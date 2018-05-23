@@ -28,6 +28,16 @@
   with_items:
     - /opt/plex
     - "{{plex.transcodes}}"
+    - "/opt/nginx-proxy/vhost.d/"
+
+- name: Import nginx-proxy config
+  copy:
+    src: plex_nginx.conf
+    dest: "/opt/nginx-proxy/vhost.d/plex.{{domain}}"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: yes
 
 - name: Stop and remove any existing container
   docker_container:
