@@ -10,7 +10,7 @@ defaultEntryPoints = ["https", "http"]
 [web]
 address = ":8080"
   [web.auth.basic]
-  usersFile = "/opt/traefik/.htpasswd"
+  usersFile = "/etc/traefik/.htpasswd"
 
 # Force HTTPS
 [entryPoints]
@@ -29,7 +29,7 @@ address = ":8080"
 # Let's encrypt configuration
 [acme]
 email = "{{email}}" #any email id will work
-storage="/opt/traefik/acme/acme.json"
+storage="/etc/traefik/acme/acme.json"
 entryPoint = "https"
 acmeLogging=true 
 onDemand = false #create certificate when container is created

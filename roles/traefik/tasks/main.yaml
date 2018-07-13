@@ -39,6 +39,9 @@
   template:
     src: traefik.toml
     dest: /opt/traefik/traefik.toml
+    mode: 0775
+    owner: "{{user}}"
+    group: "{{user}}"
     force: yes
   when: traefik_toml.stat.exists == False
 
