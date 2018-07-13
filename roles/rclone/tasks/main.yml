@@ -157,7 +157,7 @@
   register: mount_cloud
 
 - name: Stop existing mount-cloud service
-    systemd: state=stopped name=mount-cloud
+  systemd: state=stopped name=mount-cloud
   when: mount_cloud_service.stat.exists
 
 - name: Import mount-cloud.service
