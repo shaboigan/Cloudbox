@@ -135,10 +135,10 @@
 - name: Check mount-local.service exists
   stat:
     path: "/etc/systemd/system/mount-local.service"
-  register: unionfs_service
+  register: mount_local
 
 - name: Stop existing mount-local service
-    systemd: state=stopped name=mount-local
+  systemd: state=stopped name=mount-local
   when: mount_local_service.stat.exists
 
 - name: Import mount-local.service
@@ -146,15 +146,15 @@
     src: mount-local.service.js2
     dest: /etc/systemd/system/mount-local.service
     force: yes
-  when: unionfs_service.stat.exists == False
+  when: mount_local.stat.exists == False
 
 - name: Start mount-local service
-    systemd: state=started name=mount-local daemon_reload=yes enabled=yes
+  systemd: state=started name=mount-local daemon_reload=yes enabled=yes
 
 - name: Check mount-cloud.service exists
   stat:
     path: "/etc/systemd/system/mount-cloud.service"
-  register: unionfs_service
+  register: mount_cloud
 
 - name: Stop existing mount-cloud service
     systemd: state=stopped name=mount-cloud
@@ -165,7 +165,7 @@
     src: mount-cloud.service.js2
     dest: /etc/systemd/system/mount-cloud.service
     force: yes
-  when: unionfs_service.stat.exists == False
+  when: mount_cloud.stat.exists == False
 
 - name: Start mount-cloud service
-    systemd: state=started name=mount-cloud daemon_reload=yes enabled=yes
+  systemd: state=started name=mount-cloud daemon_reload=yes enabled=yes
