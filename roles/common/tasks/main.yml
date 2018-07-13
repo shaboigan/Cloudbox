@@ -17,6 +17,8 @@
     - /mnt/local/Media/Movies
     - /mnt/local/Media/Music
     - /mnt/local/Media/TV
+    - /mnt/.cloud-crypt
+    - /mnt/.local-crypt
     - /opt
     - /home/{{user}}/logs
     - /home/{{user}}/.config

@@ -28,6 +28,7 @@
   with_items:
     - "/home/{{user}}/.config"
     - "/home/{{user}}/.config/rclone"
+    - /opt/scripts/rclone
 
 - name: Touch or create blank rclone.conf file
   file:
@@ -92,3 +93,79 @@
 - name: "Display rclone version"
   debug:
     msg: "rclone version {{rclone_version.stdout}} installed."
+
+- name: Check mount-local.sh exists
+  stat:
+    path: "/opt/scripts/rclone/mount-local.sh"
+    get_attributes: false
+    get_checksum: false
+    get_md5: false
+    get_mime: false
+  register: mount_local_script
+
+- name: Import mount-local.sh
+  copy:
+    src: "mount-cloud.sh"
+    dest: "/opt/scripts/rclone/mount-local.sh"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: yes
+  when: mount_local_script.stat.exists == False
+
+- name: Check mount-cloud.sh exists
+  stat:
+    path: "/opt/scripts/rclone/mount-cloud.sh"
+    get_attributes: false
+    get_checksum: false
+    get_md5: false
+    get_mime: false
+  register: mount_cloud_script
+
+- name: Import mount-cloud.sh
+  copy:
+    src: "mount-cloud.sh"
+    dest: "/opt/scripts/rclone/mount-cloud.sh"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: yes
+  when: mount_cloud_script.stat.exists == False
+
+  - name: Check mount-local.service exists
+    stat:
+      path: "/etc/systemd/system/mount-local.service"
+    register: unionfs_service
+
+  - name: Stop existing mount-local service
+    systemd: state=stopped name=mount-local
+    when: mount_local_service.stat.exists
+
+  - name: Import mount-local.service
+    template:
+      src: mount-local.service.js2
+      dest: /etc/systemd/system/mount-local.service
+      force: yes
+    when: unionfs_service.stat.exists == False
+
+  - name: Start mount-local service
+    systemd: state=started name=mount-local daemon_reload=yes enabled=yes
+
+  - name: Check mount-cloud.service exists
+    stat:
+      path: "/etc/systemd/system/mount-cloud.service"
+    register: unionfs_service
+
+  - name: Stop existing mount-cloud service
+    systemd: state=stopped name=mount-cloud
+    when: mount_cloud_service.stat.exists
+
+  - name: Import mount-cloud.service
+    template:
+      src: mount-cloud.service.js2
+      dest: /etc/systemd/system/mount-cloud.service
+      force: yes
+    when: unionfs_service.stat.exists == False
+
+  - name: Start mount-cloud service
+    systemd: state=started name=mount-cloud daemon_reload=yes enabled=yes

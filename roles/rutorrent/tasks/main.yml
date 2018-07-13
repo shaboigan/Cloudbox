@@ -74,10 +74,13 @@
     env:
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
-      VIRTUAL_HOST: "rutorrent.{{domain}}"
-      VIRTUAL_PORT: 80
-      LETSENCRYPT_HOST: "rutorrent.{{domain}}"
-      LETSENCRYPT_EMAIL: "{{email}}"
+    labels:
+      traefik.enable: "true"
+      traefik.backend: "rutorrent"
+      traefik.frontend.redirect.entryPoint: "https"
+      traefik.frontend.rule: "Host:rutorrent.{{domain}}"
+      traefik.port: "80"
+      traefik.docker.network: "cloudbox"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/rutorrent:/config"

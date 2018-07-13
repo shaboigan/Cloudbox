@@ -41,15 +41,17 @@
     published_ports:
       - "127.0.0.1:6767:6767"
     env:
-      VERSION: "unstable"
+      VERSION: "stable"
       BACKUP: "no"
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
-      MONO_TLS_PROVIDER: legacy
-      VIRTUAL_HOST: "bazarr.{{domain}}"
-      VIRTUAL_PORT: 6767
-      LETSENCRYPT_HOST: "bazarr.{{domain}}"
-      LETSENCRYPT_EMAIL: "{{email}}"
+    labels:
+      traefik.enable: "true"
+      traefik.backend: "bazarr"
+      traefik.frontend.redirect.entryPoint: "https"
+      traefik.frontend.rule: "Host:bazarr.{{domain}}"
+      traefik.port: "6767"
+      traefik.docker.network: "cloudbox"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/bazarr:/config"

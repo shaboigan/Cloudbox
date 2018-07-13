@@ -41,14 +41,17 @@
     published_ports:
       - "127.0.0.1:9117:9117"
     env:
-      VERSION: "unstable"
+      VERSION: "stable"
       BACKUP: "no"
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
-      VIRTUAL_HOST: "jackett.{{domain}}"
-      VIRTUAL_PORT: 9117
-      LETSENCRYPT_HOST: "jackett.{{domain}}"
-      LETSENCRYPT_EMAIL: "{{email}}"
+    labels:
+      traefik.enable: "true"
+      traefik.backend: "jackett"
+      traefik.frontend.redirect.entryPoint: "https"
+      traefik.frontend.rule: "Host:jackett.{{domain}}"
+      traefik.port: "9117"
+      traefik.docker.network: "cloudbox"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/jackett:/config"

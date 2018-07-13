@@ -15,6 +15,14 @@
   vars:
     subdomain: netdata
 
+- name: "Get {{user}} uid"
+  shell: "id -u {{user}}"
+  register: uid
+
+- name: "Get {{user}} gid"
+  shell: "id -g {{user}}"
+  register: gid
+
 - name: Stop and remove any existing container
   docker_container:
     name: netdata
@@ -30,10 +38,15 @@
     published_ports:
       - "127.0.0.1:19999:19999"
     env:
-      VIRTUAL_HOST: "netdata.{{domain}}"
-      VIRTUAL_PORT: 19999
-      LETSENCRYPT_HOST: "netdata.{{domain}}"
-      LETSENCRYPT_EMAIL: "{{email}}"
+      PUID: "{{uid.stdout}}"
+      PGID: "{{gid.stdout}}"
+    labels:
+      traefik.enable: "true"
+      traefik.backend: "netdata"
+      traefik.frontend.redirect.entryPoint: "https"
+      traefik.frontend.rule: "Host:netdata.{{domain}}"
+      traefik.port: "19999"
+      traefik.docker.network: "cloudbox"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/proc:/host/proc:ro"

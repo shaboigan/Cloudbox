@@ -45,17 +45,21 @@
       BACKUP: "no"
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
-      MONO_TLS_PROVIDER: legacy
-      VIRTUAL_HOST: "sonarr.{{domain}}"
-      VIRTUAL_PORT: 8989
-      LETSENCRYPT_HOST: "sonarr.{{domain}}"
-      LETSENCRYPT_EMAIL: "{{email}}"
+    labels:
+      traefik.enable: "true"
+      traefik.backend: "sonarr"
+      traefik.frontend.redirect.entryPoint: "https"
+      traefik.frontend.rule: "Host:sonarr.{{domain}}"
+      traefik.port: "8989"
+      traefik.docker.network: "cloudbox"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/sonarr:/config"
       - "/mnt/unionfs/Media/TV:/tv"
       - "{{nzbget.downloads}}:/downloads/nzbget"
+      - "{{sabnzbd.downloads}}:/downloads/sabnzbd"
       - "{{rutorrent.downloads}}:/downloads/rutorrent"
+      - "{{deluge.downloads}}:/downloads/deluge"
       - "/mnt:/mnt"
       - "/opt/scripts:/scripts"
     networks:

@@ -30,10 +30,9 @@
     - /opt/scripts/docker
     - /opt/scripts/frontail
     - /opt/scripts/nzb
-    - /opt/scripts/nginx
     - /opt/scripts/plex
     - /opt/scripts/plex_autoscan
-    - /opt/scripts/plexpy
+    - /opt/scripts/tautulli
     - /opt/scripts/torrent
 
 - name: Check arrpush.legacy.sh exists
@@ -71,15 +70,6 @@
   copy:
     src: "plex_token.sh"
     dest: "/opt/scripts/plex/plex_token.sh"
-    owner: "{{user}}"
-    group: "{{user}}"
-    mode: 0775
-    force: yes
-
-- name: Import revoke_certs.sh
-  template:
-    src: "revoke_certs.sh.js2"
-    dest: "/opt/scripts/nginx/revoke_certs.sh"
     owner: "{{user}}"
     group: "{{user}}"
     mode: 0775

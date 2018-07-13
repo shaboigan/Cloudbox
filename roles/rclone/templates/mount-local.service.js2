@@ -1,0 +1,18 @@
+[Unit]
+Description=Mounts local-crypt: to /mnt/.local-crypt
+Requires=plexdrive.service
+After=multi-user.target plexdrive.service
+RequiresMountsFor=/mnt/plexdrive
+
+[Service]
+Type=simple
+User=0
+Group=0
+ExecStart=/bin/bash /opt/scripts/rclone/mount-local.sh
+ExecStop=/bin/fusermount -uz /mnt/.local-crypt
+TimeoutStopSec=20
+KillMode=mixed
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

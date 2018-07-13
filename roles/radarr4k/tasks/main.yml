@@ -45,17 +45,21 @@
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
       BACKUP: "no"
-      MONO_TLS_PROVIDER: legacy
-      VIRTUAL_HOST: "radarr4k.{{domain}}"
-      VIRTUAL_PORT: 7878
-      LETSENCRYPT_HOST: "radarr4k.{{domain}}"
-      LETSENCRYPT_EMAIL: "{{email}}"
+    labels:
+      traefik.enable: "true"
+      traefik.backend: "radarr4k"
+      traefik.frontend.redirect.entryPoint: "https"
+      traefik.frontend.rule: "Host:radarr4k.{{domain}}"
+      traefik.port: "7878"
+      traefik.docker.network: "cloudbox"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/radarr4k:/config"
       - "/mnt/unionfs/Media/Movies:/movies"
       - "{{nzbget.downloads}}:/downloads/nzbget"
+      - "{{sabnzbd.downloads}}:/downloads/sabnzbd"
       - "{{rutorrent.downloads}}:/downloads/rutorrent"
+      - "{{deluge.downloads}}:/downloads/deluge"
       - "/mnt:/mnt"
       - "/opt/scripts:/scripts"
     networks:

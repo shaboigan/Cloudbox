@@ -4,13 +4,19 @@ passwd: password123
 domain: testcloudbox.ml
 email: your@email.com
 cloudflare_api_token:
+http_user: 
+http_passwd:
 nzbget:
   downloads: /mnt/local/downloads/nzbget
+sabnzbd:
+  downloads: /mnt/local/downloads/sabnzbd
+deluge:
+  downloads: /mnt/local/downloads/deluge
 rutorrent:
   downloads: /mnt/local/downloads/rutorrent
 plex:
   tag: public
-  transcodes: /home/{{user}}/transcodes
+  transcodes: /home/{{user}}/.transcodes
 rclone:
   version: latest
 backup:

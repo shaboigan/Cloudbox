@@ -1,0 +1,16 @@
+[Unit]
+Description=Mounts cloud-crypt: to /mnt/.cloud-crypt
+After=multi-user.target
+
+[Service]
+Type=simple
+User=0
+Group=0
+ExecStart=/bin/bash /opt/scripts/rclone/mount-cloud.sh
+ExecStop=/bin/fusermount -uz /mnt/.Media
+TimeoutStopSec=20
+KillMode=mixed
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

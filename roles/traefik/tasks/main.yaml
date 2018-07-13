@@ -1,0 +1,84 @@
+#########################################################################
+# Title:         Cloudbox: Traefik Role                                 #
+# Author(s):     shaboigan                                              #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# Docker Images: traefik:latest                                         #
+#                                                                       #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: "Get {{user}} uid"
+  shell: "id -u {{user}}"
+  register: uid
+
+- name: "Get {{user}} gid"
+  shell: "id -g {{user}}"
+  register: gid
+
+- name: Create traefik directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
+  with_items:
+    - /opt/traefik
+    - /opt/traefik/acme
+
+- name: Check traefik.toml exists
+  stat:
+    path: "/opt/traefik/traefik.toml"
+  register: traefik_toml
+
+- name: Import traefik.toml
+  template:
+    src: traefik.toml
+    dest: /opt/traefik/traefik.toml
+    force: yes
+  when: traefik_toml.stat.exists == False
+
+- name: Check acme.json exists
+  stat:
+    path: "/opt/traefik/acme/acme.json"
+  register: acme_json
+
+- name: Import acme.json
+  template: "src=acme.json dest=/opt/traefik/acme/acme.json force=yes owner={{user}} group={{user}} mode=0600"
+  when: acme_json.stat.exists == False
+
+- name: Stop and remove any existing container
+  docker_container:
+    name: traefik
+    state: absent
+
+- name: Create and start container
+  docker_container:
+    name: traefik
+    image: "traefik:latest"
+    pull: yes
+    published_ports:
+      - "80:80"
+      - "443:443"
+    env:
+      PUID: "{{uid.stdout}}"
+      PGID: "{{gid.stdout}}"
+      PROVIDER: "cloudflare"
+      CLOUDFLARE_EMAIL: "{{email}}"
+      CLOUDFLARE_API_KEY: "{{cloudflare_api_token}}"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /opt/traefik/traefik.toml:/etc/traefik/traefik.toml:ro
+      - /opt/traefik/acme:/etc/traefik/acme
+    labels:
+      traefik.enable: "true"
+      traefik.backend: "traefik"
+      traefik.frontend.redirect.entryPoint: "https"
+      traefik.frontend.rule: "Host:traefik.{{domain}}"
+      traefik.port: "8080"
+      traefik.docker.network: "cloudbox"
+    networks:
+      - name: cloudbox
+        aliases:
+          - traefik
+    restart_policy: always
+    state: started

@@ -42,15 +42,17 @@
     published_ports:
       - "127.0.0.1:8686:8686"
     env:
-      VERSION: "unstable"
+      VERSION: "stable"
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
       BACKUP: "no"
-      MONO_TLS_PROVIDER: legacy
-      VIRTUAL_HOST: "lidarr.{{domain}}"
-      VIRTUAL_PORT: 8686
-      LETSENCRYPT_HOST: "lidarr.{{domain}}"
-      LETSENCRYPT_EMAIL: "{{email}}"
+    labels:
+      traefik.enable: "true"
+      traefik.backend: "lidarr"
+      traefik.frontend.redirect.entryPoint: "https"
+      traefik.frontend.rule: "Host:lidarr.{{domain}}"
+      traefik.port: "8686"
+      traefik.docker.network: "cloudbox"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/lidarr:/config"
