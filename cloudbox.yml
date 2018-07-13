@@ -21,7 +21,7 @@
     - { role: scripts, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'scripts'] }
     - { role: traefik, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'traefik'] }
     - { role: plex, tags: ['cloudbox', 'mediabox', 'plex'] }
-    - { role: plexpy, tags: ['cloudbox', 'mediabox', 'plexpy'] }
+    - { role: tautulli, tags: ['cloudbox', 'mediabox', 'tautulli'] }
     - { role: ombi, tags: ['cloudbox', 'mediabox', 'ombi'] }
     - { role: plex_autoscan, tags: ['cloudbox', 'mediabox', 'plex_autoscan'] }
     - { role: portainer, tags: ['cloudbox', 'feederbox', 'portainer'] }
@@ -41,11 +41,8 @@
     - { role: sonarr4k, tags: ['sonarr4k'] }
     - { role: radarr4k, tags: ['radarr4k'] }
     - { role: heimdall, tags: ['heimdall'] }
-    - { role: handbrake, tags: ['handbrake'] }
     - { role: netdata, tags: ['netdata'] }
     - { role: plex_patrol, tags: ['plex_patrol'] }
     - { role: telly, tags: ['telly'] }
     - { role: bazarr, tags: ['bazarr'] }
-    - { role: duplicati, tags: ['duplicati'] }
-    - { role: deluge, tags: ['deluge'] }
-    - { role: sabnzbd, tags: ['sabnzbd'] }    
+    - { role: sabnzbd, tags: ['sabnzbd'] }
