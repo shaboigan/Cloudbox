@@ -106,7 +106,7 @@
     - "mountlocal.sh"
     - "mountcloud.sh"
 
-- name: Check service exists
+- name: Check mountlocal service exists
   stat:
     path: "/etc/systemd/system/mountlocal.service"
   register: mountlocal_service
@@ -122,10 +122,7 @@
     force: yes
   when: mountlocal_service.stat.exists == False
 
-- name: Start mountlocal service
-  systemd: state=started name=mountlocal daemon_reload=yes enabled=yes
-
-- name: Check service exists
+- name: Check mountcloud service exists
   stat:
     path: "/etc/systemd/system/mountcloud.service"
   register: mountcloud_service
@@ -140,6 +137,3 @@
     dest: /etc/systemd/system/mountcloud.service
     force: yes
   when: mountcloud_service.stat.exists == False
-
-- name: Start mountcloud service
-  systemd: state=started name=mountcloud daemon_reload=yes enabled=yes
