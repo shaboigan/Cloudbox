@@ -51,6 +51,11 @@
   template: "src=acme.json dest=/opt/traefik/acme/acme.json force=yes owner={{user}} group={{user}} mode=0600"
   when: acme_json.stat.exists == False
 
+- name: Check .htpasswd exists
+  stat:
+    path: "/opt/traefik/.htpasswd"
+  register: htpasswd
+
 - name: Touch or create blank htpasswd file
   file:
     path: "/opt/traefik/.htpasswd"
@@ -58,6 +63,7 @@
     mode: 0775
     owner: "{{user}}"
     group: "{{user}}"
+  when: htpasswd.stat.exists == False
 
 - lineinfile:
     path: /opt/traefik/.htpasswd
@@ -87,6 +93,7 @@
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /etc/localtime:/etc/localtime:ro
       - /opt/traefik/traefik.toml:/etc/traefik/traefik.toml:ro
+      - /opt/traefik/.htpasswd:/etc/traefik/.htpasswd:ro
       - /opt/traefik/acme:/etc/traefik/acme
     labels:
       traefik.enable: "true"
