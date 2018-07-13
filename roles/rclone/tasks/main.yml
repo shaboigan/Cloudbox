@@ -94,78 +94,52 @@
   debug:
     msg: "rclone version {{rclone_version.stdout}} installed."
 
-- name: Check mount-local.sh exists
-  stat:
-    path: "/opt/scripts/rclone/mount-local.sh"
-    get_attributes: false
-    get_checksum: false
-    get_md5: false
-    get_mime: false
-  register: mount_local_script
-
-- name: Import mount-local.sh
+- name: Import mount scripts
   copy:
-    src: "mount-cloud.sh"
-    dest: "/opt/scripts/rclone/mount-local.sh"
+    src: "{{item}}"
+    dest: "/opt/scripts/rclone/{{item}}"
     owner: "{{user}}"
     group: "{{user}}"
     mode: 0775
     force: yes
-  when: mount_local_script.stat.exists == False
+  with_items:
+    - "mountlocal.sh"
+    - "mountcloud.sh"
 
-- name: Check mount-cloud.sh exists
+- name: Check service exists
   stat:
-    path: "/opt/scripts/rclone/mount-cloud.sh"
-    get_attributes: false
-    get_checksum: false
-    get_md5: false
-    get_mime: false
-  register: mount_cloud_script
+    path: "/etc/systemd/system/mountlocal.service"
+  register: mountlocal_service
 
-- name: Import mount-cloud.sh
-  copy:
-    src: "mount-cloud.sh"
-    dest: "/opt/scripts/rclone/mount-cloud.sh"
-    owner: "{{user}}"
-    group: "{{user}}"
-    mode: 0775
-    force: yes
-  when: mount_cloud_script.stat.exists == False
+- name: Stop existing mountlocal service
+  systemd: state=stopped name=mountlocal
+  when: mountlocal_service.stat.exists
 
-- name: Check mount-local.service exists
-  stat:
-    path: "/etc/systemd/system/mount-local.service"
-  register: mount_local
-
-- name: Stop existing mount-local service
-  systemd: state=stopped name=mount-local
-  when: mount_local_service.stat.exists
-
-- name: Import mount-local.service
+- name: Import mountlocal.service
   template:
-    src: mount-local.service.js2
-    dest: /etc/systemd/system/mount-local.service
+    src: mountlocal.service.js2
+    dest: /etc/systemd/system/mountlocal.service
     force: yes
-  when: mount_local.stat.exists == False
+  when: mountlocal_service.stat.exists == False
 
-- name: Start mount-local service
-  systemd: state=started name=mount-local daemon_reload=yes enabled=yes
+- name: Start mountlocal service
+  systemd: state=started name=mountlocal daemon_reload=yes enabled=yes
 
-- name: Check mount-cloud.service exists
+- name: Check service exists
   stat:
-    path: "/etc/systemd/system/mount-cloud.service"
-  register: mount_cloud
+    path: "/etc/systemd/system/mountcloud.service"
+  register: mountcloud_service
 
-- name: Stop existing mount-cloud service
-  systemd: state=stopped name=mount-cloud
-  when: mount_cloud_service.stat.exists
+- name: Stop existing mountcloud service
+  systemd: state=stopped name=mountcloud
+  when: mountcloud_service.stat.exists
 
-- name: Import mount-cloud.service
+- name: Import mountcloud.service
   template:
-    src: mount-cloud.service.js2
-    dest: /etc/systemd/system/mount-cloud.service
+    src: mountcloud.service.js2
+    dest: /etc/systemd/system/mountcloud.service
     force: yes
-  when: mount_cloud.stat.exists == False
+  when: mountcloud_service.stat.exists == False
 
-- name: Start mount-cloud service
-  systemd: state=started name=mount-cloud daemon_reload=yes enabled=yes
+- name: Start mountcloud service
+  systemd: state=started name=mountcloud daemon_reload=yes enabled=yes
