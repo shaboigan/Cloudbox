@@ -10,6 +10,12 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
+- name: "Setting CloudFlare DNS Record"
+  include_role:
+    name: cloudflare
+  vars:
+    subdomain: traefik
+
 - name: "Get {{user}} uid"
   shell: "id -u {{user}}"
   register: uid
@@ -44,6 +50,19 @@
 - name: Import acme.json
   template: "src=acme.json dest=/opt/traefik/acme/acme.json force=yes owner={{user}} group={{user}} mode=0600"
   when: acme_json.stat.exists == False
+
+- name: Touch or create blank htpasswd file
+  file:
+    path: "/opt/traefik/.htpasswd"
+    state: touch
+    mode: 0775
+    owner: "{{user}}"
+    group: "{{user}}"
+
+- lineinfile:
+    path: /opt/traefik/.htpasswd
+    line: '{{http_user}}:{{http_passwd}}'
+    insertbefore: BOF
 
 - name: Stop and remove any existing container
   docker_container:
