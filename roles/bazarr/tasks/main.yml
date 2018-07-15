@@ -13,7 +13,7 @@
   include_role:
     name: cloudflare
   vars:
-    subdomain: bazarr
+    subdomain: bazarr-test
 
 - name: "Get {{user}} uid"
   shell: "id -u {{user}}"
@@ -49,7 +49,7 @@
       traefik.enable: "true"
       traefik.backend: "bazarr"
       traefik.frontend.redirect.entryPoint: "https"
-      traefik.frontend.rule: "Host:bazarr.{{domain}}"
+      traefik.frontend.rule: "Host:bazarr-test.{{domain}}"
       traefik.port: "6767"
       traefik.docker.network: "cloudbox"
     volumes:

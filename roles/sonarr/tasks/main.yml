@@ -13,7 +13,7 @@
   include_role:
     name: cloudflare
   vars:
-    subdomain: sonarr
+    subdomain: sonarr-test
 
 - name: "Get {{user}} uid"
   shell: "id -u {{user}}"
@@ -49,7 +49,7 @@
       traefik.enable: "true"
       traefik.backend: "sonarr"
       traefik.frontend.redirect.entryPoint: "https"
-      traefik.frontend.rule: "Host:sonarr.{{domain}}"
+      traefik.frontend.rule: "Host:sonarr-test.{{domain}}"
       traefik.port: "8989"
       traefik.docker.network: "cloudbox"
     volumes:

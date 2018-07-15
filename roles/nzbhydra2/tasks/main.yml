@@ -13,7 +13,7 @@
   include_role:
     name: cloudflare
   vars:
-    subdomain: nzbhydra2
+    subdomain: nzbhydra2-test
 
 - name: "Get {{user}} uid"
   shell: "id -u {{user}}"
@@ -54,7 +54,7 @@
       traefik.enable: "true"
       traefik.backend: "nzbhydra2"
       traefik.frontend.redirect.entryPoint: "https"
-      traefik.frontend.rule: "Host:nzbhydra2.{{domain}}"
+      traefik.frontend.rule: "Host:nzbhydra2-test.{{domain}}"
       traefik.port: "5076"
       traefik.docker.network: "cloudbox"
     volumes:

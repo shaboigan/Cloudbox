@@ -14,7 +14,7 @@
   include_role:
     name: cloudflare
   vars:
-    subdomain: traefik
+    subdomain: traefik-test
 
 - name: "Get {{user}} uid"
   shell: "id -u {{user}}"
@@ -50,9 +50,28 @@
     path: "/opt/traefik/acme/acme.json"
   register: acme_json
 
-- name: Import acme.json
-  template: "src=acme.json dest=/opt/traefik/acme/acme.json force=yes owner={{user}} group={{user}} mode=0600"
+- name: Touch or create blank acme.json
+  file:
+    path: "/opt/traefik/acme/acme.json"
+    state: touch
+    mode: 0600
+    owner: "{{user}}"
+    group: "{{user}}"
   when: acme_json.stat.exists == False
+
+- name: Check rules.toml exists
+  stat:
+    path: "/opt/traefik/rules.toml"    
+  register: rules_toml
+
+- name: Touch or create blank rules.toml
+  file:
+    path: "/opt/traefik/rules.toml"    
+    state: touch
+    mode: 0775
+    owner: "{{user}}"
+    group: "{{user}}"
+  when: rules_toml.stat.exists == False
 
 - name: Check .htpasswd exists
   stat:
@@ -72,6 +91,7 @@
     path: /opt/traefik/.htpasswd
     line: '{{http_user}}:{{http_passwd}}'
     insertbefore: BOF
+  when: htpasswd.stat.exists == False
 
 - name: Stop and remove any existing container
   docker_container:
@@ -86,6 +106,7 @@
     published_ports:
       - "80:80"
       - "443:443"
+      - "9876:8080"
     env:
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
@@ -97,12 +118,13 @@
       - /etc/localtime:/etc/localtime:ro
       - /opt/traefik/traefik.toml:/etc/traefik/traefik.toml:ro
       - /opt/traefik/.htpasswd:/etc/traefik/.htpasswd:ro
+      - /opt/traefik/rules.toml:/etc/traefik/rules.toml:ro
       - /opt/traefik/acme:/etc/traefik/acme
     labels:
       traefik.enable: "true"
       traefik.backend: "traefik"
       traefik.frontend.redirect.entryPoint: "https"
-      traefik.frontend.rule: "Host:traefik.{{domain}}"
+      traefik.frontend.rule: "Host:traefik-test.{{domain}}"
       traefik.port: "8080"
       traefik.docker.network: "cloudbox"
     networks:

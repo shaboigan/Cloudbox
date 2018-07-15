@@ -13,7 +13,7 @@
   include_role:
     name: cloudflare
   vars:
-    subdomain: netdata
+    subdomain: netdata-test
 
 - name: "Get {{user}} uid"
   shell: "id -u {{user}}"
@@ -44,7 +44,7 @@
       traefik.enable: "true"
       traefik.backend: "netdata"
       traefik.frontend.redirect.entryPoint: "https"
-      traefik.frontend.rule: "Host:netdata.{{domain}}"
+      traefik.frontend.rule: "Host:netdata-test.{{domain}}"
       traefik.port: "19999"
       traefik.docker.network: "cloudbox"
     volumes:

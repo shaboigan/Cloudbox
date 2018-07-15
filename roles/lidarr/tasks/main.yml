@@ -13,7 +13,7 @@
   include_role:
     name: cloudflare
   vars:
-    subdomain: lidarr
+    subdomain: lidarr-test
 
 - name: "Get {{user}} uid"
   shell: "id -u {{user}}"
@@ -50,7 +50,7 @@
       traefik.enable: "true"
       traefik.backend: "lidarr"
       traefik.frontend.redirect.entryPoint: "https"
-      traefik.frontend.rule: "Host:lidarr.{{domain}}"
+      traefik.frontend.rule: "Host:lidarr-test.{{domain}}"
       traefik.port: "8686"
       traefik.docker.network: "cloudbox"
     volumes:

@@ -13,7 +13,7 @@
   include_role:
     name: cloudflare
   vars:
-    subdomain: portainer
+    subdomain: portainer-test
 
 - name: "Get {{user}} uid"
   shell: "id -u {{user}}"
@@ -51,7 +51,7 @@
       traefik.enable: "true"
       traefik.backend: "portainer"
       traefik.frontend.redirect.entryPoint: "https"
-      traefik.frontend.rule: "Host:portainer.{{domain}}"
+      traefik.frontend.rule: "Host:portainer-test.{{domain}}"
       traefik.port: "9000"
       traefik.docker.network: "cloudbox"
     networks:

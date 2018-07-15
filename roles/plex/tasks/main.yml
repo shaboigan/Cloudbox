@@ -13,7 +13,7 @@
   include_role:
     name: cloudflare
   vars:
-    subdomain: plex
+    subdomain: plex-test
 
 - name: "Get {{user}} uid"
   shell: "id -u {{user}}"
@@ -103,7 +103,7 @@
       traefik.enable: "true"
       traefik.backend: "plex"
       traefik.frontend.redirect.entryPoint: "https"
-      traefik.frontend.rule: "Host:plex.{{domain}}"
+      traefik.frontend.rule: "Host:plex-test.{{domain}}"
       traefik.port: "32400"
       traefik.docker.network: "cloudbox"
     volumes:

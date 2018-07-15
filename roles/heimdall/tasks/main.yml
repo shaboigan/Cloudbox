@@ -13,18 +13,7 @@
   include_role:
     name: cloudflare
   vars:
-    subdomain: heimdall
-
-- name: Create htpasswd
-  htpasswd:
-    path: "/opt/nginx-proxy/htpasswd/{{item}}.{{domain}}"
-    name: "{{user}}"
-    password: "{{passwd}}"
-    owner: "{{user}}"
-    group: "{{user}}"
-    mode: 0664
-  with_items:
-    - heimdall
+    subdomain: heimdall-test
 
 - name: "Get {{user}} uid"
   shell: "id -u {{user}}"
@@ -58,7 +47,7 @@
       traefik.enable: "true"
       traefik.backend: "heimdall"
       traefik.frontend.redirect.entryPoint: "https"
-      traefik.frontend.rule: "Host:heimdall.{{domain}}"
+      traefik.frontend.rule: "Host:heimdall-test.{{domain}}"
       traefik.port: ""
       traefik.docker.network: "cloudbox"
     volumes:

@@ -13,7 +13,7 @@
   include_role:
     name: cloudflare
   vars:
-    subdomain: radarr
+    subdomain: radarr-test
 
 - name: "Get {{user}} uid"
   shell: "id -u {{user}}"
@@ -49,7 +49,7 @@
       traefik.enable: "true"
       traefik.backend: "radarr"
       traefik.frontend.redirect.entryPoint: "https"
-      traefik.frontend.rule: "Host:radarr.{{domain}}"
+      traefik.frontend.rule: "Host:radarr-test.{{domain}}"
       traefik.port: "7878"
       traefik.docker.network: "cloudbox"
     volumes:

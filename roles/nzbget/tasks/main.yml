@@ -13,7 +13,7 @@
   include_role:
     name: cloudflare
   vars:
-    subdomain: nzbget
+    subdomain: nzbget-test
 
 - name: "Get {{user}} uid"
   shell: "id -u {{user}}"
@@ -63,7 +63,7 @@
       traefik.enable: "true"
       traefik.backend: "nzbget"
       traefik.frontend.redirect.entryPoint: "https"
-      traefik.frontend.rule: "Host:nzbget.{{domain}}"
+      traefik.frontend.rule: "Host:nzbget-test.{{domain}}"
       traefik.port: "6789"
       traefik.docker.network: "cloudbox"
     volumes:
