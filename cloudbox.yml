@@ -22,6 +22,7 @@
     - { role: rclone, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'rclone'] }
     - { role: scripts, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'scripts'] }
     - { role: traefik, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'traefik'] }
+    - { role: nordvpn, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'nordvpn'] }
     - { role: plex, tags: ['cloudbox', 'mediabox', 'plex'] }
     - { role: tautulli, tags: ['cloudbox', 'mediabox', 'tautulli'] }
     - { role: plex_autoscan, tags: ['cloudbox', 'mediabox', 'plex_autoscan'] }
