@@ -136,16 +136,16 @@
   when: not rclone_conf_default_path.stat.exists
 
   - name: Import mount scripts
-  copy:
-    src: "{{item}}"
-    dest: "/opt/scripts/rclone/{{item}}"
-    owner: "{{user}}"
-    group: "{{user}}"
-    mode: 0775
-    force: yes
-  with_items:
-    - "mountlocal.sh"
-    - "mountcloud.sh"
+    copy:
+      src: "{{item}}"
+      dest: "/opt/scripts/rclone/{{item}}"
+      owner: "{{user}}"
+      group: "{{user}}"
+      mode: 0775
+      force: yes
+    with_items:
+      - "mountlocal.sh"
+      - "mountcloud.sh"
 
   - name: Check mountlocal service exists
     stat:
