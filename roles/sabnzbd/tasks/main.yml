@@ -69,7 +69,7 @@
       traefik.backend: "sabnzbd"
       traefik.frontend.redirect.entryPoint: "https"
       traefik.frontend.rule: "Host:sabnzbd.{{domain}}"
-      traefik.port: 8080
+      traefik.port: "8080"
       traefik.docker.network: "cloudbox"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"

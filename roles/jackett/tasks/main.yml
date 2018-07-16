@@ -67,7 +67,7 @@
       traefik.backend: "jackett"
       traefik.frontend.redirect.entryPoint: "https"
       traefik.frontend.rule: "Host:jackett.{{domain}}"
-      traefik.port: 9117
+      traefik.port: "9117"
       traefik.docker.network: "cloudbox"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"

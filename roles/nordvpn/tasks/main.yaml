@@ -23,7 +23,7 @@
 - name: Create and start container
   docker_container:
     name: nordvpn
-    image: "titpetric/netdata:latest"
+    image: "bubuntux/nordvpn:latest"
     pull: yes
     capabilities:
       - NET_ADMIN
@@ -41,7 +41,7 @@
       traefik.backend: "nordvpn"
       traefik.frontend.redirect.entryPoint: "https"
       traefik.frontend.rule: "Host:nordvpn.{{domain}}"
-      traefik.port: 80
+      traefik.port: "80"
       traefik.docker.network: "cloudbox"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"

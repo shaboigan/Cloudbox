@@ -142,7 +142,7 @@
       traefik.backend: "plex"
       traefik.frontend.redirect.entryPoint: "https"
       traefik.frontend.rule: "Host:plex.{{domain}}"
-      traefik.port: 32400
+      traefik.port: "32400"
       traefik.docker.network: "cloudbox"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"

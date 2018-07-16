@@ -90,9 +90,9 @@
       traefik.backend: "sonarr"
       traefik.frontend.redirect.entryPoint: "https"
       traefik.frontend.rule: "Host:sonarr.{{domain}}"
-      traefik.port: 8989
+      traefik.port: "8989"
       traefik.docker.network: "cloudbox"
-    volumes:"{{ default_volumes + new_downloads_paths|default([]) + old_downloads_paths|default([]) }}"
+    volumes: "{{ default_volumes + new_downloads_paths|default([]) + old_downloads_paths|default([]) }}"
     networks:
       - name: cloudbox
         aliases:

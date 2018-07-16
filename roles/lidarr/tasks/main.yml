@@ -67,7 +67,7 @@
       traefik.backend: "lidarr"
       traefik.frontend.redirect.entryPoint: "https"
       traefik.frontend.rule: "Host:lidarr.{{domain}}"
-      traefik.port: 8686
+      traefik.port: "8686"
       traefik.docker.network: "cloudbox"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"

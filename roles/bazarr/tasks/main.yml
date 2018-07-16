@@ -67,7 +67,7 @@
       traefik.backend: "bazarr"
       traefik.frontend.redirect.entryPoint: "https"
       traefik.frontend.rule: "Host:bazarr.{{domain}}"
-      traefik.port: 6767
+      traefik.port: "6767"
       traefik.docker.network: "cloudbox"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"

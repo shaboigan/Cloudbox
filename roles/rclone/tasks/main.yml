@@ -18,6 +18,7 @@
   with_items:
     - "/home/{{user}}/.config"
     - "/home/{{user}}/.config/rclone"
+    - /opt/scripts/rclone
 
 - name: Cleanup rclone tmp path
   shell: rm -rf /tmp/rclone-*-linux-amd64
@@ -135,46 +136,46 @@
 
   when: not rclone_conf_default_path.stat.exists
 
-  - name: Import mount scripts
-    copy:
-      src: "{{item}}"
-      dest: "/opt/scripts/rclone/{{item}}"
-      owner: "{{user}}"
-      group: "{{user}}"
-      mode: 0775
-      force: yes
-    with_items:
-      - "mountlocal.sh"
-      - "mountcloud.sh"
+- name: Import mount scripts
+  copy:
+    src: "{{item}}"
+    dest: "/opt/scripts/rclone/{{item}}"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: yes
+  with_items:
+    - "mountlocal.sh"
+    - "mountcloud.sh"
 
-  - name: Check mountlocal service exists
-    stat:
-      path: "/etc/systemd/system/mountlocal.service"
-    register: mountlocal_service
+- name: Check mountlocal service exists
+  stat:
+    path: "/etc/systemd/system/mountlocal.service"
+  register: mountlocal_service
   
-  - name: Stop existing mountlocal service
-    systemd: state=stopped name=mountlocal
-    when: mountlocal_service.stat.exists
+- name: Stop existing mountlocal service
+  systemd: state=stopped name=mountlocal
+  when: mountlocal_service.stat.exists
   
-  - name: Import mountlocal.service
-    template:
-      src: mountlocal.service.js2
-      dest: /etc/systemd/system/mountlocal.service
-      force: yes
-    when: mountlocal_service.stat.exists == False
+- name: Import mountlocal.service
+  template:
+    src: mountlocal.service.js2
+    dest: /etc/systemd/system/mountlocal.service
+    force: yes
+  when: mountlocal_service.stat.exists == False
   
-  - name: Check mountcloud service exists
-    stat:
-      path: "/etc/systemd/system/mountcloud.service"
-    register: mountcloud_service
+- name: Check mountcloud service exists
+  stat:
+    path: "/etc/systemd/system/mountcloud.service"
+  register: mountcloud_service
   
-  - name: Stop existing mountcloud service
-    systemd: state=stopped name=mountcloud
-    when: mountcloud_service.stat.exists
+- name: Stop existing mountcloud service
+  systemd: state=stopped name=mountcloud
+  when: mountcloud_service.stat.exists
   
-  - name: Import mountcloud.service
-    template:
-      src: mountcloud.service.js2
-      dest: /etc/systemd/system/mountcloud.service
-      force: yes
-    when: mountcloud_service.stat.exists == False
+- name: Import mountcloud.service
+  template:
+    src: mountcloud.service.js2
+    dest: /etc/systemd/system/mountcloud.service
+    force: yes
+  when: mountcloud_service.stat.exists == False

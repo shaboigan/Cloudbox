@@ -90,7 +90,7 @@
       traefik.backend: "radarr"
       traefik.frontend.redirect.entryPoint: "https"
       traefik.frontend.rule: "Host:radarr.{{domain}}"
-      traefik.port: 7878
+      traefik.port: "7878"
       traefik.docker.network: "cloudbox"
     volumes: "{{ default_volumes + new_downloads_paths|default([]) + old_downloads_paths|default([]) }}"
     networks:
