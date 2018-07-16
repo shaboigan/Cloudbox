@@ -7,8 +7,8 @@ After=network-online.target plexdrive.service
 [Service]
 Type=forking
 GuessMainPID=no
-User=plex
-Group=plex
+User={{user}}
+Group={{user}}
 ExecStartPre=/bin/sleep 30
 ExecStart=/usr/bin/unionfs-fuse -o cow,allow_other,nonempty /mnt/local=RW:/mnt/.local-crypt=RO /mnt/unionfs
 ExecStop=/bin/fusermount -u /mnt/unionfs

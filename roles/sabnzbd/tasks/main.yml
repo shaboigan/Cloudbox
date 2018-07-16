@@ -1,6 +1,6 @@
 #########################################################################
-# Title:         Cloudbox: SABnzbd Role                                  #
-# Author(s):     L3uddz, Desimaniac                                     #
+# Title:         Cloudbox: SABnzbd Role                                 #
+# Author(s):     Desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # Docker Image:  hotio/suitarr                                          #
 # --                                                                    #
@@ -9,43 +9,48 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Setting CloudFlare DNS Record"
+- name: Sanity Check
+  fail:
+    msg: "The new download paths settings are needed for this."
+  when: not new_downloads_settings
+
+- name: "Set DNS Record on CloudFlare"
   include_role:
     name: cloudflare
   vars:
     subdomain: sabnzbd
-
-- name: "Get {{user}} uid"
-  shell: "id -u {{user}}"
-  register: uid
-
-- name: "Get {{user}} gid"
-  shell: "id -g {{user}}"
-  register: gid
-
-- name: Create sabnzbd directories
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
-  with_items:
-    - /opt/sabnzbd
 
 - name: Stop and remove any existing container
   docker_container:
     name: sabnzbd
     state: absent
 
-- name: Create sabnzbd download directory
-  file: "path={{sabnzbd.downloads}} state=directory mode=0775 owner={{user}} group={{user}}"
+- name: Create sabnzbd directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /opt/sabnzbd
 
-- name: "Set {{sabnzbd.downloads}} permissions"
-  shell: "chmod -R 775 {{sabnzbd.downloads}}"
+- name: Create new downloads directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
+  with_items:
+    - "{{downloads.nzbs}}"
+    - "{{downloads.nzbs}}/sabnzbd"
+    - "{{downloads.nzbs}}/sabnzbd/complete"
+    - "{{downloads.nzbs}}/sabnzbd/incomplete"
+    - "{{downloads.nzbs}}/sabnzbd/watched"
+    - "{{downloads.nzbs}}/sabnzbd/logs"
 
-- name: "Set {{sabnzbd.downloads}} owner"
-  shell: "chown -R {{user}}:{{user}} {{sabnzbd.downloads}}"
+# This is still needed as sometimes it will remain in root.
+- name: "Set {{downloads.nzbs}} permissions"
+  shell: "chmod -R 775 {{downloads.nzbs}}"
 
-- name: Check sabnzbd.conf exists
+- name: "Set {{downloads.nzbs}} owner"
+  shell: "chown -R {{user}}:{{user}} {{downloads.nzbs}}"
+
+- name: Check sabnzbd.ini exists
   stat:
-    path: "/opt/sabnzbd/sabnzbd/sabnzbd.conf"
-  register: sabnzbd_conf
+    path: "/opt/sabnzbd/app/sabnzbd.ini"
+  register: sabnzbd_ini
 
 - name: Create and start container
   docker_container:
@@ -53,25 +58,25 @@
     image: hotio/suitarr:sabnzbd
     pull: yes
     published_ports:
-      - "127.0.0.1:6789:6789"
+      - "127.0.0.1:8081:8080"
     env:
       VERSION: "unstable"
       BACKUP: "no"
-      PUID: "{{uid.stdout}}"
-      PGID: "{{gid.stdout}}"
+      PUID: "{{uid}}"
+      PGID: "{{gid}}"
     labels:
       traefik.enable: "true"
       traefik.backend: "sabnzbd"
       traefik.frontend.redirect.entryPoint: "https"
       traefik.frontend.rule: "Host:sabnzbd.{{domain}}"
-      traefik.port: "6789"
+      traefik.port: 8080
       traefik.docker.network: "cloudbox"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/sabnzbd:/config"
-      - "{{sabnzbd.downloads}}:/downloads/sabnzbd"
-      - "/mnt:/mnt"
       - "/opt/scripts:/scripts"
+      - "/mnt:/mnt"
+      - "{{downloads.nzbs}}/sabnzbd:/downloads/nzbs/sabnzbd"
     restart_policy: always
     networks:
       - name: cloudbox
@@ -79,81 +84,10 @@
           - sabnzbd
     state: started
 
-- name: Wait for sabnzbd.conf to be created
-  wait_for:
-    path: "/opt/sabnzbd/sabnzbd/sabnzbd.conf"
-    state: present
-  when: sabnzbd_conf.stat.exists == False
-
-- name: "Wait for 10 seconds before stopping sabnzbd container"
-  wait_for:
-    timeout: 10
-  when: sabnzbd_conf.stat.exists == False
-
-- name: Stop container to customize sabnzbd.conf
-  docker_container:
-    name: sabnzbd
-    state: stopped
-  when: sabnzbd_conf.stat.exists == False
-
-- name: Change downloads directory
-  lineinfile:
-    path: "/opt/sabnzbd/sabnzbd/sabnzbd.conf"
-    regexp: '^MainDir\s?='
-    line: 'MainDir=/downloads/sabnzbd'
-    state: present
-  when: sabnzbd_conf.stat.exists == False
-
-- name: Change scripts directory
-  lineinfile:
-    path: "/opt/sabnzbd/sabnzbd/sabnzbd.conf"
-    regexp: '^ScriptDir\s?='
-    line: 'ScriptDir=/scripts'
-    state: present
-  when: sabnzbd_conf.stat.exists == False
-
-- name: Rename Movies category
-  lineinfile:
-    path: "/opt/sabnzbd/sabnzbd/sabnzbd.conf"
-    regexp: '^Category1.Name\s?='
-    line: 'Category1.Name=radarr'
-    state: present
-  when: sabnzbd_conf.stat.exists == False
-
-- name: Rename TV category
-  lineinfile:
-    path: "/opt/sabnzbd/sabnzbd/sabnzbd.conf"
-    regexp: '^Category2.Name\s?='
-    line: 'Category2.Name=sonarr'
-    state: present
-  when: sabnzbd_conf.stat.exists == False
-
-- name: Rename Music category
-  lineinfile:
-    path: "/opt/sabnzbd/sabnzbd/sabnzbd.conf"
-    regexp: '^Category3.Name\s?='
-    line: 'Category3.Name=lidarr'
-    state: present
-  when: sabnzbd_conf.stat.exists == False
-
-- name: Remove default Username
-  lineinfile:
-    path: "/opt/sabnzbd/sabnzbd/sabnzbd.conf"
-    regexp: '^ControlUsername\s?='
-    line: 'ControlUsername='
-    state: present
-  when: sabnzbd_conf.stat.exists == False
-
-- name: Remove default Password
-  lineinfile:
-    path: "/opt/sabnzbd/sabnzbd/sabnzbd.conf"
-    regexp: '^ControlPassword=\s?='
-    line: 'ControlPassword='
-    state: present
-  when: sabnzbd_conf.stat.exists == False
-
-- name: Start container to apply changes
-  docker_container:
-    name: sabnzbd
-    state: started
-  when: sabnzbd_conf.stat.exists == False
+- name: Settings Tweaks
+  include_tasks: "sabnzbd_settings.yml"
+  when: not (
+        (sabnzbd_ini.stat.exists)
+        or
+        ((continuous_integration|default(false,true))|bool)
+    )

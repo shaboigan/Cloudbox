@@ -9,19 +9,11 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Setting CloudFlare DNS Record"
+- name: "Set DNS Record on CloudFlare"
   include_role:
     name: cloudflare
   vars:
     subdomain: "{{ ombi.subdomain|default('ombi',true) }}"
-
-- name: "Get {{user}} uid"
-  shell: "id -u {{user}}"
-  register: uid
-
-- name: "Get {{user}} gid"
-  shell: "id -g {{user}}"
-  register: gid
 
 - name: Stop and remove any existing container
   docker_container:
@@ -41,14 +33,14 @@
     published_ports:
       - "127.0.0.1:3579:3579"
     env:
-      PUID: "{{uid.stdout}}"
-      PGID: "{{gid.stdout}}"
+      PUID: "{{uid}}"
+      PGID: "{{gid}}"
     labels:
       traefik.enable: "true"
       traefik.backend: "ombi"
       traefik.frontend.redirect.entryPoint: "https"
-      traefik.frontend.rule: "Host:ombi-test.{{domain}}"
-      traefik.port: "3579"
+      traefik.frontend.rule: "Host:ombi.{{domain}}"
+      traefik.port: 3579
       traefik.docker.network: "cloudbox"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"

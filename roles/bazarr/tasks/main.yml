@@ -9,19 +9,11 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Setting CloudFlare DNS Record"
+- name: "Set DNS Record on CloudFlare"
   include_role:
     name: cloudflare
   vars:
-    subdomain: bazarr-test
-
-- name: "Get {{user}} uid"
-  shell: "id -u {{user}}"
-  register: uid
-
-- name: "Get {{user}} gid"
-  shell: "id -g {{user}}"
-  register: gid
+    subdomain: bazarr
 
 - name: Stop and remove any existing container
   docker_container:
@@ -33,6 +25,31 @@
   with_items:
     - /opt/bazarr
 
+- name: Check subfolder1 exists
+  stat:
+    path: /opt/bazarr/Bazarr
+  register: subfolder1
+
+- name: Check subfolder2 exists
+  stat:
+    path: /opt/bazarr/app
+  register: subfolder2
+
+- name: Move 'bazarr' folder contents to 'app' subfolder
+  shell: |
+    mv /opt/bazarr /tmp/app
+    mkdir /opt/bazarr
+    mv /tmp/app /opt/bazarr/
+    find /opt/bazarr/* -type d -empty -delete
+    chown -R {{user}}:{{user}} /opt/bazarr
+  when: not (subfolder1.stat.exists or subfolder2.stat.exists)
+
+- name: Move 'Bazarr' subfolder to 'app' subfolder
+  shell: |
+    mv /opt/bazarr/Bazarr /opt/bazarr/app
+    chown -R {{user}}:{{user}} /opt/bazarr
+  when: (subfolder1.stat.exists) and (not subfolder2.stat.exists)
+
 - name: Create and start container
   docker_container:
     name: bazarr
@@ -41,16 +58,16 @@
     published_ports:
       - "127.0.0.1:6767:6767"
     env:
-      VERSION: "stable"
+      VERSION: "unstable"
       BACKUP: "no"
-      PUID: "{{uid.stdout}}"
-      PGID: "{{gid.stdout}}"
+      PUID: "{{uid}}"
+      PGID: "{{gid}}"
     labels:
       traefik.enable: "true"
       traefik.backend: "bazarr"
       traefik.frontend.redirect.entryPoint: "https"
-      traefik.frontend.rule: "Host:bazarr-test.{{domain}}"
-      traefik.port: "6767"
+      traefik.frontend.rule: "Host:bazarr.{{domain}}"
+      traefik.port: 6767
       traefik.docker.network: "cloudbox"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"

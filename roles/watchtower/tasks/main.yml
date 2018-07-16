@@ -9,14 +9,6 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Get {{user}} uid"
-  shell: "id -u {{user}}"
-  register: uid
-
-- name: "Get {{user}} gid"
-  shell: "id -g {{user}}"
-  register: gid
-
 - name: Stop and remove any existing container
   docker_container:
     name: watchtower
@@ -27,7 +19,7 @@
     name: watchtower
     image: "v2tec/watchtower"
     pull: yes
-    command: sonarr radarr jackett nzbhydra2 nzbget tautulli portainer watchtower --cleanup --interval 15
+    command: sonarr radarr jackett nzbhydra2 nzbget sabnzbd tautulli ombi portainer watchtower traefik --cleanup --interval 15
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/var/run/docker.sock:/var/run/docker.sock"

@@ -1,0 +1,56 @@
+#########################################################################
+# Title:         Cloudbox: NordVPN Role                                 #
+# Author(s):     shaboigan                                                 #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# Docker Image:  titpetric/netdata                                      #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: "Set DNS Record on CloudFlare"
+  include_role:
+    name: cloudflare
+  vars:
+    subdomain: NordVPN
+
+- name: Stop and remove any existing container
+  docker_container:
+    name: nordvpn
+    state: absent
+
+- name: Create and start container
+  docker_container:
+    name: nordvpn
+    image: "titpetric/netdata:latest"
+    pull: yes
+    capabilities:
+      - NET_ADMIN
+    published_ports:
+      - "127.0.0.1:8080:80"
+    env:
+      PUID: "{{uid}}"
+      PGID: "{{gid}}"
+      USER: "{{nordvpn.user}}"
+      PASS: "{{nordvpn.pass}}"
+      COUNTRY: "{{nordvpn.country}}"
+      PROTOCOL: openvpn_tcp
+    labels:
+      traefik.enable: "true"
+      traefik.backend: "nordvpn"
+      traefik.frontend.redirect.entryPoint: "https"
+      traefik.frontend.rule: "Host:nordvpn.{{domain}}"
+      traefik.port: 80
+      traefik.docker.network: "cloudbox"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/proc:/host/proc:ro"
+      - "/sys:/host/sys:ro"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    networks:
+      - name: cloudbox
+        aliases:
+          - netdata
+    restart_policy: always
+    state: started

@@ -14,7 +14,7 @@
   include_role:
     name: cloudflare
   vars:
-    subdomain: traefik-test
+    subdomain: traefik
 
 - name: "Get {{user}} uid"
   shell: "id -u {{user}}"
@@ -124,7 +124,7 @@
       traefik.enable: "true"
       traefik.backend: "traefik"
       traefik.frontend.redirect.entryPoint: "https"
-      traefik.frontend.rule: "Host:traefik-test.{{domain}}"
+      traefik.frontend.rule: "Host:traefik.{{domain}}"
       traefik.port: "8080"
       traefik.docker.network: "cloudbox"
     networks:

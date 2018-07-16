@@ -1,28 +1,22 @@
 ---
-user: seed
-passwd: password123
-domain: testcloudbox.ml
-email: your@email.com
-cloudflare_api_token:
-http_user: 
-http_passwd:
+downloads:
+  nzbs: /mnt/local/downloads/nzbs
+  torrents: /mnt/local/downloads/torrents
 nzbget:
-  downloads: /mnt/local/downloads/nzbget
-sabnzbd:
-  downloads: /mnt/local/downloads/sabnzbd
-deluge:
-  downloads: /mnt/local/downloads/deluge
+  downloads:
 rutorrent:
-  downloads: /mnt/local/downloads/rutorrent
+  downloads:
 plex:
   tag: public
   transcodes: /home/{{user}}/.transcodes
+nordvpn:
+  country:
 rclone:
   version: latest
 backup:
   tar_dest: /home/{{user}}/Backups
   rsync_dest: rsync://somehost.com/Backups
-  rclone_dest: google:/Backups
+  rclone_dest: cloud-crypt:/Backups
   keep_local_copy: true
   use_rsync: false
   use_rclone: false

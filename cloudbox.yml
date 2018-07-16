@@ -1,6 +1,7 @@
 ---
 - hosts: localhost
   vars_files:
+    - ['accounts.yml', 'accounts.yml.default']
     - ['settings.yml', 'settings.yml.default']
     - ['adv_settings.yml', 'adv_settings.yml.default']
   roles:
@@ -11,20 +12,22 @@
     - { role: backup, tags: ['backup'] }
     - { role: restore, tags: ['restore'] }
     - { role: pre_install, tags: ['core', 'cloudbox', 'mediabox', 'feederbox'] }
-    - { role: system, tags: ['core', 'cloudbox', 'mediabox', 'feederbox'] }
+    - { role: user, tags: ['always'] }
+    - { role: system, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'system'] }
     - { role: motd, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'motd'] }
-    - { role: common, tags: ['core', 'cloudbox', 'mediabox', 'feederbox'] }
-    - { role: unionfs, tags: ['core', 'cloudbox', 'mediabox', 'feederbox'] }
-    - { role: docker, tags: ['core', 'cloudbox', 'mediabox', 'feederbox'] }
+    - { role: common, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'common'] }
+    - { role: docker, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'docker'] }
     - { role: plexdrive, tags: ['core', 'cloudbox', 'mediabox', 'feederbox'] }
+    - { role: unionfs, tags: ['core', 'cloudbox', 'mediabox', 'feederbox'] }
     - { role: rclone, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'rclone'] }
     - { role: scripts, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'scripts'] }
     - { role: traefik, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'traefik'] }
     - { role: plex, tags: ['cloudbox', 'mediabox', 'plex'] }
     - { role: tautulli, tags: ['cloudbox', 'mediabox', 'tautulli'] }
-    - { role: ombi, tags: ['cloudbox', 'mediabox', 'ombi'] }
+    - { role: plexrequests, tags: ['cloudbox', 'mediabox', 'plexrequests'] }
     - { role: plex_autoscan, tags: ['cloudbox', 'mediabox', 'plex_autoscan'] }
     - { role: portainer, tags: ['cloudbox', 'feederbox', 'portainer'] }
+    - { role: organizr, tags: ['cloudbox', 'feederbox', 'organizr'] }
     - { role: cloudplow, tags: ['cloudbox', 'feederbox', 'cloudplow']}
     - { role: nzbget, tags: ['cloudbox', 'feederbox', 'nzbget'] }
     - { role: rutorrent, tags: ['cloudbox', 'feederbox', 'rutorrent'] }
@@ -35,14 +38,24 @@
     - { role: feeder_mount, tags: ['feeder-mount'] }
     - { role: feeder_dismount, tags: ['feeder-dismount'] }
     - { role: watchtower, tags: ['watchtower'] }
+    - { role: ombi, tags: ['ombi'] }
+    - { role: resilio, tags: ['resilio'] }
+    - { role: nextcloud, tags: ['nextcloud'] }
     - { role: lidarr, tags: ['lidarr'] }
+    - { role: emby, tags: ['emby'] }
+    - { role: nzbhydra, tags: ['nzbhydra'] }
     - { role: traktarr, tags: ['traktarr'] }
     - { role: plex_dupefinder, tags: ['plex_dupefinder'] }
     - { role: sonarr4k, tags: ['sonarr4k'] }
     - { role: radarr4k, tags: ['radarr4k'] }
     - { role: heimdall, tags: ['heimdall'] }
+    - { role: thelounge, tags: ['thelounge'] }
     - { role: netdata, tags: ['netdata'] }
+    - { role: znc, tags: ['znc'] }
+    - { role: quassel, tags: ['quassel'] }
     - { role: plex_patrol, tags: ['plex_patrol'] }
     - { role: telly, tags: ['telly'] }
+    - { role: nowshowing, tags: ['nowshowing'] }
     - { role: bazarr, tags: ['bazarr'] }
+    - { role: plexlibrary, tags: ['plexlibrary'] }
     - { role: sabnzbd, tags: ['sabnzbd'] }

@@ -9,19 +9,11 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Setting CloudFlare DNS Record"
+- name: "Set DNS Record on CloudFlare"
   include_role:
     name: cloudflare
   vars:
-    subdomain: sonarr4k-test
-
-- name: "Get {{user}} uid"
-  shell: "id -u {{user}}"
-  register: uid
-
-- name: "Get {{user}} gid"
-  shell: "id -g {{user}}"
-  register: gid
+    subdomain: sonarr4k
 
 - name: Stop and remove any existing container
   docker_container:
@@ -33,6 +25,54 @@
   with_items:
     - /opt/sonarr4k
 
+- name: Check subfolder1 exists
+  stat:
+    path: /opt/sonarr4k/Sonarr
+  register: subfolder1
+
+- name: Check subfolder2 exists
+  stat:
+    path: /opt/sonarr4k/app
+  register: subfolder2
+
+- name: Move 'sonarr4k' folder contents to 'app' subfolder
+  shell: |
+    mv /opt/sonarr4k /tmp/app
+    mkdir /opt/sonarr4k
+    mv /tmp/app /opt/sonarr4k/
+    find /opt/sonarr4k/* -type d -empty -delete
+    chown -R {{user}}:{{user}} /opt/sonarr4k
+  when: not (subfolder1.stat.exists or subfolder2.stat.exists)
+
+- name: Move 'Sonarr' subfolder to 'app' subfolder
+  shell: |
+    mv /opt/sonarr4k/Sonarr /opt/sonarr4k/app
+    chown -R {{user}}:{{user}} /opt/sonarr4k
+  when: (subfolder1.stat.exists) and (not subfolder2.stat.exists)
+
+- name: Set default_volumes variable
+  set_fact:
+    default_volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/sonarr4k:/config"
+      - "/mnt/unionfs/Media/TV:/tv"
+      - "/mnt:/mnt"
+      - "/opt/scripts:/scripts"
+
+- name: Set new_downloads_paths variable
+  set_fact:
+    new_downloads_paths:
+      - "{{downloads.nzbs}}:/downloads/nzbs"
+      - "{{downloads.torrents}}:/downloads/torrents"
+  when: new_downloads_settings
+
+- name: Set old_downloads_paths variable
+  set_fact:
+    old_downloads_paths:
+      - "{{nzbget.downloads}}:/downloads/nzbget"
+      - "{{rutorrent.downloads}}:/downloads/rutorrent"
+  when: old_downloads_settings
+
 - name: Create and start container
   docker_container:
     name: sonarr4k
@@ -43,25 +83,16 @@
     env:
       VERSION: "unstable"
       BACKUP: "no"
-      PUID: "{{uid.stdout}}"
-      PGID: "{{gid.stdout}}"
+      PUID: "{{uid}}"
+      PGID: "{{gid}}"
     labels:
       traefik.enable: "true"
       traefik.backend: "sonarr4k"
       traefik.frontend.redirect.entryPoint: "https"
-      traefik.frontend.rule: "Host:sonarr4k-test.{{domain}}"
-      traefik.port: "8989"
+      traefik.frontend.rule: "Host:sonarr4k.{{domain}}"
+      traefik.port: 8989
       traefik.docker.network: "cloudbox"
-    volumes:
-      - "/etc/localtime:/etc/localtime:ro"
-      - "/opt/sonarr4k:/config"
-      - "/mnt/unionfs/Media/TV:/tv"
-      - "{{nzbget.downloads}}:/downloads/nzbget"
-      - "{{sabnzbd.downloads}}:/downloads/sabnzbd"
-      - "{{rutorrent.downloads}}:/downloads/rutorrent"
-      - "{{deluge.downloads}}:/downloads/deluge"
-      - "/mnt:/mnt"
-      - "/opt/scripts:/scripts"
+    volumes: "{{ default_volumes + new_downloads_paths|default([]) + old_downloads_paths|default([]) }}"
     networks:
       - name: cloudbox
         aliases:

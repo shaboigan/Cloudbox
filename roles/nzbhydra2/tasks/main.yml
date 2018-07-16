@@ -9,19 +9,11 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Setting CloudFlare DNS Record"
+- name: "Set DNS Record on CloudFlare"
   include_role:
     name: cloudflare
   vars:
-    subdomain: nzbhydra2-test
-
-- name: "Get {{user}} uid"
-  shell: "id -u {{user}}"
-  register: uid
-
-- name: "Get {{user}} gid"
-  shell: "id -g {{user}}"
-  register: gid
+    subdomain: nzbhydra2
 
 - name: Stop and remove any existing container
   docker_container:
@@ -33,9 +25,34 @@
   with_items:
     - /opt/nzbhydra2
 
+- name: Check subfolder1 exists
+  stat:
+    path: /opt/nzbhydra2/NZBHydra2
+  register: subfolder1
+
+- name: Check subfolder2 exists
+  stat:
+    path: /opt/nzbhydra2/app
+  register: subfolder2
+
+- name: Move 'nzbhydra2' folder contents to 'app' subfolder
+  shell: |
+    mv /opt/nzbhydra2 /tmp/app
+    mkdir /opt/nzbhydra2
+    mv /tmp/app /opt/nzbhydra2/
+    find /opt/nzbhydra2/* -type d -empty -delete
+    chown -R {{user}}:{{user}} /opt/nzbhydra2
+  when: not (subfolder1.stat.exists or subfolder2.stat.exists)
+
+- name: Move 'NZBHydra2' subfolder to 'app' subfolder
+  shell: |
+    mv /opt/nzbhydra2/NZBHydra2 /opt/nzbhydra2/app
+    chown -R {{user}}:{{user}} /opt/nzbhydra2
+  when: (subfolder1.stat.exists) and (not subfolder2.stat.exists)
+
 - name: Check if nzbhydra.yml exists
   stat:
-    path: "/opt/nzbhydra2/NZBHydra2/nzbhydra.yml"
+    path: "/opt/nzbhydra2/app/nzbhydra.yml"
   register: nzbhydra2_yml
 
 - name: Create and start container
@@ -48,14 +65,14 @@
     env:
       VERSION: "unstable"
       BACKUP: "no"
-      PUID: "{{uid.stdout}}"
-      PGID: "{{gid.stdout}}"
+      PUID: "{{uid}}"
+      PGID: "{{gid}}"
     labels:
       traefik.enable: "true"
       traefik.backend: "nzbhydra2"
       traefik.frontend.redirect.entryPoint: "https"
-      traefik.frontend.rule: "Host:nzbhydra2-test.{{domain}}"
-      traefik.port: "5076"
+      traefik.frontend.rule: "Host:nzbhydra2.{{domain}}"
+      traefik.port: 5076
       traefik.docker.network: "cloudbox"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
