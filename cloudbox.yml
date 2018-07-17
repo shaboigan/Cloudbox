@@ -8,6 +8,7 @@
     - { role: sanity_check }
     - { role: pre_tasks }
     - { role: kernel, tags: ['kernel'], when: [ 'ansible_distribution_version == "16.04"' ] }
+    - { role: encrypt_settings, tags: ['always', 'encrypt_settings'] }
     - { role: settings, tags: ['always', 'settings'] }
     - { role: backup, tags: ['backup'] }
     - { role: restore, tags: ['restore'] }

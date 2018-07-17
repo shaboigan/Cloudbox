@@ -1,0 +1,16 @@
+#########################################################################
+# Title:         Cloudbox: Encrypt Settings Role                                #
+# Author(s):     L3uddz, Desimaniac, shaboigan                                     #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: "Cloudbox Encrypt Settings Task"
+  include_tasks: "encrypt_settings.yml"
+  with_items:
+    - "accounts.yml"
+    - "settings.yml"
+    - "adv_settings.yml"
