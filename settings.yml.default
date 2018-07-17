@@ -11,6 +11,7 @@ plex:
   transcodes: /home/{{user}}/.transcodes
 nordvpn:
   country:
+  protocol:
 rclone:
   version: latest
 backup:

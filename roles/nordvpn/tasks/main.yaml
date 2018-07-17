@@ -13,12 +13,22 @@
   include_role:
     name: cloudflare
   vars:
-    subdomain: NordVPN
+    subdomain: nordvpn
 
+- name: "Get user UID and GID"
+  include_role:
+    name: user
+    
 - name: Stop and remove any existing container
   docker_container:
     name: nordvpn
     state: absent
+
+- name: Create nordvpn directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /opt/nordvpn
+    - /opt/nordvpn/vpn
 
 - name: Create and start container
   docker_container:
@@ -27,6 +37,8 @@
     pull: yes
     capabilities:
       - NET_ADMIN
+    devices:
+      - /dev/net/tun
     published_ports:
       - "127.0.0.1:8080:80"
     env:
@@ -35,7 +47,7 @@
       USER: "{{nordvpn.user}}"
       PASS: "{{nordvpn.pass}}"
       COUNTRY: "{{nordvpn.country}}"
-      PROTOCOL: openvpn_tcp
+      PROTOCOL: "{{nordvpn.protocol}}"
     labels:
       traefik.enable: "true"
       traefik.backend: "nordvpn"
@@ -44,13 +56,10 @@
       traefik.port: "80"
       traefik.docker.network: "cloudbox"
     volumes:
-      - "/etc/localtime:/etc/localtime:ro"
-      - "/proc:/host/proc:ro"
-      - "/sys:/host/sys:ro"
-      - "/var/run/docker.sock:/var/run/docker.sock"
+      - /opt/nordvpn/vpn:/vpn/ovpn
     networks:
       - name: cloudbox
         aliases:
-          - netdata
+          - nordvpn
     restart_policy: always
     state: started

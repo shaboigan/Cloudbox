@@ -16,13 +16,9 @@
   vars:
     subdomain: traefik
 
-- name: "Get {{user}} uid"
-  shell: "id -u {{user}}"
-  register: uid
-
-- name: "Get {{user}} gid"
-  shell: "id -g {{user}}"
-  register: gid
+- name: "Get user UID and GID"
+  include_role:
+    name: user
 
 - name: Create traefik directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
@@ -108,8 +104,8 @@
       - "443:443"
       - "9876:8080"
     env:
-      PUID: "{{uid.stdout}}"
-      PGID: "{{gid.stdout}}"
+      PUID: "{{uid}}"
+      PGID: "{{gid}}"
       PROVIDER: "cloudflare"
       CLOUDFLARE_EMAIL: "{{email}}"
       CLOUDFLARE_API_KEY: "{{cloudflare_api_token}}"

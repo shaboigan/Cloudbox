@@ -9,6 +9,10 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
+- name: "Get user UID and GID"
+  include_role:
+    name: user
+    
 - name: "Assert that all Telly related settings are filled in."
   assert:
     that:

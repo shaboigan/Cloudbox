@@ -15,6 +15,10 @@
   vars:
     subdomain: "{{ ombi.subdomain|default('ombi',true) }}"
 
+- name: "Get user UID and GID"
+  include_role:
+    name: user
+    
 - name: Stop and remove any existing container
   docker_container:
     name: ombi
