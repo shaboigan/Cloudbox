@@ -8,6 +8,11 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
+- name: "Check if '{{item}}' exists."
+  stat:
+    path: "{{playbook_dir}}/{{item}}"
+  register: file
+
 - name: "Copy '{{item}}.default' to '{{item}}'."
   copy:
     src: "{{playbook_dir}}/{{item}}.default"
@@ -17,6 +22,11 @@
     mode: 0664
     force: yes
   when: not file.stat.exists
+
+- name: "Get stats on '{{item}}' for hash check."
+  stat:
+    path: "{{playbook_dir}}/{{item}}"
+  register: file
 
 # Hash Check
 - name: "Get stats on '{{item}}.default' for hash check."
