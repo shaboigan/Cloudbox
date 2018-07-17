@@ -8,6 +8,11 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
+- name: "Get 'cloudbox.yml' info."
+  stat:
+    path: "{{playbook_dir}}/cloudbox.yml"
+  register: cloudbox_yml
+
 - name: "Cloudbox Encrypt Settings Task"
   include_tasks: "encrypt_settings.yml"
   with_items:
