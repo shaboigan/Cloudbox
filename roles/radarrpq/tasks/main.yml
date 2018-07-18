@@ -69,6 +69,7 @@
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/radarrpq:/config"
+      - /mnt/unionfs/Media:/data
       - "/mnt/unionfs/Media/Poor Quality:/movies"
       - "/mnt:/mnt"
       - "/opt/scripts:/scripts"

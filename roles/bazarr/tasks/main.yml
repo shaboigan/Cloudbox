@@ -69,8 +69,10 @@
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/bazarr:/config"
-      - "/mnt/unionfs/Media/TV:/tv"
-      - "/mnt/unionfs/Media/Movies:/movies"
+      - /mnt/unionfs/Media:/data
+      - /mnt/unionfs/Media/Movies
+      - /mnt/unionfs/Media/Music
+      - /mnt/unionfs/Media/TV Shows
       - "/mnt:/mnt"
       - "/opt/scripts:/scripts"
     networks:

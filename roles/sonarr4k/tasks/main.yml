@@ -69,7 +69,8 @@
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/sonarr4k:/config"
-      - "/mnt/unionfs/Media/TV:/tv"
+      - /mnt/unionfs/Media:/data
+      - "/mnt/unionfs/Media/TV Shows:/tv"
       - "/mnt:/mnt"
       - "/opt/scripts:/scripts"
       - "{{downloads.nzbs}}:/downloads/nzbs"

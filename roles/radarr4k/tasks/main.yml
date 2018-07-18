@@ -69,6 +69,7 @@
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/radarr4k:/config"
+      - /mnt/unionfs/Media:/data
       - "/mnt/unionfs/Media/Full HD Movies:/movies"
       - "/mnt:/mnt"
       - "/opt/scripts:/scripts"

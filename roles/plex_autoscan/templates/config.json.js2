@@ -71,8 +71,8 @@
       ],
       "/data/TV/":[
          "/tv/",
-         "/mnt/unionfs/Media/TV/",
-         "My Drive/Media/TV/"
+         "/mnt/unionfs/Media/TV Shows/",
+         "My Drive/Media/TV Shows/"
       ]
    },
    "SERVER_PORT":3468,
