@@ -103,6 +103,12 @@
       gateway: '172.18.0.254'
       iprange: '172.18.0.0/24'
 
+- name: Remove all but selected list of containers
+  docker_network:
+    name: bridge
+    connected:
+      - traefik
+
 - name: Restart all previously running Docker containers
   shell: 'docker start {{docker_running_containers.stdout}}'
   ignore_errors: yes

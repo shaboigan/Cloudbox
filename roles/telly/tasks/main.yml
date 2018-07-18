@@ -2,6 +2,12 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
+- name: "Set DNS Record on CloudFlare"
+  include_role:
+    name: cloudflare
+  vars:
+    subdomain: telly
+
 - name: "Get user UID and GID"
   include_role:
     name: user
@@ -28,9 +34,7 @@
     name: telly
     image: "tombowditch/telly"
     pull: yes
-    volumes:
-    - "/etc/localtime:/etc/localtime:ro"
-    - "/opt/telly:/opt/telly"
+    network_mode: "container:nordvpn"
     env:
       PLAYLIST: "{{telly.playlist}}"
       STREAMS: "{{telly.streams}}"
@@ -38,9 +42,11 @@
       BASE: "telly:6077"
       PUID: "{{uid}}"
       PGID: "{{gid}}"
-    networks:
-      - name: cloudbox
-        aliases:
-          - telly
+      USEREGEX: ".*UK.*"
+      FRIENDLYNAME: TellyTuner
+      DEVICEID: "12345678"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/telly:/opt/telly"
     restart_policy: always
     state: started

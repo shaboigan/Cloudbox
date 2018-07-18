@@ -8,7 +8,6 @@
     - { role: sanity_check }
     - { role: pre_tasks }
     - { role: kernel, tags: ['kernel'], when: [ 'ansible_distribution_version == "16.04"' ] }
-    - { role: encrypt_settings, tags: ['always', 'encrypt_settings'] }
     - { role: settings, tags: ['always', 'settings'] }
     - { role: backup, tags: ['backup'] }
     - { role: restore, tags: ['restore'] }
@@ -23,33 +22,34 @@
     - { role: rclone, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'rclone'] }
     - { role: scripts, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'scripts'] }
     - { role: traefik, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'traefik'] }
+    - { role: netdata, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'netdata'] }
     - { role: nordvpn, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'nordvpn'] }
     - { role: plex, tags: ['cloudbox', 'mediabox', 'plex'] }
     - { role: tautulli, tags: ['cloudbox', 'mediabox', 'tautulli'] }
     - { role: plex_autoscan, tags: ['cloudbox', 'mediabox', 'plex_autoscan'] }
+    - { role: plex_patrol, tags: ['cloudbox', 'mediabox', 'plex_patrol'] }
+    - { role: plexlibrary, tags: ['cloudbox', 'mediabox', 'plexlibrary'] }
     - { role: portainer, tags: ['cloudbox', 'feederbox', 'portainer'] }
     - { role: cloudplow, tags: ['cloudbox', 'feederbox', 'cloudplow']}
     - { role: nzbget, tags: ['cloudbox', 'feederbox', 'nzbget'] }
+    - { role: sabnzbd, tags: ['cloudbox', 'feederbox', 'sabnzbd'] }
+    - { role: deluge, tags: ['cloudbox', 'feederbox', 'deluge'] }
+    - { role: rutorrent, tags: ['cloudbox', 'feederbox', 'rutorrent'] }
     - { role: jackett, tags: ['cloudbox', 'feederbox', 'jackett'] }
     - { role: nzbhydra2, tags: ['cloudbox', 'feederbox', 'nzbhydra2'] }
     - { role: sonarr, tags: ['cloudbox', 'feederbox', 'sonarr'] }
     - { role: radarr, tags: ['cloudbox', 'feederbox', 'radarr'] }
+    - { role: lidarr, tags: ['cloudbox', 'feederbox', 'lidarr'] }
+    - { role: bazarr, tags: ['cloudbox', 'feederbox', 'bazarr'] }
+    - { role: heimdall, tags: ['cloudbox', 'heimdall'] }
+    - { role: ombi, tags: ['cloudbox', 'ombi'] }
+    - { role: traktarr, tags: ['cloudbox', 'traktarr'] }
+    - { role: plex_dupefinder, tags: ['cloudbox', 'plex_dupefinder'] }
     - { role: feeder_mount, tags: ['feeder-mount'] }
     - { role: feeder_dismount, tags: ['feeder-dismount'] }
     - { role: watchtower, tags: ['watchtower'] }
-    - { role: ombi, tags: ['ombi'] }
-    - { role: lidarr, tags: ['lidarr'] }
-    - { role: traktarr, tags: ['traktarr'] }
-    - { role: plex_dupefinder, tags: ['plex_dupefinder'] }
     - { role: sonarr4k, tags: ['sonarr4k'] }
     - { role: radarr4k, tags: ['radarr4k'] }
-    - { role: heimdall, tags: ['heimdall'] }
-    - { role: netdata, tags: ['netdata'] }
-    - { role: plex_patrol, tags: ['plex_patrol'] }
+    - { role: radarrpq, tags: ['radarrpq'] }
     - { role: telly, tags: ['telly'] }
-    - { role: bazarr, tags: ['bazarr'] }
-    - { role: plexlibrary, tags: ['plexlibrary'] }
-    - { role: sabnzbd, tags: ['sabnzbd'] }
     - { role: handbrake, tags: ['handbrake'] }
-    - { role: deluge, tags: ['deluge'] }
-    - { role: rutorrent, tags: ['rutorrent'] }

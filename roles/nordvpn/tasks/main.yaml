@@ -33,10 +33,12 @@
     devices:
       - /dev/net/tun
     published_ports:
-      - "127.0.0.1:8080:80"
+# Deluge daemon and web-ui ports      
       - "127.0.0.1:8112:8112"
       - "127.0.0.1:58846:58846"
-      - "127.0.0.1:58946:58946"      
+      - "127.0.0.1:58946:58946"
+# Telly port      
+      - "127.0.0.1:6077:6077"      
     env:
       PUID: "{{uid}}"
       PGID: "{{gid}}"
@@ -44,13 +46,7 @@
       PASS: "{{nordvpn.pass}}"
       COUNTRY: "{{nordvpn.country}}"
       PROTOCOL: "{{nordvpn.protocol}}"
-    labels:
-      traefik.enable: "true"
-      traefik.backend: "nordvpn"
-      traefik.frontend.redirect.entryPoint: "https"
-      traefik.frontend.rule: "Host:nordvpn.{{domain}}"
-      traefik.port: "80"
-      traefik.docker.network: "cloudbox"
+      NETWORK: "172.18.0.0/16"
     volumes:
       - /opt/nordvpn/vpn:/vpn/ovpn
     networks:

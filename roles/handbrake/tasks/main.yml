@@ -61,7 +61,7 @@
       - "/mnt/handbrake/source/4k:/watch4:rw"
       - "/mnt/handbrake/source/dvd:/watch5:rw"
       - "/mnt/handbrake/output:/output:rw"
-      - "/mnt/handbrake:storage:ro"
+      - "/mnt/handbrake:/storage:ro"
     networks:
       - name: cloudbox
         aliases:

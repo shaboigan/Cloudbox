@@ -50,7 +50,7 @@
       traefik.docker.network: "cloudbox"
     volumes:
       - "/opt/deluge:/config"
-      - "{{downloads.torrents}}/deluge:downloads"
+      - "{{downloads.torrents}}/deluge:/downloads"
       - "{{downloads.torrents}}:/data"
     restart_policy: always
     state: started
