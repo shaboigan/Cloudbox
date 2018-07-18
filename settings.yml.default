@@ -2,12 +2,8 @@
 downloads:
   nzbs: /mnt/local/downloads/nzbs
   torrents: /mnt/local/downloads/torrents
-nzbget:
-  downloads:
-rutorrent:
-  downloads:
 plex:
-  tag: public
+  tag: beta
   transcodes: /home/{{user}}/.transcodes
 nordvpn:
   country: 
