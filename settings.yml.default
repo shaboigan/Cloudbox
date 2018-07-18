@@ -10,8 +10,9 @@ plex:
   tag: public
   transcodes: /home/{{user}}/.transcodes
 nordvpn:
-  country:
-  protocol:
+  country: 
+  category: # Anti DDoS;Dedicated IP servers;Double VPN;Obfuscated Servers;Onion Over VPN;P2P;Standard VPN servers
+  protocol: # openvpn_udp;openvpn_tcp
 rclone:
   version: latest
 backup:

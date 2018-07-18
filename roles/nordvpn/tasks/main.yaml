@@ -45,6 +45,7 @@
       USER: "{{nordvpn.user}}"
       PASS: "{{nordvpn.pass}}"
       COUNTRY: "{{nordvpn.country}}"
+      CATTEGORY: "{{nordvpn.category}}"
       PROTOCOL: "{{nordvpn.protocol}}"
       NETWORK: "172.18.0.0/16"
     volumes:
