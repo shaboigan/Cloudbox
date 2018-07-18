@@ -1,0 +1,70 @@
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: "Set DNS Record on CloudFlare"
+  include_role:
+    name: cloudflare
+  vars:
+    subdomain: handbrake
+
+- name: "Get user UID and GID"
+  include_role:
+    name: user
+    
+- name: Stop and remove any existing container
+  docker_container:
+    name: handbrake
+    state: absent
+
+- name: Create handbrake directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /opt/handbrake
+    - /mnt/handbrake
+    - /mnt/handbrake/source
+    - /mnt/handbrake/source/yify
+    - /mnt/handbrake/source/yify_anime
+    - /mnt/handbrake/source/bluray
+    - /mnt/handbrake/source/4k
+    - /mnt/handbrake/source/dvd
+    - /mnt/handbrake/output
+
+- name: Create and start container
+  docker_container:
+    name: handbrake
+    image: "jlesage/handbrake:latest"
+    pull: yes
+    published_ports:
+      - "127.0.0.1:5800:5800"
+    env:
+      USER_ID: "{{uid}}"
+      GROUP_ID: "{{gid}}"
+      AUTOMATED_CONVERSION_PRESET: YIFY
+#     AUTOMATED_CONVERSION_PRESET_2:
+#     AUTOMATED_CONVERSION_PRESET_3:
+#     AUTOMATED_CONVERSION_PRESET_4:
+#     AUTOMATED_CONVERSION_PRESET_5:
+      APP_NICENESS: "10"
+    labels:
+      traefik.enable: "true"
+      traefik.backend: "handbrake"
+      traefik.frontend.redirect.entryPoint: "https"
+      traefik.frontend.rule: "Host:handbrake.{{domain}}"
+      traefik.port: "5800"
+      traefik.docker.network: "cloudbox"
+    volumes:
+      - "/opt/handbrake:/config:rw"
+      - "/mnt/handbrake/source/yify:/watch:rw"
+      - "/mnt/handbrake/source/yify_anime:/watch2:rw"
+      - "/mnt/handbrake/source/bluray:/watch3:rw"
+      - "/mnt/handbrake/source/4k:/watch4:rw"
+      - "/mnt/handbrake/source/dvd:/watch5:rw"
+      - "/mnt/handbrake/output:/output:rw"
+      - "/mnt/handbrake:storage:ro"
+    networks:
+      - name: cloudbox
+        aliases:
+          - handbrake
+    restart_policy: always
+    state: started

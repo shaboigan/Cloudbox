@@ -1,0 +1,56 @@
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: "Set DNS Record on CloudFlare"
+  include_role:
+    name: cloudflare
+  vars:
+    subdomain: deluge
+
+- name: "Get user UID and GID"
+  include_role:
+    name: user
+    
+- name: Stop and remove any existing container
+  docker_container:
+    name: deluge
+    state: absent
+
+- name: Create deluge directory
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
+  with_items:
+    - /opt/deluge
+
+- name: Create new downloads directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
+  with_items:
+    - "{{downloads.torrents}}"
+    - "{{downloads.torrents}}/deluge"
+    - "{{downloads.torrents}}/deluge/completed"
+    - "{{downloads.torrents}}/deluge/incomplete"
+    - "{{downloads.torrents}}/deluge/watched"
+
+- name: Create and start container
+  docker_container:
+    name: deluge
+    image: "linuxserver/deluge:latest"
+    pull: yes
+    env:
+      PUID: "{{uid}}"
+      PGID: "{{gid}}"
+      UMASK_SET: "<022>"
+    network_mode: "container:nordvpn"
+    labels:
+      traefik.enable: "true"
+      traefik.backend: "deluge"
+      traefik.frontend.redirect.entryPoint: "https"
+      traefik.frontend.rule: "Host:deluge.{{domain}}"
+      traefik.port: "8112"
+      traefik.docker.network: "cloudbox"
+    volumes:
+      - "/opt/deluge:/config"
+      - "{{downloads.torrents}}/deluge:downloads"
+      - "{{downloads.torrents}}:/data"
+    restart_policy: always
+    state: started

@@ -1,11 +1,4 @@
 #########################################################################
-# Title:         Cloudbox: NordVPN Role                                 #
-# Author(s):     shaboigan                                                 #
-# URL:           https://github.com/cloudbox/cloudbox                   #
-# Docker Image:  titpetric/netdata                                      #
-# --                                                                    #
-#         Part of the Cloudbox project: https://cloudbox.rocks          #
-#########################################################################
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
@@ -41,6 +34,9 @@
       - /dev/net/tun
     published_ports:
       - "127.0.0.1:8080:80"
+      - "127.0.0.1:8112:8112"
+      - "127.0.0.1:58846:58846"
+      - "127.0.0.1:58946:58946"      
     env:
       PUID: "{{uid}}"
       PGID: "{{gid}}"

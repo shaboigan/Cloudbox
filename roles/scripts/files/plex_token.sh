@@ -1,10 +1,5 @@
 #!/bin/sh -e
 #########################################################################
-# Title:         Retrieve Plex Token                                    #
-# Author(s):     Werner Beroux (https://github.com/wernight)            #
-# URL:           https://github.com/wernight/docker-plex-media-server   #
-# Description:   Prompts for Plex login and prints Plex access token.   #
-#########################################################################
 #                           MIT License                                 #
 #########################################################################
 
