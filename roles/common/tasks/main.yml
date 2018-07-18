@@ -8,9 +8,16 @@
     - /mnt/local
     - /mnt/local/.unionfs-fuse
     - /mnt/local/Media
+    - /mnt/local/Media/Anime
+    - /mnt/local/Media/Documentaries
+    - "/mnt/local/Media/Full HD Movies"
     - /mnt/local/Media/Movies
+    - "/mnt/local/Media/Poor Quality"
+    - /mnt/local/Media/Reality
     - /mnt/local/Media/Music
     - /mnt/local/Media/TV
+    - /mnt/local/Media/Sports
+    - /mnt/local/Media/Stand-Up
     - /mnt/.cloud-crypt
     - /mnt/.local-crypt
     - /opt

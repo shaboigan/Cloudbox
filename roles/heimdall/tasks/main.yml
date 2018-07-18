@@ -28,7 +28,7 @@
     image: linuxserver/heimdall
     pull: yes
     published_ports:
-      - "127.0.0.1:8078:80"
+      - "127.0.0.1:9443:443"
     env:
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
@@ -37,7 +37,7 @@
       traefik.backend: "heimdall"
       traefik.frontend.redirect.entryPoint: "https"
       traefik.frontend.rule: "Host:heimdall.{{domain}}"
-      traefik.port: "80"
+      traefik.port: "9443"
       traefik.docker.network: "cloudbox"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"

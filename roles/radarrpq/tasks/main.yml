@@ -47,36 +47,13 @@
     chown -R {{user}}:{{user}} /opt/radarrpq
   when: (subfolder1.stat.exists) and (not subfolder2.stat.exists)
 
-- name: Set default_volumes variable
-  set_fact:
-    default_volumes:
-      - "/etc/localtime:/etc/localtime:ro"
-      - "/opt/radarrpq:/config"
-      - "/mnt/unionfs/Media/Movies:/movies"
-      - "/mnt:/mnt"
-      - "/opt/scripts:/scripts"
-
-- name: Set new_downloads_paths variable
-  set_fact:
-    new_downloads_paths:
-      - "{{downloads.nzbs}}:/downloads/nzbs"
-      - "{{downloads.torrents}}:/downloads/torrents"
-  when: new_downloads_settings
-
-- name: Set old_downloads_paths variable
-  set_fact:
-    old_downloads_paths:
-      - "{{nzbget.downloads}}:/downloads/nzbget"
-      - "{{rutorrent.downloads}}:/downloads/rutorrent"
-  when: old_downloads_settings
-
 - name: Create and start container
   docker_container:
     name: radarrpq
     image: hotio/suitarr:radarr
     pull: yes
     published_ports:
-      - "127.0.0.1:7879:7878"
+      - "127.0.0.1:7880:7878"
     env:
       VERSION: "unstable"
       PUID: "{{uid}}"
@@ -87,9 +64,16 @@
       traefik.backend: "radarrpq"
       traefik.frontend.redirect.entryPoint: "https"
       traefik.frontend.rule: "Host:radarrpq.{{domain}}"
-      traefik.port: "7878"
+      traefik.port: "7880"
       traefik.docker.network: "cloudbox"
-    volumes: "{{ default_volumes + new_downloads_paths|default([]) + old_downloads_paths|default([]) }}"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/radarrpq:/config"
+      - "/mnt/unionfs/Media/Poor Quality:/movies"
+      - "/mnt:/mnt"
+      - "/opt/scripts:/scripts"
+      - "{{downloads.nzbs}}:/downloads/nzbs"
+      - "{{downloads.torrents}}:/downloads/torrents"
     networks:
       - name: cloudbox
         aliases:

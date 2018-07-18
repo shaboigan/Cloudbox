@@ -34,7 +34,6 @@
     - { role: nzbget, tags: ['cloudbox', 'feederbox', 'nzbget'] }
     - { role: sabnzbd, tags: ['cloudbox', 'feederbox', 'sabnzbd'] }
     - { role: deluge, tags: ['cloudbox', 'feederbox', 'deluge'] }
-    - { role: rutorrent, tags: ['cloudbox', 'feederbox', 'rutorrent'] }
     - { role: jackett, tags: ['cloudbox', 'feederbox', 'jackett'] }
     - { role: nzbhydra2, tags: ['cloudbox', 'feederbox', 'nzbhydra2'] }
     - { role: sonarr, tags: ['cloudbox', 'feederbox', 'sonarr'] }
