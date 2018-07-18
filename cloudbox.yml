@@ -53,3 +53,4 @@
     - { role: sabnzbd, tags: ['sabnzbd'] }
     - { role: handbrake, tags: ['handbrake'] }
     - { role: deluge, tags: ['deluge'] }
+    - { role: rutorrent, tags: ['rutorrent'] }
