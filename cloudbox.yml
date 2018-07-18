@@ -45,7 +45,6 @@
     - { role: radarr4k, tags: ['radarr4k'] }
     - { role: heimdall, tags: ['heimdall'] }
     - { role: netdata, tags: ['netdata'] }
-    - { role: znc, tags: ['znc'] }
     - { role: plex_patrol, tags: ['plex_patrol'] }
     - { role: telly, tags: ['telly'] }
     - { role: bazarr, tags: ['bazarr'] }
