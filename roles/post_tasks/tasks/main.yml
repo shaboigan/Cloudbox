@@ -2,6 +2,11 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
+- name: Check to see if docker is installed
+  stat:
+    path: "/usr/bin/docker"
+  register: docker_binary
+
 - name: Gather list of running Docker containers
   shell: "docker ps --format '{{ '{{' }} .Names{{ '}}' }}' | xargs echo -n"
   register: docker_running_containers
@@ -18,6 +23,10 @@
     name: bridge
     connected:
       - traefik
+
+- name: Restart NordVPN container
+  shell: 'docker start nordvpn'
+  ignore_errors: yes
 
 - name: Restart all previously running Docker containers
   shell: 'docker start {{docker_running_containers.stdout}}'

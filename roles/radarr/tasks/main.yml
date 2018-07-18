@@ -53,7 +53,7 @@
     image: hotio/suitarr:radarr
     pull: yes
     published_ports:
-      - "127.0.0.1:7878:7878"
+      - "7878:7878"
     env:
       VERSION: "unstable"
       PUID: "{{uid}}"

@@ -53,7 +53,7 @@
     image: hotio/suitarr:jackett
     pull: yes
     published_ports:
-      - "127.0.0.1:9117:9117"
+      - "9117:9117"
     env:
       VERSION: "unstable"
       BACKUP: "no"

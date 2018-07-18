@@ -59,7 +59,7 @@
     image: hotio/suitarr:nzbget
     pull: yes
     published_ports:
-      - "127.0.0.1:6789:6789"
+      - "6789:6789"
     env:
       VERSION: "unstable"
       BACKUP: "no"
