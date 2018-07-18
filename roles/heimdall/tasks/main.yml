@@ -30,8 +30,8 @@
     published_ports:
       - "127.0.0.1:9443:443"
     env:
-      PUID: "{{uid.stdout}}"
-      PGID: "{{gid.stdout}}"
+      PUID: "{{uid}}"
+      PGID: "{{gid}}"
     labels:
       traefik.enable: "true"
       traefik.backend: "heimdall"
