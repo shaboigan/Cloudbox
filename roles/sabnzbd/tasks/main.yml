@@ -2,11 +2,6 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Sanity Check
-  fail:
-    msg: "The new download paths settings are needed for this."
-  when: not new_downloads_settings
-
 - name: "Set DNS Record on CloudFlare"
   include_role:
     name: cloudflare
@@ -26,23 +21,11 @@
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
     - /opt/sabnzbd
-
-- name: Create new downloads directories
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
-  with_items:
-    - "{{downloads.nzbs}}"
     - "{{downloads.nzbs}}/sabnzbd"
     - "{{downloads.nzbs}}/sabnzbd/complete"
     - "{{downloads.nzbs}}/sabnzbd/incomplete"
     - "{{downloads.nzbs}}/sabnzbd/watched"
     - "{{downloads.nzbs}}/sabnzbd/logs"
-
-# This is still needed as sometimes it will remain in root.
-- name: "Set {{downloads.nzbs}} permissions"
-  shell: "chmod -R 775 {{downloads.nzbs}}"
-
-- name: "Set {{downloads.nzbs}} owner"
-  shell: "chown -R {{user}}:{{user}} {{downloads.nzbs}}"
 
 - name: Check sabnzbd.ini exists
   stat:

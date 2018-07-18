@@ -17,6 +17,20 @@
     - /home/{{user}}/logs
     - /home/{{user}}/.config
     - /home/{{user}}/.config/pip
+    - "{{downloads.nzbs}}"
+    - "{{downloads.torrents}}"
+
+- name: "Set {{downloads.nzbs}} permissions"
+  shell: "chmod -R 775 {{downloads.nzbs}}"
+
+- name: "Set {{downloads.nzbs}} owner"
+  shell: "chown -R {{user}}:{{user}} {{downloads.nzbs}}"
+
+- name: "Set {{downloads.torrents}} permissions"
+  shell: "chmod -R 775 {{downloads.torrents}}"
+
+- name: "Set {{downloads.torrents}} owner"
+  shell: "chown -R {{user}}:{{user}} {{downloads.torrents}}"
 
 - name: Set /opt permissions
   shell: "chmod -R ugo+X /opt"
