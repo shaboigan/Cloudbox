@@ -48,6 +48,29 @@
     chown -R {{user}}:{{user}} /opt/lidarr
   when: (subfolder1.stat.exists) and (not subfolder2.stat.exists)
 
+- name: Set default_volumes variable
+  set_fact:
+    default_volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/lidarr:/config"
+      - "/mnt/unionfs/Media/Movies:/movies"
+      - "/mnt:/mnt"
+      - "/opt/scripts:/scripts"
+
+- name: Set new_downloads_paths variable
+  set_fact:
+    new_downloads_paths:
+      - "{{downloads.nzbs}}:/downloads/nzbs"
+      - "{{downloads.torrents}}:/downloads/torrents"
+  when: new_downloads_settings
+
+- name: Set old_downloads_paths variable
+  set_fact:
+    old_downloads_paths:
+      - "{{nzbget.downloads}}:/downloads/nzbget"
+      - "{{rutorrent.downloads}}:/downloads/rutorrent"
+  when: old_downloads_settings
+
 - name: Create and start container
   docker_container:
     name: lidarr
@@ -59,6 +82,7 @@
       VERSION: "unstable"
       PUID: "{{uid}}"
       PGID: "{{gid}}"
+      BACKUP: "no"
     labels:
       traefik.enable: "true"
       traefik.backend: "lidarr"
@@ -66,15 +90,7 @@
       traefik.frontend.rule: "Host:lidarr.{{domain}}"
       traefik.port: "8686"
       traefik.docker.network: "cloudbox"
-    volumes:
-      - "/etc/localtime:/etc/localtime:ro"
-      - "/opt/lidarr:/config"
-      - "/mnt/unionfs/Media/Music:/music"
-      - "{{nzbget.downloads}}:/downloads/nzbget"
-      - "{{rutorrent.downloads}}:/downloads/rutorrent"
-      - "/mnt:/mnt"
-      - "/opt/scripts:/scripts"
-    networks:
+    volumes: "{{ default_volumes + new_downloads_paths|default([]) + old_downloads_paths|default([]) }}"    networks:
       - name: cloudbox
         aliases:
           - lidarr
