@@ -53,7 +53,7 @@
     default_volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/lidarr:/config"
-      - "/mnt/unionfs/Media/Movies:/movies"
+      - "/mnt/unionfs/Media/Music:/music"
       - "/mnt:/mnt"
       - "/opt/scripts:/scripts"
 
