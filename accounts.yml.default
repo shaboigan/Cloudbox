@@ -1,8 +1,8 @@
 ---
-user: seed
-passwd: password123
-domain: testcloudbox.ml
-email: your@email.com
+user: 
+passwd: 
+domain: 
+email: 
 cloudflare_api_token:
 http_user:
 http_passwd:
@@ -13,14 +13,25 @@ nordvpn:
   user:
   pass:
 deluge:
-  user:
   pass:
 nzbget:
-  user:
   pass:
 sabnzbd:
-  user:
-  pass:  
+  pass:
+bazarr:
+  pass:
+radarr:
+  pass:
+sonaarr:
+  pass:
+jackett:
+  pass:
+nzbhydra2:
+  pass:
+ombi:
+  pass:
+tautulli:
+  pass:
 pushover:
   app_token:
   user_key:

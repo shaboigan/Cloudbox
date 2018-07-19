@@ -38,8 +38,9 @@
       traefik.backend: "heimdall"
       traefik.frontend.redirect.entryPoint: "https"
       traefik.frontend.rule: "Host:heimdall.{{domain}}"
-      traefik.port: "9443"
+      traefik.port: "443"
       traefik.docker.network: "cloudbox"
+      traefik.protocol: "https"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/heimdall:/config"

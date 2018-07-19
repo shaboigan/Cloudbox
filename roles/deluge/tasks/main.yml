@@ -22,12 +22,17 @@
   with_items:
     - /opt/deluge
 
-- name: Create new downloads directories
+- name: Create downloads directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
   with_items:
     - "{{downloads.torrents}}"
     - "{{downloads.torrents}}/deluge"
     - "{{downloads.torrents}}/deluge/completed"
+    - "{{downloads.torrents}}/deluge/completed/sonarr"
+    - "{{downloads.torrents}}/deluge/completed/sonarr4k"
+    - "{{downloads.torrents}}/deluge/completed/radarrpq"
+    - "{{downloads.torrents}}/deluge/completed/radarr"
+    - "{{downloads.torrents}}/deluge/completed/radarr4k"
     - "{{downloads.torrents}}/deluge/incomplete"
     - "{{downloads.torrents}}/deluge/watched"
 
