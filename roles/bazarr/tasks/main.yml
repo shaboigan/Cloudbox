@@ -79,14 +79,6 @@
       - name: cloudbox
         aliases:
           - bazarr
+    purge_networks: yes
     restart_policy: always
     state: started
-
-- name: Remove bridge network
-  shell: "docker network disconnect -f bridge bazarr"
-  ignore_errors: yes
-
-- name: Restart container to apply network changes
-  docker_container:
-    name: bazarr
-    state: restarted

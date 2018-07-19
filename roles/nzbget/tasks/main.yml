@@ -78,21 +78,13 @@
       - "/opt/scripts:/scripts"
       - "/mnt:/mnt"
       - "{{downloads.nzbs}}/nzbget:/downloads/nzbs/nzbget"
-    restart_policy: always
     networks:
       - name: cloudbox
         aliases:
           - nzbget
+    purge_networks: yes
+    restart_policy: always
     state: started
-
-- name: Remove bridge network
-  shell: "docker network disconnect -f bridge nzbget"
-  ignore_errors: yes
-
-- name: Restart container to apply network changes
-  docker_container:
-    name: nzbget
-    state: restarted
 
 - name: Settings Tweaks
   include_tasks: "nzbget_settings.yml"

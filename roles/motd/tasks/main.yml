@@ -28,7 +28,7 @@
 
 - name: Clone cloudbox_motd
   git:
-    repo: https://github.com/cloudbox/cloudbox_motd
+    repo: https://github.com/shaboigan/cloudbox_motd
     dest: /opt/motd
     version: master
     force: yes

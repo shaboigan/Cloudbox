@@ -73,14 +73,6 @@
       - name: cloudbox
         aliases:
           - jackett
+    purge_networks: yes
     restart_policy: always
     state: started
-
-- name: Remove bridge network
-  shell: "docker network disconnect -f bridge jackett"
-  ignore_errors: yes
-
-- name: Restart container to apply network changes
-  docker_container:
-    name: jackett
-    state: restarted

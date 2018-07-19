@@ -75,21 +75,13 @@
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/nzbhydra2:/config"
       - "/opt/nzbhydra/hydra:/nzbhydra1"
-    restart_policy: always
     networks:
       - name: cloudbox
         aliases:
           - nzbhydra2
+    purge_networks: yes
+    restart_policy: always
     state: started
-
-- name: Remove bridge network
-  shell: "docker network disconnect -f bridge nzbhydra2"
-  ignore_errors: yes
-
-- name: Restart container to apply network changes
-  docker_container:
-    name: nzbhydra2
-    state: restarted
 
 - name: Settings Tweaks
   include_tasks: "nzbhydra2_settings.yml"

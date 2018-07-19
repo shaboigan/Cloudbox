@@ -47,14 +47,6 @@
       - name: cloudbox
         aliases:
           - portainer
+    purge_networks: yes
     restart_policy: always
     state: started
-
-- name: Remove bridge network
-  shell: "docker network disconnect -f bridge portainer"
-  ignore_errors: yes
-
-- name: Restart container to apply network changes
-  docker_container:
-    name: portainer
-    state: restarted

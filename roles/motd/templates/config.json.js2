@@ -9,20 +9,25 @@
     "show": {
       "autoscan": false,
       "nzbget": false,
+      "sabnzbd": false,
       "tautulli": false,
-      "rtorrent": false
+      "rtorrent": false,
+      "deluge": false
     },
     "text_color": "LGRN",
     "title_color": "LBLU"
   },
-  "nzbget": {
-    "url": "https://{{user}}:{{passwd}}@nzbget.{{domain}}"
-  },
   "tautulli": {
       "url": "https://tautulli.{{domain}}",
-      "api_key": "SET_YOUR_API_KEY"
+      "api_key": "{{tautulli.api}}"
   },
-  "rtorrent": {
-    "url": "https://{{user}}:{{passwd}}@rutorrent.{{domain}}"
-  }
+  "nzbget": {
+    "url": "https://{{user}}:{{nzbget.passwd}}@nzbget.{{domain}}"
+  },
+  "sabnzbd": {
+    "url": "https://{{user}}:{{sabnzbd.passwd}}@sabnzbd.{{domain}}"
+  },
+  "deluge": {
+    "url": "https://{{deluge.user}}:{{deluge.passwd}}@deluge.{{domain}}"
+  }  
 }

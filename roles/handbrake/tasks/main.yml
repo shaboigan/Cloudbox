@@ -66,14 +66,6 @@
       - name: cloudbox
         aliases:
           - handbrake
+    purge_networks: yes
     restart_policy: always
     state: started
-
-- name: Remove bridge network
-  shell: "docker network disconnect -f bridge handbrake"
-  ignore_errors: yes
-
-- name: Restart container to apply network changes
-  docker_container:
-    name: handbrake
-    state: restarted
