@@ -17,9 +17,6 @@
   ignore_errors: yes
   when: (docker_running_containers.stdout | trim == '')
 
-- name: Reconnect Traefik back to bridge network
-  shell: "docker network connect --alias traefik bridge traefik"
-
 - name: Restart NordVPN container
   shell: 'docker start nordvpn'
   ignore_errors: yes
