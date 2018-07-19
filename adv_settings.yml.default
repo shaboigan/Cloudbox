@@ -1,5 +1,9 @@
+
 ---
 shell: zsh
+plex:
+  force_auto_adjust_quality: no
+  allow_high_output_bitrates: no
 ombi:
   subdomain: ombi
 telly:

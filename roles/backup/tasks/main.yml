@@ -7,7 +7,8 @@
   - name: "Create log directory."
     file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
     with_items:
-      - /home/{{user}}/logs
+      - "/home/{{user}}/logs"
+      - "/home/{{user}}/logs/backup"
 
   - name: "Check if 'backup.lock' is present."
     stat:
@@ -52,6 +53,11 @@
       recurse: yes
     when: backup_location.stat.exists == False
 
+  - name: "Look for 'backup_excludes.txt' file in cloudbox folder."
+    stat:
+      path: "{{playbook_dir}}/backup_excludes.txt"
+    register: backup_excludes_file
+
   - name: "Copy files to '{{backup.tar_dest}}'."
     copy:
       src: "{{item}}"
@@ -65,9 +71,18 @@
      - "{{playbook_dir}}/accounts.yml"
      - "{{playbook_dir}}/settings.yml"
      - "{{playbook_dir}}/adv_settings.yml"
-     - "{{playbook_dir}}/backup_excludes.txt"
      - "/home/{{user}}/.config/rclone/rclone.conf"
     ignore_errors: yes
+
+  - name: "Copy files to '{{backup.tar_dest}}'."
+    copy:
+      src: "{{playbook_dir}}/backup_excludes.txt"
+      dest: "{{backup.tar_dest}}"
+      owner: "{{user}}"
+      group: "{{user}}"
+      mode: 0775
+      force: yes
+    when: backup_excludes_file.stat.exists
 
   - name: "Check '{{backup.tar_dest}}/cloudbox.tar' exists."
     stat:
@@ -133,11 +148,6 @@
       name: plexdrive
       state: stopped
     when: plexdrive_status is success
-
-  - name: "Look for 'backup_excludes.txt' file in cloudbox folder."
-    stat:
-      path: "{{playbook_dir}}/backup_excludes.txt"
-    register: backup_excludes_file
 
   - name: "Archiving '/opt' to '{{backup.tar_dest}}/cloudbox.tar'."
     shell: |
@@ -216,9 +226,18 @@
      - "accounts.yml"
      - "settings.yml"
      - "adv_settings.yml"
-     - "backup_excludes.txt"
      - "rclone.conf"
      - "cloudbox.tar"
+
+  - name: "Reset permissions and mod dates to files in '{{backup.tar_dest}}'."
+    file:
+      path: "{{backup.tar_dest}}/backup_excludes.txt"
+      state: touch
+      owner: "{{user}}"
+      group: "{{user}}"
+      mode: 0755
+      force: yes
+    when: backup_excludes_file.stat.exists
 
   # Due to a touch command in a previous backup, all files on backup.rclone_dest have same mod dates, therefore, only one file's mod date is needed.
   - name: "Get datestamp for previous '{{backup.rclone_dest}}/cloudbox.tar'."
@@ -246,7 +265,7 @@
      - "cloudbox.tar"
 
   - name: "Use rclone to upload backup to '{{backup.rclone_dest}}'."
-    command: "rclone copy '{{backup.tar_dest}}' '{{backup.rclone_dest}}' --stats=30s -v --transfers=2 --drive-chunk-size=64M --log-file='/home/{{user}}/logs/cloudbox_backup_rclone-{{lookup('pipe','date +%Y-%m-%d_%H-%M-%S')}}.log'"
+    command: "rclone copy '{{backup.tar_dest}}' '{{backup.rclone_dest}}' --stats=30s -v --transfers=2 --drive-chunk-size=64M --log-file='/home/{{user}}/logs/backup/cloudbox_backup_rclone-{{lookup('pipe','date +%Y-%m-%d_%H-%M-%S')}}.log'"
     become: yes
     become_user: "{{user}}"
     when: backup.use_rclone
@@ -263,7 +282,7 @@
       src: "{{backup.tar_dest}}/"
       dest: "{{backup.rsync_dest}}/"
       rsync_opts:
-        - "--log-file='/home/{{user}}/logs/cloudbox_backup_rsync-{{lookup('pipe','date +%Y-%m-%d_%H-%M-%S')}}.log'"
+        - "--log-file='/home/{{user}}/logs/backup/cloudbox_backup_rsync-{{lookup('pipe','date +%Y-%m-%d_%H-%M-%S')}}.log'"
     become: yes
     become_user: "{{user}}"
     when: backup.use_rsync
@@ -304,7 +323,7 @@
     cron:
       name: "Backup Cloudbox"
       special_time: "{{backup.cron_time}}"
-      job: "PATH='/usr/bin:/bin:/usr/local/bin' env ANSIBLE_CONFIG='{{playbook_dir}}/ansible.cfg' '{{playbook_binary.stdout}}' '{{playbook_dir}}/cloudbox.yml' --tags backup --skip-tags settings >> '/home/{{user}}/logs/cloudbox_backup'-{{ '`' }}date +\\%Y-\\%m-\\%d_\\%H-\\%M-\\%S{{ '`' }}.log 2>&1"
+      job: "PATH='/usr/bin:/bin:/usr/local/bin' env ANSIBLE_CONFIG='{{playbook_dir}}/ansible.cfg' '{{playbook_binary.stdout}}' '{{playbook_dir}}/cloudbox.yml' --tags backup --skip-tags settings >> '/home/{{user}}/logs/backup/cloudbox_backup'-{{ '`' }}date +\\%Y-\\%m-\\%d_\\%H-\\%M-\\%S{{ '`' }}.log 2>&1"
       state: "{{backup.cron_state}}"
 
   - debug:

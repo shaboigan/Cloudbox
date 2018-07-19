@@ -28,6 +28,9 @@
 ./radarr4k/app/logs/*
 ./radarr4k/app/MediaCover/*
 
+./radarrpq/app/logs/*
+./radarrpq/app/MediaCover/*
+
 ./sonarr/app/logs/*
 ./sonarr/app/MediaCover/*
 

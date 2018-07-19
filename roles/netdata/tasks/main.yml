@@ -17,6 +17,12 @@
     name: netdata
     state: absent
 
+- name: Create netdata directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /opt/netdata
+    - /opt/netdata/overrides
+
 - name: Create and start container
   docker_container:
     name: netdata
@@ -41,6 +47,7 @@
       - "/proc:/host/proc:ro"
       - "/sys:/host/sys:ro"
       - "/var/run/docker.sock:/var/run/docker.sock"
+      - /opt/netdata/overrides:/etc/netdata/override
     networks:
       - name: cloudbox
         aliases:

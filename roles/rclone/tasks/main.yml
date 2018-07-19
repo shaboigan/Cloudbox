@@ -12,7 +12,6 @@
   with_items:
     - "/home/{{user}}/.config"
     - "/home/{{user}}/.config/rclone"
-    - /opt/scripts/rclone
 
 - name: Cleanup rclone tmp path
   shell: rm -rf /tmp/rclone-*-linux-amd64
@@ -22,12 +21,19 @@
 - name: Check if rclone version was specified
   set_fact:
     rclone_version_specified: "{{ true if not (
-      (rclone.version is undefined)
-      or
-      (rclone.version is none)
-      or
-      (rclone.version | trim == '')
-      ) else false}}"
+        (rclone is undefined)
+        or
+        (rclone is none)
+        or
+        (rclone | trim == '')
+        or
+        (rclone.version is undefined)
+        or
+        (rclone.version is none)
+        or
+        (rclone.version | trim == '')
+      )
+      else false }}"
 
 - name: Set rclone_download_url for current version
   set_fact:
@@ -92,7 +98,7 @@
 
 - name: "Display rclone version"
   debug:
-    msg: "rclone version {{rclone_version.stdout}} installed."
+    msg: "Rclone {{rclone_version.stdout}} installed."
 
 - name: Check if rclone.conf exists in cloudbox folder
   stat:

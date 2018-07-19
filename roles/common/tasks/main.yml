@@ -117,7 +117,7 @@
   ignore_errors: yes
   when: not unrar_binary.stat.exists
 
-- name: "Import pip.conf into /home/{{user}}/.config/pip/"
+- name: "Import pip.conf into /home/{{user}}/.config/pip/pip.conf"
   copy:
     src: "pip.conf"
     dest: "/home/{{user}}/.config/pip/pip.conf"
@@ -132,9 +132,9 @@
     - passlib
     - ansible-toolbox
     - ndg-httpsclient
-    - docker-py
     - dnspython
     - yq
+    - lxml
   ignore_errors: yes
 
 - name: Set default shell

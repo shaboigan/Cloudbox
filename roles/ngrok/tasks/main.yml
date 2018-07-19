@@ -18,4 +18,4 @@
 
 - name: "Display ngrok version"
   debug:
-    msg: "ngrok version {{ngrok_version.stdout}} installed."
+    msg: "ngrok {{ngrok_version.stdout}} installed."
