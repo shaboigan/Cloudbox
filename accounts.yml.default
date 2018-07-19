@@ -12,6 +12,15 @@ plex:
 nordvpn:
   user:
   pass:
+deluge:
+  user:
+  pass:
+nzbget:
+  user:
+  pass:
+sabnzbd:
+  user:
+  pass:  
 pushover:
   app_token:
   user_key:
