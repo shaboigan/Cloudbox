@@ -68,3 +68,7 @@
           - handbrake
     restart_policy: always
     state: started
+
+- name: Remove bridge network
+  shell: "docker network disconnect -f bridge handbrake"
+  ignore_errors: yes

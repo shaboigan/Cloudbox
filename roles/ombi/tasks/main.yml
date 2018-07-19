@@ -48,3 +48,7 @@
           - ombi
     restart_policy: always
     state: started
+
+- name: Remove bridge network
+  shell: "docker network disconnect -f bridge ombi"
+  ignore_errors: yes

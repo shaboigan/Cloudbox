@@ -82,6 +82,9 @@
           - nzbhydra2
     state: started
 
+- name: Remove bridge network
+  shell: "docker network disconnect -f bridge nzbhydra2"
+
 - name: Settings Tweaks
   include_tasks: "nzbhydra2_settings.yml"
   when: not (

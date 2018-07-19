@@ -55,6 +55,10 @@
     restart_policy: always
     state: started
 
+- name: Remove bridge network
+  shell: "docker network disconnect -f bridge deluge"
+  ignore_errors: yes
+
 - name: Stop container to customize deluge settings
   docker_container:
     name: deluge

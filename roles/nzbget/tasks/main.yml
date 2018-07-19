@@ -85,6 +85,9 @@
           - nzbget
     state: started
 
+- name: Remove bridge network
+  shell: "docker network disconnect -f bridge nzbget"
+
 - name: Settings Tweaks
   include_tasks: "nzbget_settings.yml"
   when: not (

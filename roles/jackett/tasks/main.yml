@@ -71,6 +71,10 @@
       - "/opt/jackett:/config"
     restart_policy: always
     state: started
+
+- name: Remove bridge network
+  shell: "docker network disconnect -f bridge jackett"
+  ignore_errors: yes
     networks:
       - name: cloudbox
         aliases:

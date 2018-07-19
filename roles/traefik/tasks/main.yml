@@ -121,3 +121,7 @@
           - traefik
     restart_policy: always
     state: started
+
+- name: Remove bridge network
+  shell: "docker network disconnect -f bridge traefik"
+  ignore_errors: yes

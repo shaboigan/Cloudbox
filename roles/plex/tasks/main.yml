@@ -157,6 +157,9 @@
           - plex
     state: started
 
+- name: Remove bridge network
+  shell: "docker network disconnect -f bridge plex"
+
 # we need this here because sometimes after a restore, docker will set this transcodes folder to root, dont ask why, but it does...
 - name: "Wait 5 seconds, then ensure {{plex.transcodes}} has the correct permissions"
   wait_for:

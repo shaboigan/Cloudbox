@@ -81,3 +81,7 @@
           - sonarr4k
     restart_policy: always
     state: started
+
+- name: Remove bridge network
+  shell: "docker network disconnect -f bridge sonarr4k"
+  ignore_errors: yes

@@ -54,3 +54,7 @@
           - netdata
     restart_policy: always
     state: started
+
+- name: Remove bridge network
+  shell: "docker network disconnect -f bridge netdata"
+  ignore_errors: yes

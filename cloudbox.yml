@@ -52,4 +52,3 @@
     - { role: radarrpq, tags: ['radarrpq'] }
     - { role: telly, tags: ['telly'] }
     - { role: handbrake, tags: ['handbrake'] }
-    - { role: post_tasks, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'post_tasks'] }    

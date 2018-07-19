@@ -28,7 +28,8 @@
     image: linuxserver/heimdall
     pull: yes
     published_ports:
-      - "9443:443"
+        - "90:80"
+        - "9443:443"
     env:
       PUID: "{{uid}}"
       PGID: "{{gid}}"
@@ -48,3 +49,7 @@
           - heimdall
     restart_policy: always
     state: started
+
+- name: Remove bridge network
+  shell: "docker network disconnect -f bridge heimdall"
+  ignore_errors: yes
