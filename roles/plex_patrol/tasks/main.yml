@@ -54,3 +54,9 @@
 
 - name: Remove bridge network
   shell: "docker network disconnect -f bridge plex_patrol"
+  ignore_errors: yes
+
+- name: Restart container to apply network changes
+  docker_container:
+    name: plex_patrol
+    state: restarted

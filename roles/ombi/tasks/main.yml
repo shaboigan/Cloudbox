@@ -52,3 +52,8 @@
 - name: Remove bridge network
   shell: "docker network disconnect -f bridge ombi"
   ignore_errors: yes
+
+- name: Restart container to apply network changes
+  docker_container:
+    name: ombi
+    state: restarted

@@ -56,7 +56,7 @@
     state: started
 
 - name: Remove bridge network
-  shell: "docker network disconnect -f bridge deluge"
+  shell: "docker network disconnect -f bridge $container$"
   ignore_errors: yes
 
 - name: Stop container to customize deluge settings

@@ -12,6 +12,7 @@
   with_items:
     - "/home/{{user}}/.config"
     - "/home/{{user}}/.config/rclone"
+    - "/opt/scripts/rclone"
 
 - name: Cleanup rclone tmp path
   shell: rm -rf /tmp/rclone-*-linux-amd64

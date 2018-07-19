@@ -125,3 +125,8 @@
 - name: Remove bridge network
   shell: "docker network disconnect -f bridge traefik"
   ignore_errors: yes
+
+- name: Restart container to apply network changes
+  docker_container:
+    name: traefik
+    state: restarted

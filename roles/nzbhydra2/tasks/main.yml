@@ -84,6 +84,12 @@
 
 - name: Remove bridge network
   shell: "docker network disconnect -f bridge nzbhydra2"
+  ignore_errors: yes
+
+- name: Restart container to apply network changes
+  docker_container:
+    name: nzbhydra2
+    state: restarted
 
 - name: Settings Tweaks
   include_tasks: "nzbhydra2_settings.yml"

@@ -85,3 +85,8 @@
 - name: Remove bridge network
   shell: "docker network disconnect -f bridge sonarr4k"
   ignore_errors: yes
+
+- name: Restart container to apply network changes
+  docker_container:
+    name: sonarr4k
+    state: restarted

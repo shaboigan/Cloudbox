@@ -53,3 +53,8 @@
 - name: Remove bridge network
   shell: "docker network disconnect -f bridge heimdall"
   ignore_errors: yes
+
+- name: Restart container to apply network changes
+  docker_container:
+    name: heimdall
+    state: restarted

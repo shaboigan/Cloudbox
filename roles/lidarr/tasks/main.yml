@@ -85,3 +85,8 @@
 - name: Remove bridge network
   shell: "docker network disconnect -f bridge lidarr"
   ignore_errors: yes
+
+- name: Restart container to apply network changes
+  docker_container:
+    name: lidarr
+    state: restarted
