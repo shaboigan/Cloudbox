@@ -47,6 +47,11 @@
     chown -R {{user}}:{{user}} /opt/jackett
   when: (subfolder1.stat.exists) and (not subfolder2.stat.exists)
 
+- name: Check sabnzbd.ini exists
+  stat:
+    path: "/opt/jackett/app/ServerConfig.json"
+  register: serverconfig_json
+
 - name: Create and start container
   docker_container:
     name: jackett
@@ -76,3 +81,11 @@
     purge_networks: yes
     restart_policy: always
     state: started
+
+- name: Settings Tweaks
+  include_tasks: "jackett_settings.yml"
+  when: not (
+        (serverconfig_json.stat.exists)
+        or
+        ((continuous_integration|default(false,true))|bool)
+    )    
