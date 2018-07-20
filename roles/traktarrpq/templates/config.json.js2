@@ -95,17 +95,10 @@
     "debug": false
   },
   "radarr": {
-    "api_key": "",
+    "api_key": "{{radarrpq.api}}",
     "profile": "SD",
     "url": "https://radarrpq.{{domain}}",
     "root_folder": "/movies/"
-  },
-  "sonarr": {
-    "api_key": "",
-    "profile": "HD-1080p",
-    "url": "https://sonarr.{{domain}}",
-    "root_folder": "/tv/",
-    "tags": {}
   },
   "trakt": {
     "client_id": "0e8707106dbc2fc658ee088a97c2b0c29e291ac616b5444eb697c6227c12821a",

@@ -95,14 +95,14 @@
     "debug": false
   },
   "radarr": {
-    "api_key": "",
-    "profile": "UHD",
+    "api_key": "{{radarr4k.api}}",
+    "profile": "Ultra-HD",
     "url": "https://radarr4k.{{domain}}",
     "root_folder": "/movies/"
   },
   "sonarr": {
-    "api_key": "",
-    "profile": "UHD",
+    "api_key": "{{sonarr4k.api}}",
+    "profile": "Ultra-HD",
     "url": "https://sonarr4k.{{domain}}",
     "root_folder": "/tv/",
     "tags": {}

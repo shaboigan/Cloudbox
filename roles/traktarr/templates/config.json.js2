@@ -95,14 +95,14 @@
     "debug": false
   },
   "radarr": {
-    "api_key": "",
-    "profile": "YIFY-1080p",
+    "api_key": "{{radarr.api}}",
+    "profile": "YIFY-720p/1080p",
     "url": "https://radarr.{{domain}}",
     "root_folder": "/movies/"
   },
   "sonarr": {
-    "api_key": "",
-    "profile": "HD-1080p",
+    "api_key": "{{sonarr.api}}",
+    "profile": "Any",
     "url": "https://sonarr.{{domain}}",
     "root_folder": "/tv/",
     "tags": {}
