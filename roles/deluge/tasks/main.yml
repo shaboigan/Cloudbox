@@ -44,7 +44,7 @@
     env:
       PUID: "{{uid}}"
       PGID: "{{gid}}"
-      UMASK_SET: "<022>"
+      UMASK_SET: "022"
     network_mode: "container:nordvpn"
     labels:
       traefik.enable: "true"
