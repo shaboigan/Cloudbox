@@ -12,6 +12,9 @@ plex:
 nordvpn:
   user:
   pass:
+trakt:
+  id:
+  secret:
 deluge:
   pass:
 nzbget:
@@ -26,6 +29,10 @@ bazarr:
 radarr:
   api:
   pass:
+radarrpq:
+  api:
+radarr4k:
+  api:
 sonaarr:
   api:
   pass:

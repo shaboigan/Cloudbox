@@ -72,12 +72,6 @@
     name: docker-ce
     selection: hold
 
-- name: Uninstall docker-py pip module
-  pip:
-    name: docker-py
-    state: absent
-  ignore_errors: yes
-
 - name: Install docker pip module
   pip:
     name: docker

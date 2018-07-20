@@ -94,21 +94,21 @@
   "core": {
     "debug": false
   },
-  "radarr": {
-    "api_key": "",
-    "profile": "HD-1080p",
-    "url": "https://radarr.{{domain}}",
+  "radarrpq": {
+    "api_key": "{{radarrpq.api}}",
+    "profile": "SD",
+    "url": "https://radarrpq.{{domain}}",
     "root_folder": "/movies/"
   },
   "sonarr": {
-    "api_key": "",
-    "profile": "HD-1080p",
+    "api_key": "{{sonarr.api}}",
+    "profile": "HD-720p",
     "url": "https://sonarr.{{domain}}",
     "root_folder": "/tv/",
     "tags": {}
   },
   "trakt": {
-    "client_id": "",
-    "client_secret": ""
+    "client_id": "{{trakt.id}}",
+    "client_secret": "{{trakt.secret}}"
   }
 }
