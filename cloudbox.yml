@@ -52,3 +52,5 @@
     - { role: radarrpq, tags: ['radarrpq'] }
     - { role: telly, tags: ['telly'] }
     - { role: handbrake, tags: ['handbrake'] }
+    - { role: traktarrpq, tags: ['cloudbox', 'traktarrpq'] }
+    - { role: traktarr4k, tags: ['cloudbox', 'traktarr4k'] }
