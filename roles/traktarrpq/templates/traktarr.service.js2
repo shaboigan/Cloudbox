@@ -1,0 +1,19 @@
+# /etc/systemd/system/traktarrpq.service
+
+[Unit]
+Description=traktarrpq
+After=network-online.target unionfs.service docker.service
+
+[Service]
+User={{user}}
+Group={{user}}
+Type=simple
+WorkingDirectory=/opt/traktarrpq/
+TimeoutStartSec=900
+ExecStartPre=/bin/sleep 120
+ExecStart=/usr/bin/python3 /opt/traktarrpq/traktarr.py run
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=default.target

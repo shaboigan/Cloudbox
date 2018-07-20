@@ -96,14 +96,14 @@
   },
   "radarr": {
     "api_key": "",
-    "profile": "YIFY-1080p",
-    "url": "https://radarr.{{domain}}",
+    "profile": "UHD",
+    "url": "https://radarr4k.{{domain}}",
     "root_folder": "/movies/"
   },
   "sonarr": {
     "api_key": "",
-    "profile": "HD-1080p",
-    "url": "https://sonarr.{{domain}}",
+    "profile": "UHD",
+    "url": "https://sonarr4k.{{domain}}",
     "root_folder": "/tv/",
     "tags": {}
   },
