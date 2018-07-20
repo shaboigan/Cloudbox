@@ -22,7 +22,7 @@
       "api_key": "{{tautulli.api}}"
   },
   "nzbget": {
-    "url": "https://{{user}}:{{nzbget.passwd}}@nzbget.{{domain}}"
+    "url": "https://{{user}}:{{nzbget.pass}}@nzbget.{{domain}}"
   },
   "sabnzbd": {
     "url": "https://{{user}}:{{sabnzbd.pass}}@sabnzbd.{{domain}}"
