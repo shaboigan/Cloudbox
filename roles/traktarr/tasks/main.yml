@@ -18,7 +18,7 @@
 
 - name: Clone traktarr
   git:
-    repo: https://github.com/l3uddz/traktarr/
+    repo: https://github.com/shaboigan/traktarr/
     dest: /opt/traktarr
     version: master
     force: yes

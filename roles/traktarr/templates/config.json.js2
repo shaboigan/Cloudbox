@@ -100,6 +100,18 @@
     "url": "https://radarrpq.{{domain}}",
     "root_folder": "/movies/"
   },
+  "radarr": {
+    "api_key": "{{radarr.api}}",
+    "profile": "YIFY-1080p",
+    "url": "https://radarr.{{domain}}",
+    "root_folder": "/movies/"
+  },
+  "radarr4k": {
+    "api_key": "{{radarr4k.api}}",
+    "profile": "Ultra-HD",
+    "url": "https://radarr4k.{{domain}}",
+    "root_folder": "/movies/"
+  },
   "sonarr": {
     "api_key": "{{sonarr.api}}",
     "profile": "HD-720p",
