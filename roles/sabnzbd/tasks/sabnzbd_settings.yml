@@ -46,7 +46,7 @@
     path: "/opt/sabnzbd/app/sabnzbd.ini"
     insertafter: '^rss_filenames\s?=.*'
     regexp: '^password\s?=.*'
-    line: "password = {{sabnzbd.passwd}}"
+    line: "password = {{sabnzbd.pass}}"
     state: present
 
 - name: Set Form Auth

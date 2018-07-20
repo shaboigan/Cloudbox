@@ -25,9 +25,9 @@
     "url": "https://{{user}}:{{nzbget.passwd}}@nzbget.{{domain}}"
   },
   "sabnzbd": {
-    "url": "https://{{user}}:{{sabnzbd.passwd}}@sabnzbd.{{domain}}"
+    "url": "https://{{user}}:{{sabnzbd.pass}}@sabnzbd.{{domain}}"
   },
   "deluge": {
-    "url": "https://{{deluge.user}}:{{deluge.passwd}}@deluge.{{domain}}"
+    "url": "https://{{user}}:{{deluge.pass}}@deluge.{{domain}}"
   }  
 }

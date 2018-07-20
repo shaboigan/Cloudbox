@@ -33,7 +33,7 @@ radarrpq:
   api:
 radarr4k:
   api:
-sonaarr:
+sonarr:
   api:
   pass:
 jackett:
