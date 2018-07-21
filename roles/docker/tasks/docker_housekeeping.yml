@@ -1,0 +1,11 @@
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Remove all unused docker images
+  shell: docker image prune -af
+  ignore_errors: yes
+
+- name: Remove all unused docker volumes
+  shell: docker volume prune -f
+  ignore_errors: yes

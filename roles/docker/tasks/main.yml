@@ -72,6 +72,12 @@
     name: docker-ce
     selection: hold
 
+- name: Uninstall docker-py pip module
+  pip:
+    name: docker-py
+    state: absent
+  ignore_errors: yes
+
 - name: Install docker pip module
   pip:
     name: docker
@@ -80,6 +86,12 @@
 
 - name: Import daemon.json
   copy: "src=daemon.json dest=/etc/docker/daemon.json force=yes mode=0775"
+
+- name: Create override directory
+  file: "path=/etc/systemd/system/docker.service.d state=directory mode=0775"
+
+- name: Import override file
+  copy: "src=override.conf dest=/etc/systemd/system/docker.service.d/override.conf force=yes mode=0775"
 
 - name: Start docker
   systemd: state=started name=docker enabled=yes
@@ -94,28 +106,18 @@
   failed_when: s.rc > 1
   ignore_errors: yes
 
-- name: Check if docker override directory exists
-  stat:
-    path: /etc/systemd/system/docker.service.d
-  register: docker_override_dir
+- name: "Import Docker Housekeeping tasks"
+  import_tasks: "docker_housekeeping.yml"
 
-- name: Create override directory
-  file: "path=/etc/systemd/system/docker.service.d state=directory mode=0775"
-  when: docker_override_dir.stat.exists == False
-
-- name: Import override file
-  copy: "src=override.conf dest=/etc/systemd/system/docker.service.d/override.conf force=yes mode=0775"
-
-- name: "Install ctop"
-  import_role:
-    name: ctop
-  tags: ctop
-
-- name: "Import Docker network tasks"
+- name: "Import Docker Network tasks"
   import_tasks: "docker_network.yml"
-  tags: docker_network
 
 - name: "Re-start all previously running Docker containers"
   shell: 'docker start {{docker_running_containers.stdout}}'
   ignore_errors: yes
   when: (docker_binary.stat.exists) and (docker_service_running) and not (docker_running_containers.stdout | trim == '')
+
+- name: "Install ctop"
+  import_role:
+    name: ctop
+  tags: ctop
