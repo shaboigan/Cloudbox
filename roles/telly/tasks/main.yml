@@ -48,5 +48,6 @@
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/telly:/opt/telly"
+    purge_networks: yes
     restart_policy: always
     state: started
