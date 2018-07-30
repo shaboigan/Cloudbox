@@ -17,8 +17,8 @@
   when: unionfs_service.stat.exists
 
 - name: Stop existing unionfs service
-    systemd: state=stopped name=unionfs
-    when: (unionfs_service.stat.exists) and (unionfs_status is success)
+  systemd: state=stopped name=unionfs
+  when: (unionfs_service.stat.exists) and (unionfs_status is success)
 
 - name: Create /mnt/unionfs and subdirs
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
