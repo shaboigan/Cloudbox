@@ -42,7 +42,7 @@
       BASE: "telly:6077"
       PUID: "{{uid}}"
       PGID: "{{gid}}"
-      USEREGEX: ".*UK.*"
+      USEREGEX: "{{telly.regex}}"
       FRIENDLYNAME: TellyTuner
       DEVICEID: "12345678"
     volumes:

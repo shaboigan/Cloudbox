@@ -6,7 +6,17 @@
   include_role:
     name: cloudflare
   vars:
-    subdomain: tautulli
+    subdomain: "{{item}}"
+  with_items:
+    - "{{domain}}"
+    - "www"
+  when: organizr.direct_domain|default(false,true)
+
+- name: "Set DNS Record on CloudFlare"
+  include_role:
+    name: cloudflare
+  vars:
+    subdomain: organizr
 
 - name: "Get user UID and GID"
   include_role:
@@ -14,46 +24,54 @@
 
 - name: Stop and remove any existing container
   docker_container:
-    name: tautulli
+    name: organizr
     state: absent
 
-- name: Wait for Plex Logs folder to be created by Plex
-  wait_for:
-    path: "/opt/plex/Library/Application Support/Plex Media Server/Logs"
-    state: present
-
-- name: Create tautulli directories
+- name: Create Organizr directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
-    - /opt/tautulli
-    - /opt/scripts/tautulli
+    - /opt/organizr
 
 - name: Create and start container
   docker_container:
-    name: tautulli
-    image: tautulli/tautulli
+    name: organizr
+    image: "tronyx/docker-organizr-v2:plex"
     pull: yes
     published_ports:
-      - "8181:8181"
+      - "7421:80"
     env:
       PUID: "{{uid}}"
       PGID: "{{gid}}"
     labels:
       traefik.enable: "true"
-      traefik.backend: "tautulli"
+      traefik.backend: "organizr"
       traefik.frontend.redirect.entryPoint: "https"
-      traefik.frontend.rule: "Host:tautulli.{{domain}}"
-      traefik.port: "8181"
+      traefik.frontend.rule: "Host:organizr.{{domain}}"
+      traefik.port: "80"
       traefik.docker.network: "cloudbox"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
-      - "/opt/tautulli:/config"
-      - "/opt/plex/Library/Application Support/Plex Media Server/Logs:/logs:ro"
-      - "/opt/scripts:/scripts"
+      - "/opt/organizr:/config"
     networks:
       - name: cloudbox
         aliases:
-          - tautulli
+          - organizr
     purge_networks: yes
     restart_policy: always
     state: started
+
+- name: Wait for Organizr.css to be created
+  wait_for:
+    path: "/opt/organizr/www/Dashboard/css/themes/Organizr.css"
+    state: present
+
+- name: Download Plex Theme
+  get_url:
+    url:  "https://raw.githubusercontent.com/Burry/organizr-v2-plex-theme/master/css/Plex.css"
+    dest: "/opt/organizr/www/Dashboard/css/themes/"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0664
+    force: yes
+    validate_certs: no
+  ignore_errors: yes

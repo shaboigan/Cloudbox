@@ -6,7 +6,7 @@
   include_role:
     name: cloudflare
   vars:
-    subdomain: tautulli
+    subdomain: znc
 
 - name: "Get user UID and GID"
   include_role:
@@ -14,46 +14,39 @@
 
 - name: Stop and remove any existing container
   docker_container:
-    name: tautulli
+    name: znc
     state: absent
 
-- name: Wait for Plex Logs folder to be created by Plex
-  wait_for:
-    path: "/opt/plex/Library/Application Support/Plex Media Server/Logs"
-    state: present
-
-- name: Create tautulli directories
+- name: Create znc directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
-    - /opt/tautulli
-    - /opt/scripts/tautulli
+    - /opt/znc
 
 - name: Create and start container
   docker_container:
-    name: tautulli
-    image: tautulli/tautulli
+    name: znc
+    image: horjulf/docker-znc
     pull: yes
     published_ports:
-      - "8181:8181"
+      - "6501:6501"
+      - "6502:6502"
     env:
       PUID: "{{uid}}"
       PGID: "{{gid}}"
     labels:
       traefik.enable: "true"
-      traefik.backend: "tautulli"
+      traefik.backend: "znc"
       traefik.frontend.redirect.entryPoint: "https"
-      traefik.frontend.rule: "Host:tautulli.{{domain}}"
-      traefik.port: "8181"
+      traefik.frontend.rule: "Host:znc.{{domain}}"
+      traefik.port: "6501"
       traefik.docker.network: "cloudbox"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
-      - "/opt/tautulli:/config"
-      - "/opt/plex/Library/Application Support/Plex Media Server/Logs:/logs:ro"
-      - "/opt/scripts:/scripts"
+      - "/opt/znc:/config"
     networks:
       - name: cloudbox
         aliases:
-          - tautulli
+          - znc
     purge_networks: yes
     restart_policy: always
     state: started

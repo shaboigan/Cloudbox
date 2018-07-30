@@ -1,4 +1,11 @@
 #########################################################################
+# Title:         Cloudbox: The Lounge Role                              #
+# Author(s):     L3uddz                                                 #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# Docker Image:  hotio/suitarr                                          #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
@@ -6,7 +13,7 @@
   include_role:
     name: cloudflare
   vars:
-    subdomain: tautulli
+    subdomain: thelounge
 
 - name: "Get user UID and GID"
   include_role:
@@ -14,46 +21,38 @@
 
 - name: Stop and remove any existing container
   docker_container:
-    name: tautulli
+    name: thelounge
     state: absent
 
-- name: Wait for Plex Logs folder to be created by Plex
-  wait_for:
-    path: "/opt/plex/Library/Application Support/Plex Media Server/Logs"
-    state: present
-
-- name: Create tautulli directories
+- name: Create thelounge directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
-    - /opt/tautulli
-    - /opt/scripts/tautulli
+    - /opt/thelounge
 
 - name: Create and start container
   docker_container:
-    name: tautulli
-    image: tautulli/tautulli
+    name: thelounge
+    image: "linuxserver/thelounge"
     pull: yes
     published_ports:
-      - "8181:8181"
+      - "9500:9000"
     env:
       PUID: "{{uid}}"
       PGID: "{{gid}}"
     labels:
       traefik.enable: "true"
-      traefik.backend: "tautulli"
+      traefik.backend: "lounge"
       traefik.frontend.redirect.entryPoint: "https"
-      traefik.frontend.rule: "Host:tautulli.{{domain}}"
-      traefik.port: "8181"
+      traefik.frontend.rule: "Host:lounge.{{domain}}"
+      traefik.port: "9000"
       traefik.docker.network: "cloudbox"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
-      - "/opt/tautulli:/config"
-      - "/opt/plex/Library/Application Support/Plex Media Server/Logs:/logs:ro"
-      - "/opt/scripts:/scripts"
+      - "/opt/thelounge:/config"
     networks:
       - name: cloudbox
         aliases:
-          - tautulli
+          - thelounge
     purge_networks: yes
     restart_policy: always
     state: started

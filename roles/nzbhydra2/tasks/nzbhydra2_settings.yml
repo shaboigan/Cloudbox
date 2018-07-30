@@ -40,7 +40,7 @@
     line: "{{ item.line }}"
     state: present
   with_items:
-    - {line: '    password: "{{passwd}}"'}
+    - {line: '    password: "{{nzbhydra2.pass}}"'}
     - {line: '    username: "{{user}}"'}
     - {line: '    showIndexerSelection: true'}
     - {line: '    maySeeStats: true'}

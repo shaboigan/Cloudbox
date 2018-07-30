@@ -17,10 +17,11 @@
     name: radarrpq
     state: absent
 
-- name: Create radarrpq directories
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
-  with_items:
-    - /opt/radarrpq
+# START - Suitarr Migration Tasks
+- name: Check folder exists
+  stat:
+    path: /opt/radarrpq
+  register: folder
 
 - name: Check subfolder1 exists
   stat:
@@ -39,13 +40,19 @@
     mv /tmp/app /opt/radarrpq/
     find /opt/radarrpq/* -type d -empty -delete
     chown -R {{user}}:{{user}} /opt/radarrpq
-  when: not (subfolder1.stat.exists or subfolder2.stat.exists)
+  when: (folder.stat.exists) and not (subfolder1.stat.exists or subfolder2.stat.exists)
 
 - name: Move 'Radarr' subfolder to 'app' subfolder
   shell: |
     mv /opt/radarrpq/Radarr /opt/radarrpq/app
     chown -R {{user}}:{{user}} /opt/radarrpq
-  when: (subfolder1.stat.exists) and (not subfolder2.stat.exists)
+  when: (folder.stat.exists) and (subfolder1.stat.exists) and (not subfolder2.stat.exists)
+# END - Suitarr Migration Tasks
+
+- name: Create radarrpq directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /opt/radarrpq
 
 - name: Create and start container
   docker_container:

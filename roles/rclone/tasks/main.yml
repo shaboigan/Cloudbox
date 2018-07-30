@@ -153,27 +153,27 @@
   stat:
     path: "/etc/systemd/system/mountlocal.service"
   register: mountlocal_service
-  
+
 - name: Stop existing mountlocal service
   systemd: state=stopped name=mountlocal
   when: mountlocal_service.stat.exists
-  
+
 - name: Import mountlocal.service
   template:
     src: mountlocal.service.js2
     dest: /etc/systemd/system/mountlocal.service
     force: yes
   when: mountlocal_service.stat.exists == False
-  
+
 - name: Check mountcloud service exists
   stat:
     path: "/etc/systemd/system/mountcloud.service"
   register: mountcloud_service
-  
+
 - name: Stop existing mountcloud service
   systemd: state=stopped name=mountcloud
   when: mountcloud_service.stat.exists
-  
+
 - name: Import mountcloud.service
   template:
     src: mountcloud.service.js2

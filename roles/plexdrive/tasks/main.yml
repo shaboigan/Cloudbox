@@ -7,10 +7,13 @@
     path: "/etc/systemd/system/plexdrive.service"
   register: plexdrive_service
 
-- name: Check if plexdrive service is running
-  command: systemctl status plexdrive
-  ignore_errors: yes
-  register: plexdrive_status
+- name: Populate Service Facts
+  service_facts:
+  when: plexdrive_service.stat.exists
+
+- name: Get plexdrive service state
+  set_fact:
+    plexdrive_service_running: "{{ (services['plexdrive.service']['state'] == \"running\") }}"
   when: plexdrive_service.stat.exists
 
 - name: Stop existing plexdrive service
