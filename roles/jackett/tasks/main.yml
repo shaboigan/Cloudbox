@@ -61,11 +61,6 @@
   with_items:
     - /opt/jackett
 
-- name: Check sabnzbd.ini exists
-  stat:
-    path: "/opt/jackett/app/ServerConfig.json"
-  register: serverconfig_json
-
 - name: Create and start container
   docker_container:
     name: jackett
@@ -95,11 +90,3 @@
     purge_networks: yes
     restart_policy: always
     state: started
-
-- name: Settings Tweaks
-  include_tasks: "jackett_settings.yml"
-  when: not (
-        (serverconfig_json.stat.exists)
-        or
-        ((continuous_integration|default(false,true))|bool)
-    )    

@@ -24,8 +24,8 @@
     - { role: traefik, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'traefik'] }
     - { role: nordvpn, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'nordvpn'] }
     - { role: plex, tags: ['cloudbox', 'mediabox', 'plex'] }
-    - { role: tautulli, tags: ['tautulli'] }
-    - { role: ombi, tags: ['ombi'] }
+    - { role: tautulli, tags: ['cloudbox', 'mediabox', 'tautulli'] }
+    - { role: ombi, tags: ['cloudbox', 'mediabox', 'ombi'] }
     - { role: plex_autoscan, tags: ['cloudbox', 'mediabox', 'plex_autoscan'] }
     - { role: portainer, tags: ['cloudbox', 'feederbox', 'portainer'] }
     - { role: organizr, tags: ['cloudbox', 'feederbox', 'organizr'] }
