@@ -27,35 +27,35 @@
     - { role: tautulli, tags: ['cloudbox', 'mediabox', 'tautulli'] }
     - { role: ombi, tags: ['cloudbox', 'mediabox', 'ombi'] }
     - { role: plex_autoscan, tags: ['cloudbox', 'mediabox', 'plex_autoscan'] }
+    - { role: plex_patrol, tags: ['cloudbox', 'mediabox', 'plex_patrol'] }
+    - { role: python-plexlibrary, tags: ['cloudbox', 'mediabox', 'python-plexlibrary'] }
     - { role: portainer, tags: ['cloudbox', 'feederbox', 'portainer'] }
     - { role: organizr, tags: ['cloudbox', 'feederbox', 'organizr'] }
     - { role: cloudplow, tags: ['cloudbox', 'feederbox', 'cloudplow'] }
-    - { role: nzbget, tags: ['cloudbox', 'feederbox', 'nzbget'], when: [ 'nzbs' ] }
-    - { role: sabnzbd, tags: ['cloudbox', 'feederbox', 'sabnzbd'] }
-    - { role: deluge, tags: ['cloudbox', 'feederbox', 'deluge'] }
+    - { role: sabnzbd, tags: ['cloudbox', 'feederbox', 'sabnzbd'], when: [ 'nzbs' ] }
+    - { role: deluge, tags: ['cloudbox', 'feederbox', 'deluge'], when: [ 'torrents' ] }
     - { role: jackett, tags: ['cloudbox', 'feederbox', 'jackett'], when: [ 'torrents' ] }
-    - { role: nzbhydra2, tags: ['cloudbox', 'feederbox', 'nzbhydra2'] }
+    - { role: nzbhydra2, tags: ['cloudbox', 'feederbox', 'nzbhydra2'], when: [ 'nzbs' ] }
+    - { role: plex_dupefinder, tags: ['cloudbox', 'feederbox', 'plex_dupefinder'] }    
+    - { role: bazarr, tags: ['cloudbox', 'feederbox', 'bazarr'] }
     - { role: sonarr, tags: ['cloudbox', 'feederbox', 'sonarr'] }
     - { role: radarr, tags: ['cloudbox', 'feederbox', 'radarr'] }
     - { role: lidarr, tags: ['cloudbox', 'feederbox', 'lidarr'] }
     - { role: feeder_mount, tags: ['feeder_mount'] }
     - { role: feeder_dismount, tags: ['feeder_dismount'] }
-    - { role: watchtower, tags: ['watchtower'] }
-    - { role: traktarr, tags: ['traktarr'] }
-    - { role: traktarrpq, tags: ['traktarrpq'] }
-    - { role: traktarr4k, tags: ['traktarr4k'] }
-    - { role: plex_dupefinder, tags: ['plex_dupefinder'] }
-    - { role: sonarr4k, tags: ['sonarr4k'] }
+    - { role: handbrake, tags: ['handbrake'] }
+    - { role: heimdall, tags: ['heimdall'] }
+    - { role: netdata, tags: ['netdata'] }
+    - { role: nzbget, tags: ['nzbget'], when: [ 'nzbs' ] }
+    - { role: quassel, tags: ['quassel'] }
     - { role: radarr4k, tags: ['radarr4k'] }
     - { role: radarrpq, tags: ['radarrpq'] }    
-    - { role: heimdall, tags: ['heimdall'] }
-    - { role: thelounge, tags: ['thelounge'] }
-    - { role: netdata, tags: ['netdata'] }
-    - { role: znc, tags: ['znc'] }
-    - { role: quassel, tags: ['quassel'] }
-    - { role: plex_patrol, tags: ['plex_patrol'] }
+    - { role: sonarr4k, tags: ['sonarr4k'] }
     - { role: telly, tags: ['telly'] }
-    - { role: bazarr, tags: ['bazarr'] }
-    - { role: python-plexlibrary, tags: ['python-plexlibrary'] }
-    - { role: handbrake, tags: ['handbrake'] }
+    - { role: thelounge, tags: ['thelounge'] }
+    - { role: traktarr, tags: ['traktarr'] }
+    - { role: traktarr4k, tags: ['traktarr4k'] }    
+    - { role: traktarrpq, tags: ['traktarrpq'] }
+    - { role: watchtower, tags: ['watchtower'] }
+    - { role: znc, tags: ['znc'] }
     - { role: tautulli_test, tags: ['tautulli_test'] }
