@@ -20,16 +20,16 @@
 
 ./plexlibrary/plexlibrary_cron.log
 
-./tautulli/logs/*
+./plexpy/logs/*
 
 ./radarr/app/logs/*
 ./radarr/app/MediaCover/*
 
-./radarr4k/app/logs/*
-./radarr4k/app/MediaCover/*
-
 ./radarrpq/app/logs/*
 ./radarrpq/app/MediaCover/*
+
+./radarr4k/app/logs/*
+./radarr4k/app/MediaCover/*
 
 ./sonarr/app/logs/*
 ./sonarr/app/MediaCover/*

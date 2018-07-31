@@ -1,9 +1,17 @@
 #########################################################################
+# Title:         Cloudbox: NodeJS Role                                  #
+# Author(s):     Desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
 - name: Install nodejs
   shell: "curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash - && sudo apt-get install -y nodejs"
+  args:
+    executable: /bin/bash
   tags: nodejs
 
 - name: "Get nodejs binary path"

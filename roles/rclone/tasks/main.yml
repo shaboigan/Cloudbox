@@ -1,4 +1,10 @@
 #########################################################################
+# Title:         Cloudbox: Rclone Role                                  #
+# Author(s):     L3uddz, Desimaniac                                     #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
@@ -12,7 +18,6 @@
   with_items:
     - "/home/{{user}}/.config"
     - "/home/{{user}}/.config/rclone"
-    - "/opt/scripts/rclone"
 
 - name: Cleanup rclone tmp path
   shell: rm -rf /tmp/rclone-*-linux-amd64
@@ -67,7 +72,7 @@
   copy:
     src: "{{ rclone_tmp_dir.stdout }}/rclone"
     dest: "/usr/bin/rclone"
-    mode: 0755
+    mode: 0775
     owner: root
     group: root
     force: yes
@@ -84,7 +89,7 @@
   copy:
     src: "{{ rclone_tmp_dir.stdout }}/rclone.1"
     dest: /usr/local/share/man/man1/rclone.1
-    mode: 0644
+    mode: 0664
     owner: root
     group: root
 

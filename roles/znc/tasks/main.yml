@@ -1,4 +1,11 @@
 #########################################################################
+# Title:         Cloudbox: ZNC Role                                     #
+# Author(s):     L3uddz, Horjulf                                        #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# Docker Image:  horjulf/docker-znc                                     #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
@@ -7,10 +14,6 @@
     name: cloudflare
   vars:
     subdomain: znc
-
-- name: "Get user UID and GID"
-  include_role:
-    name: user
 
 - name: Stop and remove any existing container
   docker_container:

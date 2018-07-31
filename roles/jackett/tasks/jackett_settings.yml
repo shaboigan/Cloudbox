@@ -21,7 +21,7 @@
   lineinfile:
     path: "/opt/jackett/app/ServerConfig.json"
     regexp: '^AdminPassword\s?:.*'
-    line: '"AdminPassword": "{{jackett.pass}}"'
+    line: '"AdminPassword": "{{passwd}}"'
     state: present
 
 # Start Container

@@ -1,4 +1,11 @@
 #########################################################################
+# Title:         Cloudbox: NZBHydra2 Settings Sub Tasks                 #
+# Author(s):     Desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# Docker Image:  hotio/suitarr                                          #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
@@ -40,7 +47,7 @@
     line: "{{ item.line }}"
     state: present
   with_items:
-    - {line: '    password: "{{nzbhydra2.pass}}"'}
+    - {line: '    password: "{{passwd}}"'}
     - {line: '    username: "{{user}}"'}
     - {line: '    showIndexerSelection: true'}
     - {line: '    maySeeStats: true'}

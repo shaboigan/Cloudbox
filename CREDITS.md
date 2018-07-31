@@ -11,7 +11,7 @@
 * [Horjulf](https://github.com/horjulf) - ruTorrent + autodl Docker Image (creator); Plex Autoscan; Traktarr, Plex Patrol, Arrpush, and others.
 * [RXWatcher](https://github.com/RXWatcher1) - Cloudbox.
 * [Vuur](https://github.com/vuur) -  Web Design; Admin of GitHub, Discord, and Reddit.
-* [Captain-NaCl](https://github.com/Captain-NaCl) - Cloudbox; Cloudbox Wiki.
+* [TheBradz](https://github.com/TheBradz) - Cloudbox; Cloudbox Wiki.
 * [Kasper56](https://github.com/After-Shock) - Cloudbox Wiki.
 * [Hotio](https://gitlab.com/hotio) - Suitarr Docker Image (creator).
 * [Mitchell Klijs](https://github.com/mitchellklijs) - Traktarr; Cloudplow.
@@ -35,7 +35,7 @@
 * [Plexdrive](https://github.com/dweidenfeld/plexdrive)
 * [Plex Autoscan](https://github.com/l3uddz/plex_autoscan)
 * [Cloudplow](https://github.com/l3uddz/cloudplow)
-* [Cloudbox MOTD](https://github.com/shaboigan/cloudbox_motd)
+* [Cloudbox MOTD](https://github.com/Cloudbox/cloudbox_motd)
 * [Traktarr](https://github.com/l3uddz/traktarr)
 * [Plex Dupefinder](https://github.com/l3uddz/plex_dupefinder)
 * [WebTools (Plex)](https://github.com/ukdtom/WebTools.bundle)
@@ -48,7 +48,7 @@
 * [Plex](https://www.plex.tv) ([Docker](https://github.com/plexinc/pms-docker))
 * [Emby](https://emby.media/) ([Docker](https://hub.docker.com/r/emby/embyserver/))
 * [Plex Patrol](https://github.com/l3uddz/plex_patrol) ([Docker](https://hub.docker.com/r/emby/embyserver/))
-* [Tautulli (tautulli)](http://tautulli.com/) ([Docker](https://github.com/Tautulli/Tautulli-Docker))
+* [Tautulli (PlexPy)](http://tautulli.com/) ([Docker](https://github.com/Tautulli/Tautulli-Docker))
 * [Sonarr](https://sonarr.tv) ([Docker](https://gitlab.com/hotio/suitarr))
 * [Radarr](https://radarr.video) ([Docker](https://gitlab.com/hotio/suitarr))
 * [Lidarr](https://lidarr.audio) ([Docker](https://gitlab.com/hotio/suitarr))

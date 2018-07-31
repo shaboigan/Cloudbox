@@ -1,4 +1,11 @@
 #########################################################################
+# Title:         Cloudbox: Portainer Role                               #
+# Author(s):     L3uddz                                                 #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# Docker Image:  portainer/portainer                                    #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
@@ -11,7 +18,7 @@
 - name: "Get user UID and GID"
   include_role:
     name: user
-    
+
 - name: Stop and remove any existing container
   docker_container:
     name: portainer
@@ -43,7 +50,7 @@
       traefik.frontend.rule: "Host:portainer.{{domain}}"
       traefik.port: "9000"
       traefik.docker.network: "cloudbox"
-    networks:      
+    networks:
       - name: cloudbox
         aliases:
           - portainer

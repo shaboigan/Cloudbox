@@ -1,7 +1,12 @@
 #########################################################################
+# Title:         Cloudbox: Backup Role                                  #
+# Author(s):     L3uddz, Desimaniac, RXWatcher1                         #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
 #                   GNU General Public License v3.0                     #
 #########################################################################
-
 ---
 - block:
   - name: "Create log directory."
@@ -10,16 +15,6 @@
       - "/home/{{user}}/logs"
       - "/home/{{user}}/logs/backup"
 
-  - name: "Check if 'backup.lock' is present."
-    stat:
-      path: "{{playbook_dir}}/backup.lock"
-    register: backup_lock
-
-  - name: "Fail when 'backup.lock 'exists."
-    fail:
-      msg: "Backup is already in progress. Please wait for it to complete."
-    when: backup_lock.stat.exists
-
   - name: "Create 'backup.lock'."
     file:
       path: "{{playbook_dir}}/backup.lock"
@@ -27,7 +22,6 @@
       owner: "{{user}}"
       group: "{{user}}"
       mode: 0775
-    when: backup_lock.stat.exists == False
 
   - name: "Get Start Time"
     set_fact: start_time="{{lookup('pipe','date \"+%s\"')}}"
@@ -127,27 +121,40 @@
       message: "Stopped Docker containers."
       when: not (docker_running_containers.stdout | trim == '')
 
-  - name: Check if plexdrive is running
-    command: systemctl status plexdrive
-    ignore_errors: yes
-    register: plexdrive_status
+  - name: Populate Service Facts
+    service_facts:
 
-  - name: Check if cloudplow is running
-    command: systemctl status cloudplow
-    ignore_errors: yes
-    register: cloudplow_status
+  - name: Check if 'plexdrive.service' exists
+    stat:
+      path: "/etc/systemd/system/plexdrive.service"
+    register: plexdrive_service
 
-  - name: Stop cloudplow service
-    systemd:
-      name: cloudplow
-      state: stopped
-    when: cloudplow_status is success
+  - name: Get plexdrive service state
+    set_fact:
+      plexdrive_service_running: "{{ (services['plexdrive.service']['state'] == \"running\") }}"
+    when: plexdrive_service.stat.exists
 
   - name: Stop plexdrive service
     systemd:
       name: plexdrive
       state: stopped
-    when: plexdrive_status is success
+    when: plexdrive_service.stat.exists and plexdrive_service_running
+
+  - name: Check if 'cloudplow.service' exists
+    stat:
+      path: "/etc/systemd/system/cloudplow.service"
+    register: cloudplow_service
+
+  - name: Get cloudplow service state
+    set_fact:
+      cloudplow_service_running: "{{ (services['cloudplow.service']['state'] == \"running\") }}"
+    when: cloudplow_service.stat.exists
+
+  - name: Stop cloudplow service
+    systemd:
+      name: cloudplow
+      state: stopped
+    when: cloudplow_service.stat.exists and cloudplow_service_running
 
   - name: "Archiving '/opt' to '{{backup.tar_dest}}/cloudbox.tar'."
     shell: |
@@ -157,7 +164,8 @@
         --warning=no-file-removed \
         --exclude-from '{{ backup_excludes_file.stat.exists | ternary(playbook_dir + '/backup_excludes.txt', playbook_dir + '/roles/backup/files/backup_excludes.txt') }}' \
         -cf '{{backup.tar_dest}}/cloudbox.tar' \
-        -C /opt .
+        -C /opt . \
+        2> /home/{{user}}/logs/backup/cloudbox_backup_tar_stderr.log
     become: yes
     become_user: "{{user}}"
     args:
@@ -190,7 +198,7 @@
     systemd:
       name: plexdrive
       state: started
-    when: plexdrive_status is success
+    when: plexdrive_service.stat.exists and plexdrive_service_running
 
   - name: "Wait for 5 seconds before starting containers."
     wait_for:
@@ -219,7 +227,7 @@
       state: touch
       owner: "{{user}}"
       group: "{{user}}"
-      mode: 0755
+      mode: 0775
       force: yes
     with_items:
      - "ansible.cfg"
@@ -235,7 +243,7 @@
       state: touch
       owner: "{{user}}"
       group: "{{user}}"
-      mode: 0755
+      mode: 0775
       force: yes
     when: backup_excludes_file.stat.exists
 
@@ -307,7 +315,7 @@
     systemd:
       name: cloudplow
       state: started
-    when: cloudplow_status is success
+    when: cloudplow_service.stat.exists and cloudplow_service_running
 
   - name: "Remove cloudbox.tar from '{{backup.tar_dest}}'."
     file:
@@ -334,13 +342,13 @@
       systemd:
         name: plexdrive
         state: started
-      when: plexdrive_status is success
+      when: plexdrive_service.stat.exists and plexdrive_service_running
 
     - name: "Wait for 5 seconds before starting containers."
       wait_for:
         timeout: 5
 
-    - name: "Restart all previously running Docker containers."
+    - name: "Re-start all previously running Docker containers."
       shell: 'docker start {{docker_running_containers.stdout}}'
       ignore_errors: yes
       when: not (docker_running_containers.stdout | trim == '')
@@ -349,7 +357,7 @@
       systemd:
         name: cloudplow
         state: started
-      when: cloudplow_status is success
+      when: cloudplow_service.stat.exists and cloudplow_service_running
 
     - debug:
         msg: 'Backup terminated due to an error.'
@@ -365,7 +373,6 @@
     file:
       path: "{{playbook_dir}}/backup.lock"
       state: absent
-    when: backup_lock.stat.exists == False
 
   - name: "Reset logs folder ownership."
     shell: "chown -R {{user}}:{{user}} /home/{{user}}/logs/"

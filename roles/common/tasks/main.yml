@@ -1,4 +1,10 @@
 #########################################################################
+# Title:         Cloudbox: Common Role                                  #
+# Author(s):     L3uddz, Desimaniac                                     #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
@@ -44,7 +50,7 @@
   args:
     warn: no
 
-- name: Set /opt ownership
+- name: Set '/opt' ownership
   shell: "chown -R {{user}}:{{user}} /opt"
   args:
     warn: no

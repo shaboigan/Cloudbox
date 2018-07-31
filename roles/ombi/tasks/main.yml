@@ -11,11 +11,43 @@
 - name: "Get user UID and GID"
   include_role:
     name: user
-    
+
 - name: Stop and remove any existing container
   docker_container:
     name: ombi
     state: absent
+
+# START - Suitarr Migration Tasks
+- name: Check folder exists
+  stat:
+    path: /opt/ombi
+  register: folder
+
+- name: Check subfolder1 exists
+  stat:
+    path: /opt/ombi/Ombi
+  register: subfolder1
+
+- name: Check subfolder2 exists
+  stat:
+    path: /opt/ombi/app
+  register: subfolder2
+
+- name: Move 'ombi' folder contents to 'app' subfolder
+  shell: |
+    mv /opt/ombi /tmp/app
+    mkdir /opt/ombi
+    mv /tmp/app /opt/ombi/
+    find /opt/ombi/* -type d -empty -delete
+    chown -R {{user}}:{{user}} /opt/ombi
+  when: (folder.stat.exists) and not (subfolder1.stat.exists or subfolder2.stat.exists)
+
+- name: Move 'Ombi' subfolder to 'app' subfolder
+  shell: |
+    mv /opt/ombi/Ombi /opt/ombi/app
+    chown -R {{user}}:{{user}} /opt/ombi
+  when: (folder.stat.exists) and (subfolder1.stat.exists) and (not subfolder2.stat.exists)
+# END - Suitarr Migration Tasks
 
 - name: Create ombi directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
@@ -25,13 +57,15 @@
 - name: Create and start container
   docker_container:
     name: ombi
-    image: "linuxserver/ombi"
+    image: hotio/suitarr:ombi
     pull: yes
     published_ports:
-      - "3579:3579"
+      - "3579:5000"
     env:
+      VERSION: "unstable"
       PUID: "{{uid}}"
       PGID: "{{gid}}"
+      BACKUP: "no"
     labels:
       traefik.enable: "true"
       traefik.backend: "ombi"

@@ -95,20 +95,20 @@
     "debug": false
   },
   "radarr": {
-    "api_key": "{{radarr.api}}",
-    "profile": "YIFY-720p/1080p",
+    "api_key": "",
+    "profile": "HD-1080p",
     "url": "https://radarr.{{domain}}",
     "root_folder": "/movies/"
   },
   "sonarr": {
-    "api_key": "{{sonarr.api}}",
-    "profile": "Any",
+    "api_key": "",
+    "profile": "HD-1080p",
     "url": "https://sonarr.{{domain}}",
     "root_folder": "/tv/",
     "tags": {}
   },
   "trakt": {
-    "client_id": "0e8707106dbc2fc658ee088a97c2b0c29e291ac616b5444eb697c6227c12821a",
-    "client_secret": "698de06941e5f3cf6092b5e200904d8a616bf1a6c0fcf721615447942c455ac0"
+    "client_id": "",
+    "client_secret": ""
   }
 }

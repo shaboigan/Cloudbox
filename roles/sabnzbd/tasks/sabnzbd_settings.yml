@@ -1,4 +1,11 @@
 #########################################################################
+# Title:         Cloudbox: SABnzbd Role - Settings Tasks                #
+# Author(s):     Desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# Docker Image:  hotio/suitarr                                          #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
@@ -46,7 +53,7 @@
     path: "/opt/sabnzbd/app/sabnzbd.ini"
     insertafter: '^rss_filenames\s?=.*'
     regexp: '^password\s?=.*'
-    line: "password = {{sabnzbd.pass}}"
+    line: "password = {{passwd}}"
     state: present
 
 - name: Set Form Auth

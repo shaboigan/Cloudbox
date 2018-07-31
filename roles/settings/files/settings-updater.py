@@ -1,8 +1,17 @@
 #!/usr/bin/env python3
 """
+
+    #########################################################################
+    # Title:         Settings Updater Script                                #
+    # Author(s):     L3uddz                                                 #
+    # URL:           https://github.com/cloudbox/cloudbox                   #
+    # Description:   Adds variables to settings.yml.                        #
+    # --                                                                    #
+    #         Part of the Cloudbox project: https://cloudbox.rocks          #
     #########################################################################
     #                   GNU General Public License v3.0                     #
     #########################################################################
+
 """
 import logging
 import os

@@ -58,5 +58,4 @@
     - { role: bazarr, tags: ['bazarr'] }
     - { role: python-plexlibrary, tags: ['python-plexlibrary'] }
     - { role: handbrake, tags: ['handbrake'] }
-    - { role: ombi_test, tags: ['ombi_test'] }
     - { role: tautulli_test, tags: ['tautulli_test'] }

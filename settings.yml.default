@@ -22,4 +22,3 @@ backup:
   cron_state: absent
   pushover_app_token:
   pushover_user_key:
-

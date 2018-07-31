@@ -1,4 +1,10 @@
 #########################################################################
+# Title:         Cloudbox: Plexdrive Role                               #
+# Author(s):     L3uddz, Desimaniac                                     #
+# URL:           https://github.com/Cloudbox/Cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
@@ -18,7 +24,7 @@
 
 - name: Stop existing plexdrive service
   systemd: state=stopped name=plexdrive
-  when: (plexdrive_service.stat.exists) and (plexdrive_status is success)
+  when: plexdrive_service.stat.exists and plexdrive_service_running
 
 - name: Create plexdrive directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
@@ -28,9 +34,9 @@
 
 - name: Install plexdrive
   get_url:
-    url:  https://github.com/dweidenfeld/plexdrive/releases/download/5.0.0/plexdrive-linux-amd64
+    url: https://github.com/dweidenfeld/plexdrive/releases/download/5.0.0/plexdrive-linux-amd64
     dest: /opt/plexdrive/plexdrive
-    mode: 0755
+    mode: 0775
     owner: "{{user}}"
     group: "{{user}}"
     force: yes
@@ -41,7 +47,7 @@
     src: plexdrive.service.js2
     dest: /etc/systemd/system/plexdrive.service
     force: yes
-  when: plexdrive_service.stat.exists == False
+  when: not plexdrive_service.stat.exists
 
 - name: Systemd daemon-reload
   systemd: state=stopped name=plexdrive daemon_reload=yes enabled=no

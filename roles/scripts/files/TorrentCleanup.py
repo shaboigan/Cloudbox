@@ -2,6 +2,13 @@
 """
 
     #########################################################################
+    # Title:         Torrent Cleanup Script                                 #
+    # Author(s):     L3uddz                                                 #
+    # URL:           https://github.com/cloudbox/cloudbox                   #
+    # Description:   Cleanup auto extracted files in ruTorrent downloads.   #
+    # --                                                                    #
+    #         Part of the Cloudbox project: https://cloudbox.rocks          #
+    #########################################################################
     #                   GNU General Public License v3.0                     #
     #########################################################################
 

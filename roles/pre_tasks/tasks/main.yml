@@ -1,7 +1,17 @@
 #########################################################################
+# Title:         Cloudbox: Pre-Tasks Role                               #
+# Author(s):     Desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
+- name: Clean Paths
+  import_tasks: "clean_paths.yml"
+  tags: always
+
 - name: Set Cloudbox Variables
   import_tasks: "variables.yml"
   tags: always

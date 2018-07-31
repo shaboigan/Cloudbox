@@ -1,4 +1,10 @@
 #########################################################################
+# Title:         Cloudbox: UnionFS Role                                 #
+# Author(s):     L3uddz, Desimaniac                                     #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
@@ -18,7 +24,7 @@
 
 - name: Stop existing unionfs service
   systemd: state=stopped name=unionfs
-  when: (unionfs_service.stat.exists) and (unionfs_status is success)
+  when: unionfs_service.stat.exists and unionfs_service_running
 
 - name: Create /mnt/unionfs and subdirs
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"

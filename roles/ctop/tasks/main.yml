@@ -1,4 +1,10 @@
 #########################################################################
+# Title:         Cloudbox: ctop Role                                    #
+# Author(s):     L3uddz, Desimaniac                                     #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
@@ -13,7 +19,7 @@
   get_url:
     url:  "{{ ctop_download_url.stdout | default('https://github.com/bcicen/ctop/releases/download/v0.7.1/ctop-0.7.1-linux-amd64',true) }}"
     dest: /usr/local/bin/ctop
-    mode: 0755
+    mode: 0775
     owner: root
     group: root
     force: yes

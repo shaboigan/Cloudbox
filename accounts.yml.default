@@ -15,39 +15,6 @@ nordvpn:
 trakt:
   id:
   secret:
-deluge:
-  pass:
-nzbget:
-  api:
-  pass:
-sabnzbd:
-  api:
-  pass:
-bazarr:
-  api:
-  pass:
-radarr:
-  api:
-  pass:
-radarrpq:
-  api:
-radarr4k:
-  api:
-sonarr:
-  api:
-  pass:
-jackett:
-  api:
-  pass:
-nzbhydra2:
-  api:
-  pass:
-ombi:
-  api:
-  pass:
-tautulli:
-  api:
-  pass:
 pushover:
   app_token:
   user_key:

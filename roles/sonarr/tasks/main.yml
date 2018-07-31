@@ -1,4 +1,11 @@
 #########################################################################
+# Title:         Cloudbox: Sonarr Role                                  #
+# Author(s):     L3uddz, Desimaniac                                     #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# Docker Image:  hotio/suitarr                                          #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
@@ -11,7 +18,7 @@
 - name: "Get user UID and GID"
   include_role:
     name: user
-    
+
 - name: Stop and remove any existing container
   docker_container:
     name: sonarr
