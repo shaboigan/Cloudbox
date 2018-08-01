@@ -50,6 +50,7 @@
     - { role: quassel, tags: ['quassel'] }
     - { role: radarr4k, tags: ['radarr4k'] }
     - { role: radarrpq, tags: ['radarrpq'] }    
+    - { role: rutorrent, tags: ['rutorrent'], when: [ 'torrents' ] }
     - { role: sonarr4k, tags: ['sonarr4k'] }
     - { role: telly, tags: ['telly'] }
     - { role: thelounge, tags: ['thelounge'] }

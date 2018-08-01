@@ -14,7 +14,7 @@ rclone:
 backup:
   tar_dest: /home/{{user}}/Backups
   rsync_dest: rsync://somehost.com/Backups
-  rclone_dest: google:/Backups
+  rclone_dest: cloud-crypt:/Backups
   keep_local_copy: true
   use_rsync: false
   use_rclone: false

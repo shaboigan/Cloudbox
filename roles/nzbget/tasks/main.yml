@@ -60,6 +60,7 @@
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
     - /opt/nzbget
+    - "{{downloads.nzbs}}/nzbget"
 
 - name: Check nzbget.conf exists
   stat:

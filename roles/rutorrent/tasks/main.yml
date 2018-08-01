@@ -1,0 +1,96 @@
+#########################################################################
+# Title:         Cloudbox: ruTorrent Role                               #
+# Author(s):     L3uddz, Horjulf                                        #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# Docker Image:  horjulf/rutorrent-autodl                               #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: "Set DNS Record on CloudFlare"
+  include_role:
+    name: cloudflare
+  vars:
+    subdomain: rutorrent
+
+- name: "Get user UID and GID"
+  include_role:
+    name: user
+
+- name: Stop and remove any existing container
+  docker_container:
+    name: rutorrent
+    state: absent
+
+- name: Create rutorrent directory
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
+  with_items:
+    - /opt/rutorrent
+    - "{{downloads.torrents}}/rutorrent"
+    - "{{downloads.torrents}}/rutorrent/completed"
+    - "{{downloads.torrents}}/rutorrent/incoming"
+    - "{{downloads.torrents}}/rutorrent/watched"
+
+- name: Check if rtorrent.rc exists
+  stat:
+    path: "/opt/rutorrent/rtorrent/rtorrent.rc"
+  register: rtorrent_rc
+
+- name: Check if plugins.ini exists
+  stat:
+    path: "/opt/rutorrent/rutorrent/settings/plugins.ini"
+  register: plugins_ini
+
+- name: Replace plugins.ini with customized one
+  copy:
+    src: plugins.ini
+    dest: "/opt/rutorrent/rutorrent/settings/plugins.ini"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: yes
+  when: plugins_ini.stat.exists
+
+- name: Create and start container
+  docker_container:
+    name: rutorrent
+    image: horjulf/rutorrent-autodl
+    pull: yes
+    published_ports:
+      - "3111:80"
+      - "51413:51413"
+      - "6881:6881/udp"
+    env:
+      PUID: "{{uid}}"
+      PGID: "{{gid}}"
+    labels:
+      traefik.enable: "true"
+      traefik.backend: "rutorrent"
+      traefik.frontend.redirect.entryPoint: "https"
+      traefik.frontend.rule: "Host:rutorrent.{{domain}}"
+      traefik.port: "80"
+      traefik.docker.network: "cloudbox"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/rutorrent:/config"
+      - "/opt/scripts:/scripts"
+      - "/mnt:/mnt"
+      - "{{downloads.torrents}}/rutorrent:/downloads"
+    networks:
+      - name: cloudbox
+        aliases:
+          - rutorrent
+    purge_networks: yes
+    restart_policy: always
+    stop_timeout: 300
+    state: started
+
+- name: Settings Tweaks
+  include_tasks: "rutorrent_settings.yml"
+  when: not (
+        (rtorrent_rc.stat.exists)
+        or
+        ((continuous_integration|default(false,true))|bool)
+    )
