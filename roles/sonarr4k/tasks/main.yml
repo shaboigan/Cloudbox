@@ -67,7 +67,7 @@
     image: hotio/suitarr:sonarr
     pull: yes
     published_ports:
-      - "8989:8989"
+      - "8990:8989"
     env:
       VERSION: "unstable"
       PUID: "{{uid}}"

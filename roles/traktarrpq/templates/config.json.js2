@@ -95,13 +95,13 @@
     "debug": false
   },
   "radarr": {
-    "api_key": "{{radarrpq.api}}",
+    "api_key": "{{ radarrpq_api_key | default('',true) }}",
     "profile": "SD",
     "url": "https://radarrpq.{{domain}}",
     "root_folder": "/movies/"
   },
   "trakt": {
-    "client_id": "0e8707106dbc2fc658ee088a97c2b0c29e291ac616b5444eb697c6227c12821a",
-    "client_secret": "698de06941e5f3cf6092b5e200904d8a616bf1a6c0fcf721615447942c455ac0"
+    "client_id": "{{trakt.id}}",
+    "client_secret": "{{trakt.secret}}"
   }
 }
