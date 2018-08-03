@@ -35,6 +35,50 @@
     path: "/opt/traktarr4k/config.json"
   register: traktarr4k_config
 
+- name: "Check if sonarr4k exists"
+  stat:
+    path: "/opt/sonarr4k/app/config.xml"
+  register: sonarr4k_config
+  when: not traktarr4k_config.stat.exists
+
+- name: "When sonarr4k exists, add api key to traktarr4k config"
+  block:
+
+  - name: Pull sonarr4k api key
+    xml:
+      path: "/opt/sonarr4k/app/config.xml"
+      xpath: /Config/ApiKey
+      content: text
+    register: xmlresp4k
+
+  - name: Set sonarr4k api Key
+    set_fact:
+      sonarr4k_api_key: "{{ xmlresp4k.matches[0].ApiKey }}"
+
+  when: (not traktarr4k_config.stat.exists) and (sonarr4k_config.stat.exists)
+
+- name: "Check if radarr4k exists"
+  stat:
+    path: "/opt/radarr4k/app/config.xml"
+  register: radarr4k_config
+  when: not traktarr4k_config.stat.exists
+
+- name: "When radarr4k exists, add api key to traktarr4k config"
+  block:
+
+  - name: Pull radarr4k api key
+    xml:
+      path: "/opt/radarr4k/app/config.xml"
+      xpath: /Config/ApiKey
+      content: text
+    register: xmlresp4k
+
+  - name: Set radarr4k api Key
+    set_fact:
+      radarr4k_api_key: "{{ xmlresp4k.matches[0].ApiKey }}"
+
+  when: (not traktarr4k_config.stat.exists) and (radarr4k_config.stat.exists)
+
 - name: Import default config
   template:
     src: config.json.js2
