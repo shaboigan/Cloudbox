@@ -59,7 +59,7 @@
     purge_networks: yes
     restart_policy: always
     state: started
-    
+
 - name: Stop container to customize deluge settings
   docker_container:
     name: deluge

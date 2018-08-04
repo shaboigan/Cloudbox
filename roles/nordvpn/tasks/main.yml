@@ -33,12 +33,16 @@
     devices:
       - /dev/net/tun
     published_ports:
-# Deluge daemon and web-ui ports      
+# Deluge daemon and web-ui ports
       - "8112:8112"
       - "58846:58846"
       - "58946:58946"
-# Telly port      
-      - "6077:6077"      
+# Telly port
+      - "6077:6077"
+# RuTorrent daemon and web-ui ports
+      - "3111:80"
+      - "51413:51413"
+      - "6881:6881/udp"
     env:
       PUID: "{{uid}}"
       PGID: "{{gid}}"

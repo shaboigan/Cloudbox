@@ -65,6 +65,7 @@
     env:
       PUID: "{{uid}}"
       PGID: "{{gid}}"
+    network_mode: "container:nordvpn"
     labels:
       traefik.enable: "true"
       traefik.backend: "rutorrent"
@@ -78,13 +79,8 @@
       - "/opt/scripts:/scripts"
       - "/mnt:/mnt"
       - "{{downloads.torrents}}/rutorrent:/downloads"
-    networks:
-      - name: cloudbox
-        aliases:
-          - rutorrent
     purge_networks: yes
     restart_policy: always
-    stop_timeout: 300
     state: started
 
 - name: Settings Tweaks
