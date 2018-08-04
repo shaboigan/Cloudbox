@@ -1,8 +1,14 @@
 #########################################################################
+# Title:         Cloudbox: Traktarr Role                                #
+# Author(s):     L3uddz, Desimaniac                                     #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Check service exists
+- name: Check if traktarrpq service exists
   stat:
     path: "/etc/systemd/system/traktarrpq.service"
   register: traktarrpq_service
@@ -30,7 +36,7 @@
     requirements: /opt/traktarrpq/requirements.txt
     executable: pip3
 
-- name: Check config exists
+- name: Check if traktarrpq config exists
   stat:
     path: "/opt/traktarrpq/config.json"
   register: traktarrpq_config
@@ -65,7 +71,7 @@
     group: "{{user}}"
     mode: 0775
     force: yes
-  when: traktarrpq_config.stat.exists == False
+  when: not traktarrpq_config.stat.exists
 
 - name: Set traktarr.py as executable
   file:
@@ -88,7 +94,7 @@
     src: traktarrpq.service.js2
     dest: /etc/systemd/system/traktarrpq.service
     force: yes
-  when: traktarrpq_service.stat.exists == False
+  when: not traktarrpq_service.stat.exists
 
-- name: Load service file
+- name: Load traktarrpq service
   systemd: state=stopped name=traktarrpq daemon_reload=yes enabled=no

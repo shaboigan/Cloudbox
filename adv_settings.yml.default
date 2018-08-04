@@ -3,16 +3,6 @@ plex:
   open_port: no
   force_auto_adjust_quality: no
   allow_high_output_bitrates: no
-radarr:
-  api:
-radarrpq:
-  api:
-radarr4k:
-  api:
-sonarr:
-  api:      
-sonarr4k:
-  api:
 organizr:
   direct_domain: no
 ombi:

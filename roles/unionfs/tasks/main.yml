@@ -41,6 +41,7 @@
     - "/mnt/unionfs/Media/TV Shows"
     - "/mnt/unionfs/Media/Sports"
     - "/mnt/unionfs/Media/Stand-Up"
+    - /mnt/local/.unionfs-fuse
 
 - name: Install fuse
   apt:

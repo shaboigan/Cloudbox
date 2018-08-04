@@ -69,7 +69,7 @@
     published_ports:
       - "7879:7878"
     env:
-      VERSION: "unstable"
+      VERSION: "stable"
       PUID: "{{uid}}"
       PGID: "{{gid}}"
       BACKUP: "no"
@@ -78,7 +78,7 @@
       traefik.backend: "radarr4k"
       traefik.frontend.redirect.entryPoint: "https"
       traefik.frontend.rule: "Host:radarr4k.{{domain}}"
-      traefik.port: "7879"
+      traefik.port: "7878"
       traefik.docker.network: "cloudbox"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"

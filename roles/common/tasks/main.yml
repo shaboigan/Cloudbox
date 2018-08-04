@@ -11,8 +11,10 @@
 - name: Create common directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
+    - /home/{{user}}/logs
+    - /home/{{user}}/.config
+    - /home/{{user}}/.config/pip
     - /mnt/local
-    - /mnt/local/.unionfs-fuse
     - /mnt/local/Media
     - /mnt/local/Media/Anime
     - /mnt/local/Media/Documentaries
@@ -21,17 +23,18 @@
     - "/mnt/local/Media/Poor Quality"
     - /mnt/local/Media/Reality
     - /mnt/local/Media/Music
-    - /mnt/local/Media/TV Shows
+    - "/mnt/local/Media/TV Shows"
     - /mnt/local/Media/Sports
     - /mnt/local/Media/Stand-Up
     - /mnt/.cloud-crypt
     - /mnt/.local-crypt
     - /opt
-    - /home/{{user}}/logs
-    - /home/{{user}}/.config
-    - /home/{{user}}/.config/pip
     - "{{downloads.nzbs}}"
     - "{{downloads.torrents}}"
+
+- name: (Re)Set permissions
+  import_tasks: "permissions.yml"
+  tags: permissions-fix
 
 - name: "Set {{downloads.nzbs}} permissions"
   shell: "chmod -R 775 {{downloads.nzbs}}"
@@ -75,6 +78,7 @@
   apt: "name={{item}} state=present"
   with_items:
     - nano
+    - zip
     - unzip
     - p7zip
     - curl
@@ -143,12 +147,8 @@
     - dnspython
     - yq
     - lxml
+    - apprise
   ignore_errors: yes
-
-- name: Set default shell
-  import_role:
-    name: shell
-  tags: shell
 
 - name: Install nodejs
   import_role:

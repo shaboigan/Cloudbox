@@ -62,7 +62,7 @@
     published_ports:
       - "7880:7878"
     env:
-      VERSION: "unstable"
+      VERSION: "stable"
       PUID: "{{uid}}"
       PGID: "{{gid}}"
       BACKUP: "no"
@@ -71,7 +71,7 @@
       traefik.backend: "radarrpq"
       traefik.frontend.redirect.entryPoint: "https"
       traefik.frontend.rule: "Host:radarrpq.{{domain}}"
-      traefik.port: "7880"
+      traefik.port: "7878"
       traefik.docker.network: "cloudbox"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"

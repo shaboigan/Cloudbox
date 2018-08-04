@@ -69,7 +69,7 @@
     published_ports:
       - "8990:8989"
     env:
-      VERSION: "unstable"
+      VERSION: "stable"
       PUID: "{{uid}}"
       PGID: "{{gid}}"
       BACKUP: "no"
