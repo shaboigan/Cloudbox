@@ -1,4 +1,11 @@
 #########################################################################
+# Title:         Cloudbox: Tautulli Role                                #
+# Author(s):     Desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# Docker Image:  hotio/suitarr                                          #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
@@ -17,27 +24,23 @@
     name: tautulli
     state: absent
 
-- name: Wait for Plex Logs folder to be created by Plex
-  wait_for:
-    path: "/opt/plex/Library/Application Support/Plex Media Server/Logs"
-    state: present
-
 - name: Create tautulli directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
     - /opt/tautulli
-    - /opt/scripts/tautulli
 
 - name: Create and start container
   docker_container:
     name: tautulli
-    image: tautulli/tautulli
+    image: hotio/suitarr:tautulli
     pull: yes
     published_ports:
       - "8181:8181"
     env:
+      VERSION: "stable"
       PUID: "{{uid}}"
       PGID: "{{gid}}"
+      BACKUP: "no"
     labels:
       traefik.enable: "true"
       traefik.backend: "tautulli"

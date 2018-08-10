@@ -59,4 +59,3 @@
     - { role: traktarrpq, tags: ['traktarrpq'] }
     - { role: watchtower, tags: ['watchtower'] }
     - { role: znc, tags: ['znc'] }
-    - { role: tautulli_test, tags: ['tautulli_test'] }
