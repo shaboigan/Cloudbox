@@ -8,6 +8,10 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
+- name: Set User Variables
+  import_tasks: "user.yml"
+  tags: always
+
 - name: Clean Paths
   import_tasks: "clean_paths.yml"
   tags: always
@@ -15,13 +19,6 @@
 - name: Set Cloudbox Variables
   import_tasks: "variables.yml"
   tags: always
-
-# Only called when specific tag is used
-- name: Plex Auth Token role
-  import_role:
-    name: plex_auth_token
-  when: plex_account_enabled
-  tags: plex_auth_token
 
 # Sub-Domain Tasks
 - name: "Set Cloudbox Type to 'cloudbox'"

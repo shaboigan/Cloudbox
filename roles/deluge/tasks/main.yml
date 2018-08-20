@@ -52,6 +52,7 @@
       traefik.frontend.rule: "Host:deluge.{{domain}}"
       traefik.port: "8112"
       traefik.docker.network: "cloudbox"
+      "com.github.cloudbox.cloudbox_managed": "true"
     volumes:
       - "/opt/deluge:/config"
       - "{{downloads.torrents}}/deluge:/downloads"

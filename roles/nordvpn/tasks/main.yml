@@ -8,10 +8,6 @@
   vars:
     subdomain: nordvpn
 
-- name: "Get user UID and GID"
-  include_role:
-    name: user
-    
 - name: Stop and remove any existing container
   docker_container:
     name: nordvpn
@@ -34,15 +30,19 @@
       - /dev/net/tun
     published_ports:
 # Deluge daemon and web-ui ports
-      - "8112:8112"
+      - "127.0.0.1:8112:8112"
       - "58846:58846"
       - "58946:58946"
 # Telly port
-      - "6077:6077"
+      - "127.0.0.1:6077:6077"
 # RuTorrent daemon and web-ui ports
-      - "3111:80"
+      - "127.0.0.1:9080:80"
       - "51413:51413"
       - "6881:6881/udp"
+# RuTorrent_test daemon and web-ui ports
+      - "127.0.0.1:9080:9080"
+      - "9443:9443"
+      - "3000:3000"
     env:
       PUID: "{{uid}}"
       PGID: "{{gid}}"
@@ -52,6 +52,8 @@
       CATTEGORY: "{{nordvpn.category}}"
       PROTOCOL: "{{nordvpn.protocol}}"
       NETWORK: "172.18.0.0/16"
+    labels:
+      "com.github.cloudbox.cloudbox_managed": "false"
     volumes:
       - /opt/nordvpn/vpn:/vpn/ovpn
     networks:

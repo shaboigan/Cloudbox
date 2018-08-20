@@ -9,20 +9,26 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
+- name: Sanity Check
+  fail:
+    msg: "The new 'nzbs download path' setting is required."
+  when: (nzbs_downloads_path is not defined)|default(true)
+
 - name: "Set DNS Record on CloudFlare"
   include_role:
     name: cloudflare
   vars:
     subdomain: sabnzbd
 
-- name: "Get user UID and GID"
-  include_role:
-    name: user
-
 - name: Stop and remove any existing container
   docker_container:
     name: sabnzbd
     state: absent
+
+- name: Create sabnzbd directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /opt/sabnzbd
 
 - name: Create sabnzbd directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
@@ -45,9 +51,9 @@
     image: hotio/suitarr:sabnzbd
     pull: yes
     published_ports:
-      - "8081:8080"
+      - "127.0.0.1:8081:8080"
     env:
-      VERSION: "stable"
+      VERSION: "{{suitarr.version}}"
       BACKUP: "no"
       PUID: "{{uid}}"
       PGID: "{{gid}}"
@@ -58,6 +64,7 @@
       traefik.frontend.rule: "Host:sabnzbd.{{domain}}"
       traefik.port: "8080"
       traefik.docker.network: "cloudbox"
+      "com.github.cloudbox.cloudbox_managed": "true"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/sabnzbd:/config"
@@ -77,5 +84,5 @@
   when: not (
         (sabnzbd_ini.stat.exists)
         or
-        ((continuous_integration|default(false,true))|bool)
+        (continuous_integration)
     )

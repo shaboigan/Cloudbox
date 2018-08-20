@@ -15,10 +15,6 @@
   vars:
     subdomain: plex
 
-- name: "Get user UID and GID"
-  include_role:
-    name: user
-
 - name: Create plex directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
@@ -59,7 +55,7 @@
   when: plex_account_enabled and not (
       (plex_prefs.stat.exists)
       or
-      ((continuous_integration|default(false,true))|bool)
+      (continuous_integration)
     )
 
 - name: Set plex_claim_code variable
@@ -68,7 +64,7 @@
   when: plex_account_enabled and not (
       (plex_prefs.stat.exists)
       or
-      ((continuous_integration|default(false,true))|bool)
+      (continuous_integration)
     )
 
 - name: Ask user for plex claim code
@@ -80,7 +76,7 @@
       or
       (plex_account_enabled)
       or
-      ((continuous_integration|default(false,true))|bool)
+      (continuous_integration)
     )
 
 - name: Set plex_claim_code variable
@@ -91,7 +87,7 @@
       or
       (plex_account_enabled)
       or
-      ((continuous_integration|default(false,true))|bool)
+      (continuous_integration)
     )
 
 - debug: msg="Using Plex Claim Code{{':'}} {{plex_claim_code}}"
@@ -148,6 +144,7 @@
       traefik.frontend.rule: "Host:plex.{{domain}}"
       traefik.port: "32400"
       traefik.docker.network: "cloudbox"
+      "com.github.cloudbox.cloudbox_managed": "true"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/plex:/config"
@@ -187,7 +184,9 @@
 - name: "Install WebTools"
   import_role:
     name: webtools
-  tags: webtools
+  tags:
+    - webtools
+    - reinstall-webtools
 
 - name: "Forced Automatic Quality Settings"
   import_tasks: "forced_quality_settings.yml"

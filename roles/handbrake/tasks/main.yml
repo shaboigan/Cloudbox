@@ -36,7 +36,7 @@
     image: "jlesage/handbrake:latest"
     pull: yes
     published_ports:
-      - "5800:5800"
+      - "127.0.0.1:5800:5800"
     env:
       USER_ID: "{{uid}}"
       GROUP_ID: "{{gid}}"
@@ -53,6 +53,7 @@
       traefik.frontend.rule: "Host:handbrake.{{domain}}"
       traefik.port: "5800"
       traefik.docker.network: "cloudbox"
+      "com.github.cloudbox.cloudbox_managed": "true"
     volumes:
       - "/opt/handbrake:/config:rw"
       - "/mnt/handbrake/source/yify:/watch:rw"

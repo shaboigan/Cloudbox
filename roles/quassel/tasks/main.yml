@@ -15,10 +15,6 @@
   vars:
     subdomain: quassel
 
-- name: "Get user UID and GID"
-  include_role:
-    name: user
-
 - name: Stop and remove any existing container
   docker_container:
     name: quassel
@@ -62,6 +58,8 @@
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/quassel:/config"
+    labels:
+      "com.github.cloudbox.cloudbox_managed": "true"
     networks:
       - name: cloudbox
         aliases:

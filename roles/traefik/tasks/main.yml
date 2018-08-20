@@ -8,10 +8,6 @@
   vars:
     subdomain: traefik
 
-- name: "Get user UID and GID"
-  include_role:
-    name: user
-
 - name: Create traefik directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
   with_items:
@@ -49,12 +45,12 @@
 
 - name: Check rules.toml exists
   stat:
-    path: "/opt/traefik/rules.toml"    
+    path: "/opt/traefik/rules.toml"
   register: rules_toml
 
 - name: Touch or create blank rules.toml
   file:
-    path: "/opt/traefik/rules.toml"    
+    path: "/opt/traefik/rules.toml"
     state: touch
     mode: 0775
     owner: "{{user}}"
@@ -66,19 +62,14 @@
     path: "/opt/traefik/.htpasswd"
   register: htpasswd
 
-- name: Touch or create blank htpasswd file
-  file:
+- name: Create htpasswd
+  htpasswd:
     path: "/opt/traefik/.htpasswd"
-    state: touch
-    mode: 0775
+    name: "{{http_user}}"
+    password: "{{http_passwd}}"
     owner: "{{user}}"
     group: "{{user}}"
-  when: htpasswd.stat.exists == False
-
-- lineinfile:
-    path: /opt/traefik/.htpasswd
-    line: '{{http_user}}:{{http_passwd}}'
-    insertbefore: BOF
+    mode: 0664
   when: htpasswd.stat.exists == False
 
 - name: Stop and remove any existing container

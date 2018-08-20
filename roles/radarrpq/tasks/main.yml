@@ -1,4 +1,11 @@
 #########################################################################
+# Title:         Cloudbox: Radarrpq Role                                #
+# Author(s):     L3uddz, Desimaniac                                     #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# Docker Image:  hotio/suitarr                                          #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
@@ -7,10 +14,6 @@
     name: cloudflare
   vars:
     subdomain: radarrpq
-
-- name: "Get user UID and GID"
-  include_role:
-    name: user
 
 - name: Stop and remove any existing container
   docker_container:
@@ -60,12 +63,12 @@
     image: hotio/suitarr:radarr
     pull: yes
     published_ports:
-      - "7880:7878"
+      - "127.0.0.1:7880:7878"
     env:
-      VERSION: "stable"
+      VERSION: "{{suitarr.version}}"
+      BACKUP: "no"
       PUID: "{{uid}}"
       PGID: "{{gid}}"
-      BACKUP: "no"
     labels:
       traefik.enable: "true"
       traefik.backend: "radarrpq"
@@ -73,11 +76,12 @@
       traefik.frontend.rule: "Host:radarrpq.{{domain}}"
       traefik.port: "7878"
       traefik.docker.network: "cloudbox"
+      "com.github.cloudbox.cloudbox_managed": "true"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/radarrpq:/config"
       - /mnt/unionfs/Media:/data
-      - "/mnt/unionfs/Media/Poor Quality:/movies"
+      - "/mnt/unionfs/Media/Movies/Poor Quality:/movies"
       - "/mnt:/mnt"
       - "/opt/scripts:/scripts"
       - "{{downloads.nzbs}}:/downloads/nzbs"

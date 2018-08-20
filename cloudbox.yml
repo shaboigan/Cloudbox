@@ -59,3 +59,5 @@
     - { role: traktarrpq, tags: ['traktarrpq'] }
     - { role: watchtower, tags: ['watchtower'] }
     - { role: znc, tags: ['znc'] }
+    - { role: deluge_test, tags: ['deluge_test'], when: [ 'torrents' ] }
+    - { role: rutorrent_test, tags: ['rutorrent_test'], when: [ 'torrents' ] }

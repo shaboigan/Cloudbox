@@ -15,10 +15,6 @@
   vars:
     subdomain: sonarr
 
-- name: "Get user UID and GID"
-  include_role:
-    name: user
-
 - name: Stop and remove any existing container
   docker_container:
     name: sonarr
@@ -64,15 +60,15 @@
 - name: Create and start container
   docker_container:
     name: sonarr
-    image: hotio/suitarr:sonarr
+    image: "hotio/suitarr:sonarr"
     pull: yes
     published_ports:
-      - "8989:8989"
+      - "127.0.0.1:8989:8989"
     env:
-      VERSION: "stable"
+      VERSION: "{{suitarr.version}}"
+      BACKUP: "no"
       PUID: "{{uid}}"
       PGID: "{{gid}}"
-      BACKUP: "no"
     labels:
       traefik.enable: "true"
       traefik.backend: "sonarr"
@@ -80,10 +76,10 @@
       traefik.frontend.rule: "Host:sonarr.{{domain}}"
       traefik.port: "8989"
       traefik.docker.network: "cloudbox"
+      "com.github.cloudbox.cloudbox_managed": "true"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/sonarr:/config"
-      - /mnt/unionfs/Media:/data
       - "/mnt/unionfs/Media/TV Shows:/tv"
       - "/mnt:/mnt"
       - "/opt/scripts:/scripts"

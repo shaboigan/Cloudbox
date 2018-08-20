@@ -1,6 +1,6 @@
 #########################################################################
 # Title:         Cloudbox: ruTorrent Role                               #
-# Author(s):     L3uddz, Horjulf                                        #
+# Author(s):     L3uddz, Desimaniac, Horjulf                            #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # Docker Image:  horjulf/rutorrent-autodl                               #
 # --                                                                    #
@@ -14,10 +14,6 @@
     name: cloudflare
   vars:
     subdomain: rutorrent
-
-- name: "Get user UID and GID"
-  include_role:
-    name: user
 
 - name: Stop and remove any existing container
   docker_container:
@@ -37,6 +33,17 @@
   stat:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
   register: rtorrent_rc
+
+- name: Check if rtorrent.rc requires upgrading
+  set_fact:
+    standard_settings_needs_upgrading: "{{ (lookup('file', '/opt/rutorrent/rtorrent/rtorrent.rc')) is search('peer_exchange') }}"
+    subdir_settings_exist: "{{ (lookup('file', '/opt/rutorrent/rtorrent/rtorrent.rc')) is search('/downloads/torrents/rutorrent/completed/') }}"
+  when: rtorrent_rc.stat.exists
+
+- name: Backup previous rtorrent.rc file
+  shell: mv '/opt/rutorrent/rtorrent/rtorrent.rc' '/opt/rutorrent/rtorrent/rtorrent.rc.bak'
+  ignore_errors: yes
+  when: (rtorrent_rc.stat.exists) and (standard_settings_needs_upgrading|default(false,true))
 
 - name: Check if plugins.ini exists
   stat:
@@ -58,10 +65,6 @@
     name: rutorrent
     image: horjulf/rutorrent-autodl
     pull: yes
-    published_ports:
-      - "3111:80"
-      - "51413:51413"
-      - "6881:6881/udp"
     env:
       PUID: "{{uid}}"
       PGID: "{{gid}}"
@@ -73,20 +76,37 @@
       traefik.frontend.rule: "Host:rutorrent.{{domain}}"
       traefik.port: "80"
       traefik.docker.network: "cloudbox"
+      "com.github.cloudbox.cloudbox_managed": "true"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/rutorrent:/config"
+      - "{{downloads.torrents}}:/data"
       - "/opt/scripts:/scripts"
       - "/mnt:/mnt"
       - "{{downloads.torrents}}/rutorrent:/downloads"
     purge_networks: yes
     restart_policy: always
+    stop_timeout: 300
     state: started
 
-- name: Settings Tweaks
-  include_tasks: "rutorrent_settings.yml"
-  when: not (
-        (rtorrent_rc.stat.exists)
-        or
-        ((continuous_integration|default(false,true))|bool)
-    )
+# Done for new setups (or setups requiring updating for updated rtorrent version).
+- name: Standard Settings Tweaks
+  include_tasks: "rutorrent_standard_settings.yml"
+  when: (not continuous_integration)
+        and
+        ((not rtorrent_rc.stat.exists) or (standard_settings_needs_upgrading))
+
+# Done for new setups (or setups requiring updating for updated rtorrent version).
+- name: Subdir Settings Tweaks
+  include_tasks: "rutorrent_subdir_settings.yml"
+  when: (not continuous_integration)
+        and
+        ((not rtorrent_rc.stat.exists) or (standard_settings_needs_upgrading and subdirs_settings_exist))
+
+- name: Start container to apply changes
+  docker_container:
+    name: rutorrent
+    state: started
+  when: (not continuous_integration)
+        and
+        ((not rtorrent_rc.stat.exists) or (standard_settings_needs_upgrading))

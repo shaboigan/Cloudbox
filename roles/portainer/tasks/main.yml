@@ -15,10 +15,6 @@
   vars:
     subdomain: portainer
 
-- name: "Get user UID and GID"
-  include_role:
-    name: user
-
 - name: Stop and remove any existing container
   docker_container:
     name: portainer
@@ -35,7 +31,7 @@
     image: "portainer/portainer"
     pull: yes
     published_ports:
-      - "9000:9000"
+      - "127.0.0.1:9000:9000"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/portainer:/data"
@@ -50,6 +46,7 @@
       traefik.frontend.rule: "Host:portainer.{{domain}}"
       traefik.port: "9000"
       traefik.docker.network: "cloudbox"
+      "com.github.cloudbox.cloudbox_managed": "true"
     networks:
       - name: cloudbox
         aliases:

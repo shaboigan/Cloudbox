@@ -1,4 +1,11 @@
 #########################################################################
+# Title:         Cloudbox: Heimdall Role                                #
+# Author(s):     Captain-NaCl, Desimaniac                               #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# Docker Image:  linuxserver/heimdall                                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
@@ -8,10 +15,17 @@
   vars:
     subdomain: heimdall
 
-- name: "Get user UID and GID"
-  include_role:
-    name: user
-    
+- name: Create htpasswd
+  htpasswd:
+    path: "/opt/traefik/htpasswd/{{item}}.{{domain}}"
+    name: "{{http_user}}"
+    password: "{{http_passwd}}"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0664
+  with_items:
+    - heimdall
+
 - name: Stop and remove any existing container
   docker_container:
     name: heimdall
@@ -28,8 +42,7 @@
     image: linuxserver/heimdall
     pull: yes
     published_ports:
-        - "90:80"
-        - "9443:443"
+      - "127.0.0.1:8443:443"
     env:
       PUID: "{{uid}}"
       PGID: "{{gid}}"
@@ -41,6 +54,7 @@
       traefik.port: "443"
       traefik.docker.network: "cloudbox"
       traefik.protocol: "https"
+      "com.github.cloudbox.cloudbox_managed": "true"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/heimdall:/config"

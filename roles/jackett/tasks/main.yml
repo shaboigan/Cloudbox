@@ -15,10 +15,6 @@
   vars:
     subdomain: jackett
 
-- name: "Get user UID and GID"
-  include_role:
-    name: user
-
 - name: Stop and remove any existing container
   docker_container:
     name: jackett
@@ -67,9 +63,9 @@
     image: hotio/suitarr:jackett
     pull: yes
     published_ports:
-      - "9117:9117"
+      - "127.0.0.1:9117:9117"
     env:
-      VERSION: "stable"
+      VERSION: "{{suitarr.version}}"
       BACKUP: "no"
       PUID: "{{uid}}"
       PGID: "{{gid}}"
@@ -80,6 +76,7 @@
       traefik.frontend.rule: "Host:jackett.{{domain}}"
       traefik.port: "9117"
       traefik.docker.network: "cloudbox"
+      "com.github.cloudbox.cloudbox_managed": "true"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/jackett:/config"

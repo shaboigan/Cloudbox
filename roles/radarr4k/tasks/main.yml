@@ -15,10 +15,6 @@
   vars:
     subdomain: radarr4k
 
-- name: "Get user UID and GID"
-  include_role:
-    name: user
-
 - name: Stop and remove any existing container
   docker_container:
     name: radarr4k
@@ -67,12 +63,12 @@
     image: hotio/suitarr:radarr
     pull: yes
     published_ports:
-      - "7879:7878"
+      - "127.0.0.1:7879:7878"
     env:
-      VERSION: "stable"
+      VERSION: "{{suitarr.version}}"
+      BACKUP: "no"
       PUID: "{{uid}}"
       PGID: "{{gid}}"
-      BACKUP: "no"
     labels:
       traefik.enable: "true"
       traefik.backend: "radarr4k"
@@ -80,11 +76,12 @@
       traefik.frontend.rule: "Host:radarr4k.{{domain}}"
       traefik.port: "7878"
       traefik.docker.network: "cloudbox"
+      "com.github.cloudbox.cloudbox_managed": "true"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/radarr4k:/config"
       - /mnt/unionfs/Media:/data
-      - "/mnt/unionfs/Media/Full HD Movies:/movies"
+      - "/mnt/unionfs/Media/Movies/FullHD_4k:/movies"
       - "/mnt:/mnt"
       - "/opt/scripts:/scripts"
       - "{{downloads.nzbs}}:/downloads/nzbs"

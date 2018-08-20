@@ -15,10 +15,6 @@
   vars:
     subdomain: lidarr
 
-- name: "Get user UID and GID"
-  include_role:
-    name: user
-
 - name: Stop and remove any existing container
   docker_container:
     name: lidarr
@@ -61,34 +57,36 @@
   with_items:
     - /opt/lidarr
 
+- name: Set default_volumes variable
+  set_fact:
+    default_volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/lidarr:/config"
+      - "/opt/scripts:/scripts"
+      - "/mnt:/mnt"
+      - "/mnt/unionfs/Media/Music:/music"
+
 - name: Create and start container
   docker_container:
     name: lidarr
     image: hotio/suitarr:lidarr
     pull: yes
     published_ports:
-      - "8686:8686"
+      - "127.0.0.1:8686:8686"
     env:
-      VERSION: "stable"
+      VERSION: "{{suitarr.version}}"
+      BACKUP: "no"
       PUID: "{{uid}}"
       PGID: "{{gid}}"
-      BACKUP: "no"
+
+      MONO_TLS_PROVIDER: legacy
+      VIRTUAL_HOST: "lidarr.{{domain}}"
+      VIRTUAL_PORT: 8686
+      LETSENCRYPT_HOST: "lidarr.{{domain}}"
+      LETSENCRYPT_EMAIL: "{{email}}"
+    volumes: "{{ default_volumes + nzbs_downloads_path|default([]) + torrents_downloads_path|default([]) + old_nzbget_downloads_path|default([]) + old_rutorrent_downloads_path|default([]) }}"
     labels:
-      traefik.enable: "true"
-      traefik.backend: "lidarr"
-      traefik.frontend.redirect.entryPoint: "https"
-      traefik.frontend.rule: "Host:lidarr.{{domain}}"
-      traefik.port: "8686"
-      traefik.docker.network: "cloudbox"
-    volumes:
-      - "/etc/localtime:/etc/localtime:ro"
-      - "/opt/lidarr:/config"
-      - "/mnt/unionfs/Media/Music:/music"
-      - /mnt/unionfs/Media:/data
-      - "/mnt:/mnt"
-      - "/opt/scripts:/scripts"
-      - "{{downloads.nzbs}}:/downloads/nzbs"
-      - "{{downloads.torrents}}:/downloads/torrents"
+      "com.github.cloudbox.cloudbox_managed": "true"
     networks:
       - name: cloudbox
         aliases:

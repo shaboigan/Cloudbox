@@ -31,7 +31,7 @@
     image: horjulf/docker-znc
     pull: yes
     published_ports:
-      - "6501:6501"
+      - "127.0.0.1:6501:6501"
       - "6502:6502"
     env:
       PUID: "{{uid}}"
@@ -43,6 +43,7 @@
       traefik.frontend.rule: "Host:znc.{{domain}}"
       traefik.port: "6501"
       traefik.docker.network: "cloudbox"
+      "com.github.cloudbox.cloudbox_managed": "true"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/znc:/config"

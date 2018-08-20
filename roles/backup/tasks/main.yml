@@ -24,7 +24,8 @@
       mode: 0775
 
   - name: "Get Start Time"
-    set_fact: start_time="{{lookup('pipe','date \"+%s\"')}}"
+    set_fact:
+      start_time: "{{ lookup('pipe','date \"+%s\"') }}"
 
   - name: "Pushover Message: Started Cloudbox backup task."
     include_role:
@@ -104,22 +105,22 @@
     file: "path=/opt/systemd-backup state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
     ignore_errors: yes
 
-  - name: "Gather list of running Docker containers."
-    shell: "docker ps --format '{{ '{{' }} .Names{{ '}}' }}' | xargs echo -n"
-    register: docker_running_containers
+  - name: "Gather list of running Cloudbox-managed Docker containers."
+    shell: "docker ps --format '{{ '{{' }} .Names{{ '}}' }}' --filter label=com.github.cloudbox.cloudbox_managed=true | xargs echo -n"
+    register: cloudbox_managed_containers
     ignore_errors: yes
 
-  - name: "Stop all running Docker containers."
-    shell: "docker stop {{docker_running_containers.stdout}}"
+  - name: "Stop all running Cloudbox-managed Docker containers."
+    shell: "docker stop {{cloudbox_managed_containers.stdout}}"
     ignore_errors: yes
-    when: not (docker_running_containers.stdout | trim == '')
+    when: not (cloudbox_managed_containers.stdout | trim == '')
 
-  - name: "Pushover Message: Stopped Docker containers."
+  - name: "Pushover Message: Stopped Cloudbox-managed Docker containers."
     include_role:
       name: pushover
     vars:
-      message: "Stopped Docker containers."
-      when: not (docker_running_containers.stdout | trim == '')
+      message: "Stopped Cloudbox-managed Docker containers."
+      when: not (cloudbox_managed_containers.stdout | trim == '')
 
   - name: Populate Service Facts
     service_facts:
@@ -180,12 +181,19 @@
       get_mime: false
     register: backup_new
 
-  - name: "Pushover Message: Backup archive created (file size: {{ ( ( backup_new.stat.size / (1024*1024*1024) ) | int | abs ) }} GB)."
+  - name: Abort backup when tar creation fails.
+    fail: msg="There must have been an issue creating the 'cloudbox.tar' file as it does not exist at '{{backup.tar_dest}}/cloudbox.tar'"
+    when: not backup_new.stat.exists
+
+  - name: "Calculate Backup Size"
+    set_fact:
+      backup_size: "{{ ( ( backup_new.stat.size / (1024*1024*1024) ) | round(0, 'ceil') | int | abs ) }}"
+
+  - name: "Pushover Message: Backup archive created (file size: {{ backup_size }} GB)."
     include_role:
       name: pushover
     vars:
-      message: "Backup archive created (file size: {{ ( ( backup_new.stat.size / (1024*1024*1024) ) | int | abs ) }} GB)."
-    when: not (backup_new is undefined)
+      message: "Backup archive created (file size: {{ backup_size }} GB)."
     ignore_errors: yes
 
   - name: "Remove 'cloudbox.tar.backup' from '{{backup.tar_dest}}'."
@@ -204,17 +212,17 @@
     wait_for:
       timeout: 5
 
-  - name: "Restart all previously running Docker containers."
-    shell: 'docker start {{docker_running_containers.stdout}}'
+  - name: "Start all previously running Cloudbox-managed Docker containers."
+    shell: 'docker start {{cloudbox_managed_containers.stdout}}'
     ignore_errors: yes
-    when: not (docker_running_containers.stdout | trim == '')
+    when: not (cloudbox_managed_containers.stdout | trim == '')
 
-  - name: "Pushover Message: Started Docker containers."
+  - name: "Pushover Message: Started Cloudbox-managed Docker containers."
     include_role:
       name: pushover
     vars:
-      message: "Started Docker containers."
-    when: not (docker_running_containers.stdout | trim == '')
+      message: "Started Cloudbox-managed Docker containers."
+    when: not (cloudbox_managed_containers.stdout | trim == '')
 
   - name: "Wait for 10 seconds before uploads"
     wait_for:
@@ -261,6 +269,8 @@
     shell: "rclone moveto '{{ backup.rclone_dest }}/{{ item }}' '{{ backup.rclone_dest }}/archived/{{ item }}_{{ rclone_timestamp.stdout | default('old', true) }}' 2>/dev/null"
     become: yes
     become_user: "{{user}}"
+    register: rclone_move
+    failed_when: rclone_move.rc > 3
     ignore_errors: yes
     when: backup.use_rclone
     with_items:
@@ -273,7 +283,7 @@
      - "cloudbox.tar"
 
   - name: "Use rclone to upload backup to '{{backup.rclone_dest}}'."
-    command: "rclone copy '{{backup.tar_dest}}' '{{backup.rclone_dest}}' --stats=30s -v --transfers=2 --drive-chunk-size=64M --log-file='/home/{{user}}/logs/backup/cloudbox_backup_rclone-{{lookup('pipe','date +%Y-%m-%d_%H-%M-%S')}}.log'"
+    command: "rclone copy '{{backup.tar_dest}}' '{{backup.rclone_dest}}' --stats=30s -vv --transfers=2 --drive-chunk-size=64M --log-file='/home/{{user}}/logs/backup/cloudbox_backup_rclone-{{lookup('pipe','date +%Y-%m-%d_%H-%M-%S')}}.log'"
     become: yes
     become_user: "{{user}}"
     when: backup.use_rclone
@@ -303,13 +313,18 @@
     when: backup.use_rsync
 
   - name: "Get End Time"
-    set_fact: end_time="{{lookup('pipe','date \"+%s\"')}}"
+    set_fact:
+      end_time: "{{ lookup('pipe','date \"+%s\"') }}"
 
-  - name: "Pushover Message: Finished Cloudbox backup task in {{  ((((end_time|int) - (start_time|int)) /60)|int|abs) }} minutes."
+  - name: "Calculate Total Time"
+    set_fact:
+      total_time: "{{ (((end_time|int) - (start_time|int)) / 60) | int | abs }}"
+
+  - name: "Pushover Message: Finished Cloudbox backup task in {{ total_time }} minutes."
     include_role:
       name: pushover
     vars:
-      message: "Finished Cloudbox backup task in {{  ((((end_time|int) - (start_time|int)) /60)|int|abs) }} minutes."
+      message: "Finished Cloudbox backup task in {{ total_time }} minutes."
 
   - name: "Start cloudplow service."
     systemd:
@@ -348,10 +363,10 @@
       wait_for:
         timeout: 5
 
-    - name: "Re-start all previously running Docker containers."
-      shell: 'docker start {{docker_running_containers.stdout}}'
+    - name: "Start all previously running Cloudbox-managed Docker containers."
+      shell: 'docker start {{cloudbox_managed_containers.stdout}}'
       ignore_errors: yes
-      when: not (docker_running_containers.stdout | trim == '')
+      when: not (cloudbox_managed_containers.stdout | trim == '')
 
     - name: Start cloudplow service
       systemd:

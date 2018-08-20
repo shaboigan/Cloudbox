@@ -15,10 +15,6 @@
   vars:
     subdomain: bazarr
 
-- name: "Get user UID and GID"
-  include_role:
-    name: user
-
 - name: Stop and remove any existing container
   docker_container:
     name: bazarr
@@ -67,9 +63,9 @@
     image: "hotio/suitarr:bazarr"
     pull: yes
     published_ports:
-      - "6767:6767"
+      - "127.0.0.1:6767:6767"
     env:
-      VERSION: "stable"
+      VERSION: "{{suitarr.version}}"
       BACKUP: "no"
       PUID: "{{uid}}"
       PGID: "{{gid}}"
@@ -80,12 +76,12 @@
       traefik.frontend.rule: "Host:bazarr.{{domain}}"
       traefik.port: "6767"
       traefik.docker.network: "cloudbox"
+      "com.github.cloudbox.cloudbox_managed": "true"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/bazarr:/config"
-      - /mnt/unionfs/Media:/data
-      - /mnt/unionfs/Media/Movies:/movies
-      - /mnt/unionfs/Media/TV Shows:/tv
+      - "/mnt/unionfs/Media/TV:/tv"
+      - "/mnt/unionfs/Media/Movies:/movies"
       - "/mnt:/mnt"
       - "/opt/scripts:/scripts"
     networks:

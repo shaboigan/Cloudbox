@@ -1,8 +1,8 @@
 #########################################################################
 # Title:         Cloudbox: Tautulli Role                                #
-# Author(s):     Desimaniac                                             #
+# Author(s):     L3uddz, Desimaniac, shaboigan                          #
 # URL:           https://github.com/cloudbox/cloudbox                   #
-# Docker Image:  hotio/suitarr                                          #
+# Docker Image:  tautulli/tautulli                                      #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.rocks          #
 #########################################################################
@@ -15,19 +15,53 @@
   vars:
     subdomain: tautulli
 
-- name: "Get user UID and GID"
-  include_role:
-    name: user
-
 - name: Stop and remove any existing container
   docker_container:
     name: tautulli
     state: absent
 
+- name: Wait for Plex Logs folder to be created by Plex
+  wait_for:
+    path: "/opt/plex/Library/Application Support/Plex Media Server/Logs"
+    state: present
+
+# START - Suitarr Migration Tasks
+- name: Check folder exists
+  stat:
+    path: /opt/tautulli
+  register: folder
+
+- name: Check subfolder1 exists
+  stat:
+    path: /opt/tautulli/Tautulli
+  register: subfolder1
+
+- name: Check subfolder2 exists
+  stat:
+    path: /opt/tautulli/app
+  register: subfolder2
+
+- name: Move 'tautulli' folder contents to 'app' subfolder
+  shell: |
+    mv /opt/tautulli /tmp/app
+    mkdir /opt/tautulli
+    mv /tmp/app /opt/tautulli/
+    find /opt/tautulli/* -type d -empty -delete
+    chown -R {{user}}:{{user}} /opt/tautulli
+  when: (folder.stat.exists) and not (subfolder1.stat.exists or subfolder2.stat.exists)
+
+- name: Move 'Tautulli' subfolder to 'app' subfolder
+  shell: |
+    mv /opt/tautulli/Tautulli /opt/tautulli/app
+    chown -R {{user}}:{{user}} /opt/tautulli
+  when: (folder.stat.exists) and (subfolder1.stat.exists) and (not subfolder2.stat.exists)
+# END - Suitarr Migration Tasks
+
 - name: Create tautulli directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
     - /opt/tautulli
+    - /opt/scripts/tautulli
 
 - name: Create and start container
   docker_container:
@@ -35,9 +69,9 @@
     image: hotio/suitarr:tautulli
     pull: yes
     published_ports:
-      - "8181:8181"
+      - "127.0.0.1:8181:8181"
     env:
-      VERSION: "stable"
+      VERSION: "{{suitarr.version}}"
       PUID: "{{uid}}"
       PGID: "{{gid}}"
       BACKUP: "no"
@@ -48,6 +82,7 @@
       traefik.frontend.rule: "Host:tautulli.{{domain}}"
       traefik.port: "8181"
       traefik.docker.network: "cloudbox"
+      "com.github.cloudbox.cloudbox_managed": "true"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/tautulli:/config"

@@ -16,16 +16,20 @@
     - /home/{{user}}/.config/pip
     - /mnt/local
     - /mnt/local/Media
-    - /mnt/local/Media/Anime
-    - /mnt/local/Media/Documentaries
-    - "/mnt/local/Media/Full HD Movies"
     - /mnt/local/Media/Movies
-    - "/mnt/local/Media/Poor Quality"
-    - /mnt/local/Media/Reality
+    - /mnt/local/Media/Movies/Documentaries
+    - /mnt/local/Media/Movies/Foreign
+    - "/mnt/local/Media/Movies/FullHD_4k"
+    - "/mnt/local/Media/Movies/Poor Quality"
+    - /mnt/local/Media/Movies/YIFY
     - /mnt/local/Media/Music
     - "/mnt/local/Media/TV Shows"
+    - "/mnt/local/Media/TV Shows/Anime"
+    - "/mnt/local/Media/TV Shows/Documentaries"
+    - "/mnt/local/Media/TV Shows/Kids"
+    - "/mnt/local/Media/TV Shows/Reality"
+    - "/mnt/local/Media/TV Shows/Stand-Up"
     - /mnt/local/Media/Sports
-    - /mnt/local/Media/Stand-Up
     - /mnt/.cloud-crypt
     - /mnt/.local-crypt
     - /opt
@@ -35,28 +39,6 @@
 - name: (Re)Set permissions
   import_tasks: "permissions.yml"
   tags: permissions-fix
-
-- name: "Set {{downloads.nzbs}} permissions"
-  shell: "chmod -R 775 {{downloads.nzbs}}"
-
-- name: "Set {{downloads.nzbs}} owner"
-  shell: "chown -R {{user}}:{{user}} {{downloads.nzbs}}"
-
-- name: "Set {{downloads.torrents}} permissions"
-  shell: "chmod -R 775 {{downloads.torrents}}"
-
-- name: "Set {{downloads.torrents}} owner"
-  shell: "chown -R {{user}}:{{user}} {{downloads.torrents}}"
-
-- name: Set /opt permissions
-  shell: "chmod -R ugo+X /opt"
-  args:
-    warn: no
-
-- name: Set '/opt' ownership
-  shell: "chown -R {{user}}:{{user}} /opt"
-  args:
-    warn: no
 
 - name: Add multiverse repositories
   apt_repository:
@@ -150,6 +132,12 @@
     - apprise
   ignore_errors: yes
 
+- name: Install z
+  import_role:
+    name: z
+  tags: z
+  ignore_errors: yes
+
 - name: Install nodejs
   import_role:
     name: nodejs
@@ -178,4 +166,10 @@
   import_role:
     name: nethogs
   tags: nethogs
+  ignore_errors: yes
+
+- name: Install Subliminal
+  import_role:
+    name: subliminal
+  tags: subliminal
   ignore_errors: yes

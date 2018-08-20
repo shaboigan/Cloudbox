@@ -15,10 +15,6 @@
   vars:
     subdomain: thelounge
 
-- name: "Get user UID and GID"
-  include_role:
-    name: user
-
 - name: Stop and remove any existing container
   docker_container:
     name: thelounge
@@ -35,7 +31,7 @@
     image: "linuxserver/thelounge"
     pull: yes
     published_ports:
-      - "9500:9000"
+      - "127.0.0.1:9500:9000"
     env:
       PUID: "{{uid}}"
       PGID: "{{gid}}"
@@ -46,6 +42,7 @@
       traefik.frontend.rule: "Host:lounge.{{domain}}"
       traefik.port: "9000"
       traefik.docker.network: "cloudbox"
+      "com.github.cloudbox.cloudbox_managed": "true"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/thelounge:/config"

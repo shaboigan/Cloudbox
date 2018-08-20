@@ -9,16 +9,6 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Set DNS Record on CloudFlare"
-  include_role:
-    name: cloudflare
-  vars:
-    subdomain: telly
-
-- name: "Get user UID and GID"
-  include_role:
-    name: user
-
 - name: "Assert that all Telly related settings are filled in."
   assert:
     that:
@@ -31,6 +21,38 @@
     name: telly
     state: absent
 
+# START - Suitarr Migration Tasks
+- name: Check folder exists
+  stat:
+    path: /opt/telly
+  register: folder
+
+- name: Check subfolder1 exists
+  stat:
+    path: /opt/telly/Telly
+  register: subfolder1
+
+- name: Check subfolder2 exists
+  stat:
+    path: /opt/telly/app
+  register: subfolder2
+
+- name: Move 'telly' folder contents to 'app' subfolder
+  shell: |
+    mv /opt/telly /tmp/app
+    mkdir /opt/telly
+    mv /tmp/app /opt/telly/
+    find /opt/telly/* -type d -empty -delete
+    chown -R {{user}}:{{user}} /opt/telly
+  when: (folder.stat.exists) and not (subfolder1.stat.exists or subfolder2.stat.exists)
+
+- name: Move 'Telly' subfolder to 'app' subfolder
+  shell: |
+    mv /opt/telly/Telly /opt/telly/app
+    chown -R {{user}}:{{user}} /opt/telly
+  when: (folder.stat.exists) and (subfolder1.stat.exists) and (not subfolder2.stat.exists)
+# END - Suitarr Migration Tasks
+
 - name: Create telly directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
@@ -39,22 +61,29 @@
 - name: Create and start container
   docker_container:
     name: telly
-    image: "tombowditch/telly"
+    image: hotio/suitarr:telly"
     pull: yes
-    network_mode: "container:nordvpn"
     env:
-      PLAYLIST: "{{telly.playlist}}"
-      STREAMS: "{{telly.streams}}"
-      LISTEN: "0.0.0.0:6077"
-      BASE: "telly:6077"
+      VERSION: "{{suitarr.version}}"
       PUID: "{{uid}}"
       PGID: "{{gid}}"
-      USEREGEX: "{{telly.regex}}"
-      FRIENDLYNAME: TellyTuner
-      DEVICEID: "12345678"
+      BACKUP: "no"
+      TELLY_IPTV_PLAYLIST: "{{telly.playlist}}"
+      TELLY_IPTV_STREAMS: "{{telly.streams}}"
+      TELLY_WEB_LISTEN_ADDRESS: "0.0.0.0:6077"
+      TELLY_WEB_BASE_ADDRESS: "telly:6077"
+      TELLY_FILTER_REGEX_MODE: true
+      TELLY_DISCOVERY_SSDP: true
+      TELLY_LOG_REQUESTS: "{{ telly.log_requests | default ('') }}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/telly:/opt/telly"
+    labels:
+      "com.github.cloudbox.cloudbox_managed": "true"
+    networks:
+      - name: cloudbox
+        aliases:
+          - telly
     purge_networks: yes
     restart_policy: always
     state: started

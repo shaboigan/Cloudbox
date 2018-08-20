@@ -15,10 +15,6 @@
   vars:
     subdomain: nzbget
 
-- name: "Get user UID and GID"
-  include_role:
-    name: user
-
 - name: Stop and remove any existing container
   docker_container:
     name: nzbget
@@ -73,9 +69,9 @@
     image: hotio/suitarr:nzbget
     pull: yes
     published_ports:
-      - "6789:6789"
+      - "127.0.0.1:6789:6789"
     env:
-      VERSION: "stable"
+      VERSION: "{{suitarr.version}}"
       BACKUP: "no"
       PUID: "{{uid}}"
       PGID: "{{gid}}"
@@ -86,6 +82,7 @@
       traefik.frontend.rule: "Host:nzbget.{{domain}}"
       traefik.port: "6789"
       traefik.docker.network: "cloudbox"
+      "com.github.cloudbox.cloudbox_managed": "true"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/nzbget:/config"

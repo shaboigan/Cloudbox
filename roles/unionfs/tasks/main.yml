@@ -29,18 +29,12 @@
 - name: Create /mnt/unionfs and subdirs
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
   with_items:
-    - "/mnt/unionfs"
-    - "/mnt/unionfs/Media"
-    - "/mnt/unionfs/Media/Anime"
-    - "/mnt/unionfs/Media/Documentaries"
-    - "/mnt/unionfs/Media/Full HD Movies"
-    - "/mnt/unionfs/Media/Movies"
-    - "/mnt/unionfs/Media/Poor Quality"
-    - "/mnt/unionfs/Media/Reality"
-    - "/mnt/unionfs/Media/Music"
-    - "/mnt/unionfs/Media/TV Shows"
-    - "/mnt/unionfs/Media/Sports"
-    - "/mnt/unionfs/Media/Stand-Up"
+    - /mnt/unionfs
+    - /mnt/unionfs/Media
+    - /mnt/unionfs/Media/Movies
+    - /mnt/unionfs/Media/Music
+    - /mnt/unionfs/Media/TV
+    - /mnt/unionfs/Media/Sports
     - /mnt/local/.unionfs-fuse
 
 - name: Install fuse
