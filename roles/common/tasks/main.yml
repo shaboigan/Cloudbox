@@ -132,12 +132,6 @@
     - apprise
   ignore_errors: yes
 
-- name: Install z
-  import_role:
-    name: z
-  tags: z
-  ignore_errors: yes
-
 - name: Install nodejs
   import_role:
     name: nodejs
