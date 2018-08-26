@@ -30,6 +30,23 @@ Changelog Format:
 # Changelog
 ## [Unreleased]
 
+## [1.2.7] - 2018-08-21
+
+### Changed
+- Plex Autoscan URL Script: Tweaked grep command.
+- Rutorrent: Added missing auth info to nginx.conf.
+
+## [1.2.6] - 2018-08-19
+
+### Fixed
+- NZBHydra2: Sets base to null value (new installs only).
+- Plex Autoscan URL Script: Allows script to be run from any location.
+
+## [1.2.5] - 2018-08-19
+
+### Changed
+- Rutorrent: Settings updated to match latest rtorrent release.
+
 ## [1.2.4] - 2018-08-18
 
 ### Added
@@ -638,6 +655,9 @@ git reset --hard 58964a8
 
 
 [Unreleased]: https://github.com/cloudbox/cloudbox/compare/HEAD...develop
+[1.2.7]: https://github.com/cloudbox/cloudbox/compare/v1.2.6...v1.2.7
+[1.2.6]: https://github.com/cloudbox/cloudbox/compare/v1.2.5...v1.2.6
+[1.2.5]: https://github.com/cloudbox/cloudbox/compare/v1.2.4...v1.2.5
 [1.2.4]: https://github.com/cloudbox/cloudbox/compare/v1.2.3...v1.2.4
 [1.2.3]: https://github.com/cloudbox/cloudbox/compare/v1.2.2...v1.2.3
 [1.2.2]: https://github.com/cloudbox/cloudbox/compare/v1.2.1...v1.2.2
