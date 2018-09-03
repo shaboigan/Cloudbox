@@ -9,7 +9,7 @@
     "show": {
       "autoscan": false,
       "nzbget": false,
-      "plexpy": false,
+      "tautulli": false,
       "rtorrent": false
     },
     "text_color": "LGRN",
@@ -18,8 +18,8 @@
   "nzbget": {
     "url": "https://{{user}}:{{passwd}}@nzbget.{{domain}}"
   },
-  "plexpy": {
-      "url": "https://plexpy.{{domain}}",
+  "tautulli": {
+      "url": "https://tautulli.{{domain}}",
       "api_key": "SET_YOUR_API_KEY"
   },
   "rtorrent": {
