@@ -34,12 +34,22 @@
 - name: Create and start container
   docker_container:
     name: deluge
-    image: "linuxserver/deluge:latest"
+    image: binhex/arch-delugevpn
     pull: yes
     env:
       PUID: "{{uid}}"
       PGID: "{{gid}}"
-      UMASK_SET: "022"
+      UMASK: "022"
+      VPN_ENABLED: "no"
+      VPN_USER:
+      VPN_PASS:
+      VPN_PROV:
+      VPN_OPTIONS:
+      STRICT_PORT_FORWARD: "yes"
+      ENABLE_PRIVOXY: "no"
+      LAN_NETWORK:
+      NAME_SERVERS:
+      DEBUG: "false"
     network_mode: "container:nordvpn"
     labels:
       traefik.enable: "true"
@@ -50,6 +60,7 @@
       traefik.docker.network: "cloudbox"
       "com.github.cloudbox.cloudbox_managed": "true"
     volumes:
+      - "/etc/localtime:/etc/localtime:ro"
       - "/opt/deluge:/config"
       - "{{downloads.torrents}}/deluge:/downloads"
       - "{{downloads.torrents}}:/data"

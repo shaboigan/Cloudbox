@@ -11,20 +11,20 @@
 ---
 - name: Set incoming directory
   lineinfile:
-    path: "/opt/rutorrent/rtorrent/rtorrent.rc"
+    path: "/opt/rutorrent/rtorrent/config/rtorrent.rc"
     regexp: '^directory.default.set\s?=.*'
     line: 'directory.default.set = /downloads/torrents/rutorrent/incoming'
     state: present
 
 - name: Set watched directory
   lineinfile:
-    path: "/opt/rutorrent/rtorrent/rtorrent.rc"
+    path: "/opt/rutorrent/rtorrent/config/rtorrent.rc"
     line: 'schedule = watch_directory,5,5,"load.start=/downloads/torrents/rutorrent/watched/*.torrent,d.delete_tied="'
     state: present
 
 - name: Set completed directory
   lineinfile:
-    path: "/opt/rutorrent/rtorrent/rtorrent.rc"
+    path: "/opt/rutorrent/rtorrent/config/rtorrent.rc"
     line: '{{item}}'
     state: present
   with_items:
