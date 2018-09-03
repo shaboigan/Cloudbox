@@ -1,7 +1,7 @@
 {
     "core": {
         "dry_run": false,
-        "rclone_config_path": "/home/{{user}}/.config/rclone/rclone.conf"
+	    "rclone_config_path": "/home/{{user}}/.config/rclone/rclone.conf"
     },
     "hidden": {
         "/mnt/local/.unionfs-fuse": {
@@ -44,7 +44,8 @@
                 "--drive-chunk-size": "64M",
                 "--stats": "60s",
                 "--transfers": 8,
-                "--verbose": 1
+                "--verbose": 1,
+                "--skip-links": null
             },
             "rclone_sleeps": {
                 "Failed to copy: googleapi: Error 403: User rate limit exceeded": {

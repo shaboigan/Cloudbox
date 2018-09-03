@@ -8,10 +8,11 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Ensure unzip is installed
-  apt:
-    name: unzip
-    state: present
+- name: Install common packages
+  apt: "name={{item}} state=present"
+  with_items:
+    - unzip
+    - man-db
 
 - name: Create rclone directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
@@ -19,6 +20,44 @@
     - "/home/{{user}}/.config"
     - "/home/{{user}}/.config/rclone"
     - "/opt/scripts/rclone"
+
+# START - Legacy Rclone Installation Cleanup
+- name: Delete '/usr/sbin/rclone' if it exists
+  file:
+    path: "/usr/sbin/rclone"
+    state: absent
+
+- name: Check if '/opt/rclone/rclone.conf' exists
+  stat:
+    path: "/opt/rclone/rclone.conf"
+  register: opt_rclone_conf
+
+- name: Check if '/home/{{user}}/.config/rclone/rclone.conf' exists
+  stat:
+    path: "/home/{{user}}/.config/rclone/rclone.conf"
+  register: home_rclone_conf
+
+- name: Delete '/home/{{user}}/.config/rclone/rclone.conf' if it is symlinked
+  file:
+    path: "/home/{{user}}/.config/rclone/rclone.conf"
+    state: absent
+  when: home_rclone_conf.stat.islnk is defined and home_rclone_conf.stat.islnk
+
+- name: Copy '/opt/rclone/rclone.conf' to '/home/{{user}}/.config/rclone/rclone.conf'
+  copy:
+    src: "/opt/rclone/rclone.conf"
+    dest: "/home/{{user}}/.config/rclone/rclone.conf"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: no
+  when: opt_rclone_conf.stat.exists and ((not home_rclone_conf.stat.exists) or (home_rclone_conf.stat.islnk is defined and home_rclone_conf.stat.islnk))
+
+- name: Delete '/opt/rclone' if it exists
+  shell: rm -rf /opt/rclone
+  args:
+    warn: no
+# END - Legacy Rclone Installation Cleanup
 
 - name: Cleanup rclone tmp path
   shell: rm -rf /tmp/rclone-*-linux-amd64
@@ -111,6 +150,15 @@
   stat:
     path: "{{playbook_dir}}/rclone.conf"
   register: rclone_conf_playbook_dir
+
+- name: "Check if 'rclone.conf' exists in default location"
+  stat:
+    path: "/home/{{user}}/.config/rclone/rclone.conf"
+  register: rclone_conf_default_path
+
+- name: "Backup existing 'rclone.conf' at default location"
+  shell: "mv '/home/{{user}}/.config/rclone/rclone.conf' '/home/{{user}}/.config/rclone/rclone.conf.bak'"
+  when: rclone_conf_playbook_dir.stat.exists and rclone_conf_default_path.stat.exists
 
 - name: "Move 'rclone.conf' from '{{playbook_dir}}' folder to default location"
   shell: "mv '{{playbook_dir}}/rclone.conf' '/home/{{user}}/.config/rclone/rclone.conf'"
