@@ -38,15 +38,3 @@
     group: "{{user}}"
     mode: 0775
   when: (not folder_state.stat.exists) or (folder_state_age|int >= 7)
-
-- name: "Set {{downloads.nzbs}} permissions"
-  shell: "chmod -R 775 {{downloads.nzbs}}"
-
-- name: "Set {{downloads.nzbs}} owner"
-  shell: "chown -R {{user}}:{{user}} {{downloads.nzbs}}"
-
-- name: "Set {{downloads.torrents}} permissions"
-  shell: "chmod -R 775 {{downloads.torrents}}"
-
-- name: "Set {{downloads.torrents}} owner"
-  shell: "chown -R {{user}}:{{user}} {{downloads.torrents}}"

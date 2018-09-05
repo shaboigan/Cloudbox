@@ -56,12 +56,26 @@
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
     - /opt/nzbget
+
+- name: Create new downloads directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
+  with_items:
+    - "{{downloads.nzbs}}"
     - "{{downloads.nzbs}}/nzbget"
+  when: (nzbs_downloads_path is defined)|default(false)
 
 - name: Check nzbget.conf exists
   stat:
     path: "/opt/nzbget/app/nzbget.conf"
   register: nzbget_conf
+
+- name: Set default_volumes variable
+  set_fact:
+    default_volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/nzbget:/config"
+      - "/opt/scripts:/scripts"
+      - "/mnt:/mnt"
 
 - name: Create and start container
   docker_container:
@@ -83,12 +97,7 @@
       traefik.port: "6789"
       traefik.docker.network: "cloudbox"
       "com.github.cloudbox.cloudbox_managed": "true"
-    volumes:
-      - "/etc/localtime:/etc/localtime:ro"
-      - "/opt/nzbget:/config"
-      - "/opt/scripts:/scripts"
-      - "/mnt:/mnt"
-      - "{{downloads.nzbs}}/nzbget:/downloads/nzbs/nzbget"
+    volumes: "{{ default_volumes + nzbs_downloads_path|default([]) }}"
     networks:
       - name: cloudbox
         aliases:

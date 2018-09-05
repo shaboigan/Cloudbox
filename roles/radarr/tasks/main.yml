@@ -57,6 +57,15 @@
   with_items:
     - /opt/radarr
 
+- name: Set default_volumes variable
+  set_fact:
+    default_volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/radarr:/config"
+      - "/opt/scripts:/scripts"
+      - "/mnt:/mnt"
+      - "/mnt/unionfs/Media/Movies:/movies"
+
 - name: Create and start container
   docker_container:
     name: radarr
@@ -77,15 +86,7 @@
       traefik.port: "7878"
       traefik.docker.network: "cloudbox"
       "com.github.cloudbox.cloudbox_managed": "true"
-    volumes:
-      - "/etc/localtime:/etc/localtime:ro"
-      - "/opt/radarr:/config"
-      - /mnt/unionfs/Media:/data
-      - "/mnt/unionfs/Media/Movies:/movies"
-      - "/mnt:/mnt"
-      - "/opt/scripts:/scripts"
-      - "{{downloads.nzbs}}:/downloads/nzbs"
-      - "{{downloads.torrents}}:/downloads/torrents"
+    volumes: "{{ default_volumes + nzbs_downloads_path|default([]) + torrents_downloads_path|default([]) }}"
     networks:
       - name: cloudbox
         aliases:

@@ -29,16 +29,36 @@
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
     - /opt/sabnzbd
+
+- name: Create new downloads directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
+  with_items:
+    - "{{downloads.nzbs}}"
     - "{{downloads.nzbs}}/sabnzbd"
     - "{{downloads.nzbs}}/sabnzbd/complete"
     - "{{downloads.nzbs}}/sabnzbd/incomplete"
     - "{{downloads.nzbs}}/sabnzbd/watched"
     - "{{downloads.nzbs}}/sabnzbd/logs"
 
+# This is still needed as sometimes it will remain in root.
+- name: "Set {{downloads.nzbs}} permissions"
+  shell: "chmod -R 775 {{downloads.nzbs}}"
+
+- name: "Set {{downloads.nzbs}} owner"
+  shell: "chown -R {{user}}:{{user}} {{downloads.nzbs}}"
+
 - name: Check sabnzbd.ini exists
   stat:
     path: "/opt/sabnzbd/app/sabnzbd.ini"
   register: sabnzbd_ini
+
+- name: Set default_volumes variable
+  set_fact:
+    default_volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/sabnzbd:/config"
+      - "/opt/scripts:/scripts"
+      - "/mnt:/mnt"
 
 - name: Create and start container
   docker_container:
@@ -60,12 +80,7 @@
       traefik.port: "8080"
       traefik.docker.network: "cloudbox"
       "com.github.cloudbox.cloudbox_managed": "true"
-    volumes:
-      - "/etc/localtime:/etc/localtime:ro"
-      - "/opt/sabnzbd:/config"
-      - "/opt/scripts:/scripts"
-      - "/mnt:/mnt"
-      - "{{downloads.nzbs}}/sabnzbd:/downloads/nzbs/sabnzbd"
+    volumes: "{{ default_volumes + nzbs_downloads_path|default([]) }}"
     networks:
       - name: cloudbox
         aliases:

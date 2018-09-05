@@ -62,6 +62,13 @@
     path: "/opt/nzbhydra2/app/nzbhydra.yml"
   register: nzbhydra2_yml
 
+- name: Set default_volumes variable
+  set_fact:
+    default_volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/nzbhydra2:/config"
+      - "/mnt:/mnt"
+
 - name: Create and start container
   docker_container:
     name: nzbhydra2
@@ -82,10 +89,7 @@
       traefik.port: "5076"
       traefik.docker.network: "cloudbox"
       "com.github.cloudbox.cloudbox_managed": "true"
-    volumes:
-      - "/etc/localtime:/etc/localtime:ro"
-      - "/opt/nzbhydra2:/config"
-      - "/opt/nzbhydra/hydra:/nzbhydra1"
+    volumes: "{{ default_volumes }}"
     networks:
       - name: cloudbox
         aliases:
