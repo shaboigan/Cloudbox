@@ -48,7 +48,7 @@
 * [Plex](https://www.plex.tv) ([Docker](https://github.com/plexinc/pms-docker))
 * [Emby](https://emby.media/) ([Docker](https://hub.docker.com/r/emby/embyserver/))
 * [Plex Patrol](https://github.com/l3uddz/plex_patrol) ([Docker](https://hub.docker.com/r/emby/embyserver/))
-* [Tautulli (PlexPy)](http://tautulli.com/) ([Docker](https://github.com/Tautulli/Tautulli-Docker))
+* [Tautulli](http://tautulli.com/) ([Docker](https://github.com/Tautulli/Tautulli-Docker))
 * [Sonarr](https://sonarr.tv) ([Docker](https://gitlab.com/hotio/suitarr))
 * [Radarr](https://radarr.video) ([Docker](https://gitlab.com/hotio/suitarr))
 * [Lidarr](https://lidarr.audio) ([Docker](https://gitlab.com/hotio/suitarr))

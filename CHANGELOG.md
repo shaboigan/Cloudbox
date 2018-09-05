@@ -245,7 +245,7 @@ Changelog Format:
 - NZBGet: Tweaked /scripts mount path.
 - NZBHydra2: Increase JVM memory to 512MB when system has 8GB of RAM or more.
 - Plex Autoscan: Updated config to support latest changes.
-- Plexpy: /scripts/plexpy/ points to /opt/scripts/plexpy/.
+- Tautulli: /scripts/tautulli/ points to /opt/scripts/tautulli/.
 - PreInstall: Set ownership of entire /home/user folder to user.
 - ruTorrent: Tweaked /scripts mount path.
 - System: Only updates ext4 mount.
@@ -413,7 +413,7 @@ git reset --hard 58964a8
 - Node.js: Updated to v10.X.
 - Plex Autoscan: Fixed up Plex Autoscan URL Script.
 - Plex Dupefinder: misc changes to default config.
-- PlexPy (Tautulli): Now downloads nightly version.
+- Tautulli: Now downloads nightly version.
 - Readme: Added feathub link.
 - Rutorrent: Added stop_timeout to Docker container.
 - Traktarr: misc changes to default config.
@@ -614,11 +614,11 @@ git reset --hard 58964a8
   - folder: `/opt/rutorrent`
 - [WebTools](https://github.com/ukdtom/WebTools.bundle)
   - Updated to v3.0.0 (to update, see this [FAQ](https://github.com/cloudbox/cloudbox/wiki/FAQ#update-webtools) page).
-- [PlexPy](http://tautulli.com/)
-  - Now installs PlexPy v2 (aka Tautulli)
-  - subdomain: `plexpy`
-  - install: `--tags update-plexpy`
-  - folder: `/opt/plexpy`
+- [Tautulli](http://tautulli.com/)
+  - Now installs tautulli v2 (aka Tautulli)
+  - subdomain: `tautulli`
+  - install: `--tags update-tautulli`
+  - folder: `/opt/tautulli`
 
 
 ## [1.0.1] - 2017-12-30

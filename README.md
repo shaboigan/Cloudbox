@@ -30,7 +30,7 @@ Featured Applications:
 - Plexdrive
 - NZBGet
 - ruTorrent
-- Tautulli (PlexPy)
+- Tautulli
 - NZBHydra2
 - Jackett
 - Ombi

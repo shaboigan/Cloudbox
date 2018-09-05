@@ -29,11 +29,6 @@
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
     - /opt/sabnzbd
-
-- name: Create sabnzbd directories
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
-  with_items:
-    - /opt/sabnzbd
     - "{{downloads.nzbs}}/sabnzbd"
     - "{{downloads.nzbs}}/sabnzbd/complete"
     - "{{downloads.nzbs}}/sabnzbd/incomplete"

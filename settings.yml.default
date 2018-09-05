@@ -6,7 +6,7 @@ plex:
   tag: beta
   transcodes: /home/{{user}}/.transcodes
 suitarr:
-  version:
+  version: stable
 nordvpn:
   country: 
   category: # Anti DDoS;Dedicated IP servers;Double VPN;Obfuscated Servers;Onion Over VPN;P2P;Standard VPN servers
