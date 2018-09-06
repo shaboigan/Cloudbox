@@ -1,0 +1,24 @@
+---
+user: 
+passwd: 
+domain: 
+email: 
+cloudflare_api_token:
+http_user:
+http_passwd:
+plex:
+  user:
+  pass:
+nordvpn:
+  user:
+  pass:
+trakt:
+  id:
+  secret:
+discord:
+  id:
+  token:
+pushover:
+  app_token:
+  user_key:
+  priority:
