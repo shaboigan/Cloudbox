@@ -18,8 +18,8 @@
 - name: Create htpasswd
   htpasswd:
     path: "/opt/traefik/htpasswd/{{item}}.{{domain}}"
-    name: "{{http_user}}"
-    password: "{{http_passwd}}"
+    name: "{{htuser}}"
+    password: "{{htpasswd}}"
     owner: "{{user}}"
     group: "{{user}}"
     mode: 0664

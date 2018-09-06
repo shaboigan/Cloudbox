@@ -4,8 +4,8 @@ passwd:
 domain: 
 email: 
 cloudflare_api_token:
-http_user:
-http_passwd:
+htuser:
+htpasswd:
 plex:
   user:
   pass:
