@@ -15,20 +15,11 @@
     - /home/{{user}}/.config
     - /home/{{user}}/.config/pip
     - /mnt/local
+    - /mnt/local
     - /mnt/local/Media
     - /mnt/local/Media/Movies
-    - /mnt/local/Media/Movies/Documentaries
-    - /mnt/local/Media/Movies/Foreign
-    - "/mnt/local/Media/Movies/FullHD_4k"
-    - "/mnt/local/Media/Movies/Poor Quality"
-    - /mnt/local/Media/Movies/YIFY
     - /mnt/local/Media/Music
-    - "/mnt/local/Media/TV Shows"
-    - "/mnt/local/Media/TV Shows/Anime"
-    - "/mnt/local/Media/TV Shows/Documentaries"
-    - "/mnt/local/Media/TV Shows/Kids"
-    - "/mnt/local/Media/TV Shows/Reality"
-    - "/mnt/local/Media/TV Shows/Stand-Up"
+    - /mnt/local/Media/TV
     - /mnt/local/Media/Sports
     - /mnt/.cloud-crypt
     - /mnt/.local-crypt

@@ -28,7 +28,6 @@
 - name: Create new downloads directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
   with_items:
-    - "{{downloads.torrents}}"
     - "{{downloads.torrents}}/rutorrent"
     - "{{downloads.torrents}}/rutorrent/completed"
     - "{{downloads.torrents}}/rutorrent/incoming"

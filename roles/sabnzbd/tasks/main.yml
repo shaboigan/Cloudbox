@@ -33,7 +33,6 @@
 - name: Create new downloads directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
   with_items:
-    - "{{downloads.nzbs}}"
     - "{{downloads.nzbs}}/sabnzbd"
     - "{{downloads.nzbs}}/sabnzbd/complete"
     - "{{downloads.nzbs}}/sabnzbd/incomplete"
