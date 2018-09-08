@@ -15,17 +15,6 @@
   vars:
     subdomain: netdata
 
-- name: Create http_passwd
-  http_passwd:
-    path: "/opt/traefik/http_passwd/{{item}}.{{domain}}"
-    name: "{{http_user}}"
-    password: "{{http_passwd}}"
-    owner: "{{user}}"
-    group: "{{user}}"
-    mode: 0664
-  with_items:
-    - netdata
-
 - name: Stop and remove any existing container
   docker_container:
     name: netdata
