@@ -15,6 +15,15 @@
   vars:
     subdomain: heimdall
 
+- name: Slurp hashed htpasswd
+  slurp:
+    src: "/opt/traefik/.htpasswd"
+  register: hashed
+
+- name: Set hashed password
+  set_fact:
+    hashed_password: "{{ hashed['content'] | b64decode }}"
+
 - name: Stop and remove any existing container
   docker_container:
     name: heimdall
@@ -41,9 +50,9 @@
       traefik.frontend.redirect.entryPoint: "https"
       traefik.frontend.rule: "Host:heimdall.{{domain}}"
       traefik.port: "443"
+      traefik.frontend.auth.basic: "{{ hashed_password }}"
       traefik.docker.network: "cloudbox"
       traefik.protocol: "https"
-      traefik.frontend.auth.basic: ""
       "com.github.cloudbox.cloudbox_managed": "true"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"

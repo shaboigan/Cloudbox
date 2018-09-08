@@ -19,28 +19,6 @@
     name: nzbget
     state: stopped
 
-# Authentication
-- name: Set Username
-  lineinfile:
-    path: "/opt/nzbget/app/nzbget.conf"
-    regexp: '^ControlUsername\s?='
-    line: "ControlUsername={{user}}"
-    state: present
-
-- name: Set Password
-  lineinfile:
-    path: "/opt/nzbget/app/nzbget.conf"
-    regexp: '^ControlPassword\s?=.*'
-    line: "ControlPassword={{passwd}}"
-    state: present
-
-- name: Set FormAuth
-  lineinfile:
-    path: "/opt/nzbget/app/nzbget.conf"
-    regexp: '^FormAuth\s?=.*'
-    line: 'FormAuth=yes'
-    state: present
-
 # Paths
 - name: Change MainDir to downloads directory
   lineinfile:
