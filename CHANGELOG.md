@@ -241,7 +241,7 @@ Changelog Format:
 - [Z jump](https://github.com/rupa/z)
 
 ### Changed
-- Heimdall: Creates htpasswd by default.
+- Heimdall: Creates http_passwd by default.
 - NZBGet: Tweaked /scripts mount path.
 - NZBHydra2: Increase JVM memory to 512MB when system has 8GB of RAM or more.
 - Plex Autoscan: Updated config to support latest changes.
@@ -482,12 +482,12 @@ git reset --hard 58964a8
       -  `/mnt/unionfs/Media/Movies4K/`
   - Plex Autoscan will also require tweaking. See "Configuring Plex Libraries" wiki page for more info.
 - HTTP Authentication support
-  - Uses folder path `/opt/nginx-proxy/htpasswd/.
+  - Uses folder path `/opt/nginx-proxy/http_passwd/.
   - Allows setting up of basic HTTP authentication for any subdomain - use this to secure Docker web apps that don't have native login support.
-  - Command: `htpasswd -c /opt/nginx-proxy/htpasswd/SUBDOMAIN.DOMAIN.COM USERNAME` (replace `SUBDOMAIN`/`DOMAIN` with user's info; replace  `USERNAME` with desired HTTP auth username).
+  - Command: `http_passwd -c /opt/nginx-proxy/http_passwd/SUBDOMAIN.DOMAIN.COM USERNAME` (replace `SUBDOMAIN`/`DOMAIN` with user's info; replace  `USERNAME` with desired HTTP auth username).
     - User will be prompted for a password.
     - Restart the relevant Docker container for it to take effect (`docker restart appname`).
-    - To remove the HTTP authentication, simply remove the file from `/opt/nginx-proxy/htpasswd/` and restart the relevant Docker container.
+    - To remove the HTTP authentication, simply remove the file from `/opt/nginx-proxy/http_passwd/` and restart the relevant Docker container.
 - [Cloudflare DNS](https://www.cloudflare.com/) support
   - Added `cloudflare_api_token` to `settings.yml`.
   - When API token is filled in, Cloudbox will automatically create DNS entries (non proxied/CDN), and/or update them with the host's IP address, when relevant tasks are run.

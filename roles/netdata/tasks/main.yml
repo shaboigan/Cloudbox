@@ -15,11 +15,11 @@
   vars:
     subdomain: netdata
 
-- name: Create htpasswd
-  htpasswd:
-    path: "/opt/traefik/htpasswd/{{item}}.{{domain}}"
-    name: "{{htuser}}"
-    password: "{{htpasswd}}"
+- name: Create http_passwd
+  http_passwd:
+    path: "/opt/traefik/http_passwd/{{item}}.{{domain}}"
+    name: "{{http_user}}"
+    password: "{{http_passwd}}"
     owner: "{{user}}"
     group: "{{user}}"
     mode: 0664
