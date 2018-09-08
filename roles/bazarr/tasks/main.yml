@@ -20,6 +20,10 @@
     src: "/opt/traefik/.htpasswd"
   register: hashed
 
+- name: Set hashed password
+  set_fact:
+    hashed_password: "{{ hashed['content'] | b64decode }}"
+
 - name: Stop and remove any existing container
   docker_container:
     name: bazarr
@@ -80,7 +84,7 @@
       traefik.frontend.redirect.entryPoint: "https"
       traefik.frontend.rule: "Host:bazarr.{{domain}}"
       traefik.port: "6767"
-      traefik.frontend.auth.basic: "{{ hashed }}"
+      traefik.frontend.auth.basic: "{{ hashed_password }}"
       traefik.docker.network: "cloudbox"
       "com.github.cloudbox.cloudbox_managed": "true"
     volumes:
