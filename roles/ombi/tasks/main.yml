@@ -67,7 +67,7 @@
       traefik.backend: "ombi"
       traefik.frontend.redirect.entryPoint: "https"
       traefik.frontend.rule: "Host:ombi.{{domain}}"
-      traefik.port: "3579"
+      traefik.port: "5000"
       traefik.docker.network: "cloudbox"
       "com.github.cloudbox.cloudbox_managed": "true"
     volumes:
