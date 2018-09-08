@@ -31,7 +31,6 @@
   set_fact:
     default_volumes:
       - "/etc/localtime:/etc/localtime:ro"
-      - "${USERDIR}:/data:ro"
       - "/opt/deluge:/config"
       - "/opt/scripts:/scripts"
       - "/mnt:/mnt"
