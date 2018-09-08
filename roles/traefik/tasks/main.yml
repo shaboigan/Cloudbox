@@ -57,20 +57,20 @@
     group: "{{user}}"
   when: rules_toml.stat.exists == False
 
-- name: Check .http_passwd exists
+- name: Check .htpasswd exists
   stat:
-    path: "/opt/traefik/.http_passwd"
-  register: http_passwd
+    path: "/opt/traefik/.htpasswd"
+  register: htpasswd
 
-- name: Create http_passwd
-  http_passwd:
-    path: "/opt/traefik/.http_passwd"
+- name: Create htpasswd
+  htpasswd:
+    path: "/opt/traefik/.htpasswd"
     name: "{{http_user}}"
     password: "{{http_passwd}}"
     owner: "{{user}}"
     group: "{{user}}"
     mode: 0664
-  when: http_passwd.stat.exists == False
+  when: htpasswd.stat.exists == False
 
 - name: Stop and remove any existing container
   docker_container:
@@ -96,7 +96,7 @@
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /etc/localtime:/etc/localtime:ro
       - /opt/traefik/traefik.toml:/etc/traefik/traefik.toml:ro
-      - /opt/traefik/.http_passwd:/etc/traefik/.http_passwd:ro
+      - /opt/traefik/.htpasswd:/etc/traefik/.htpasswd:ro
       - /opt/traefik/rules.toml:/etc/traefik/rules.toml:ro
       - /opt/traefik/acme:/etc/traefik/acme
     labels:
