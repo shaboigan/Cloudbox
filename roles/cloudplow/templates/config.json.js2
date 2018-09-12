@@ -11,6 +11,13 @@
         }
     },
     "notifications": {
+        "Slack": {
+            "webhook_url": "https://hooks.slack.com/services/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",
+        "sender_name": "cloudplow",
+        "sender_icon": ":heavy_exclamation_mark:",
+        "channel": "",
+            "service": "slack"
+        }
     },
     "plex": {
         "enabled": false,
