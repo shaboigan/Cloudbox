@@ -54,11 +54,11 @@
 - name: "Set 'slack_enabled' variable"
   set_fact:
     slack_enabled: "{{ true if not(
-        (slack_token is undefined)
+        (slack.token is undefined)
         or
-        (slack_token is none)
+        (slack.token is none)
         or
-        (slack_token | trim == '')
+        (slack.token | trim == '')
         )
       or not(
         (slack is undefined)
@@ -67,11 +67,11 @@
         or
         (slack | trim == '')
         or
-        (slack_token is undefined)
+        (slack.token is undefined)
         or
-        (slack_token is none)
+        (slack.token is none)
         or
-        (slack_token | trim == '')
+        (slack.token | trim == '')
       )
       else false }}"
 
