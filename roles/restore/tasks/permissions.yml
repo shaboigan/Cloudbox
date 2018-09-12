@@ -12,7 +12,8 @@
   shell: "chown -R {{user}}:{{user}} /opt"
   args:
     warn: no
- - name: Set '/opt' permissions recursively
+
+- name: Set '/opt' permissions recursively
   shell: "chmod -R ugo+X /opt"
   args:
     warn: no
