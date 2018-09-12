@@ -42,11 +42,12 @@
     set_fact:
       start_time: "{{ lookup('pipe','date \"+%s\"') }}"
 
-  - name: "Pushover Message: Started Cloudbox backup task."
+  - name: "Slack Message: Started Cloudbox backup task."
     include_role:
-      name: pushover
+      name: slack
     vars:
       message: "Started Cloudbox backup task."
+      color: "normal"
 
   - name: "Copy files to '{{backup.tar_dest}}'."
     copy:
@@ -101,11 +102,12 @@
     ignore_errors: yes
     when: not (cloudbox_managed_containers.stdout | trim == '')
 
-  - name: "Pushover Message: Stopped Cloudbox-managed Docker containers."
+  - name: "Slack Message: Stopped Cloudbox-managed Docker containers."
     include_role:
-      name: pushover
+      name: slack
     vars:
       message: "Stopped Cloudbox-managed Docker containers."
+      color: "warning"
       when: not (cloudbox_managed_containers.stdout | trim == '')
 
   - name: Populate Service Facts
@@ -159,6 +161,38 @@
       state: stopped
     when: traktarr_service.stat.exists and traktarr_service_running
 
+  - name: Check if 'traktarrpq.service' exists
+    stat:
+      path: "/etc/systemd/system/traktarrpq.service"
+    register: traktarrpq_service
+
+  - name: Get traktarrpq service state
+    set_fact:
+      traktarrpq_service_running: "{{ (services['traktarrpq.service']['state'] == \"running\") }}"
+    when: traktarrpq_service.stat.exists
+
+  - name: Stop traktarrpq service
+    systemd:
+      name: traktarrpq
+      state: stopped
+    when: traktarrpq_service.stat.exists and traktarrpq_service_running
+
+  - name: Check if 'traktarr4k.service' exists
+    stat:
+      path: "/etc/systemd/system/traktarr4k.service"
+    register: traktarr4k_service
+
+  - name: Get traktarr4k service state
+    set_fact:
+      traktarr4k_service_running: "{{ (services['traktarr4k.service']['state'] == \"running\") }}"
+    when: traktarr4k_service.stat.exists
+
+  - name: Stop traktarr4k service
+    systemd:
+      name: traktarr4k
+      state: stopped
+    when: traktarr4k_service.stat.exists and traktarr4k_service_running
+
   - name: "Archiving '/opt' to '{{backup.tar_dest}}/opt/'."
     shell: |
       find /opt/ -mindepth 1 -maxdepth 1 -type d -execdir \
@@ -198,11 +232,12 @@
     set_fact:
       backup_size: "{{backup_new.stdout}}B"
 
-  - name: "Pushover Message: Backup archive created (file size: {{backup_size}})."
+  - name: "Slack Message: Backup archive created (file size: {{backup_size}})."
     include_role:
-      name: pushover
+      name: slack
     vars:
       message: "Backup archive created (file size: {{backup_size}})."
+      color: "normal"
     ignore_errors: yes
 
   - name: "Start plexdrive service."
@@ -220,11 +255,12 @@
     ignore_errors: yes
     when: not (cloudbox_managed_containers.stdout | trim == '')
 
-  - name: "Pushover Message: Started Cloudbox-managed Docker containers."
+  - name: "Slack Message: Started Cloudbox-managed Docker containers."
     include_role:
-      name: pushover
+      name: slack
     vars:
       message: "Started Cloudbox-managed Docker containers."
+      color: "good"
     when: not (cloudbox_managed_containers.stdout | trim == '')
 
   - name: "Wait for 10 seconds before uploads"
@@ -283,11 +319,12 @@
     become_user: "{{user}}"
     when: backup.use_rclone
 
-  - name: "Pushover Message: Rclone uploaded backup to '{{backup.rclone_dest}}'."
+  - name: "Slack Message: Rclone uploaded backup to '{{backup.rclone_dest}}'."
     include_role:
-      name: pushover
+      name: slack
     vars:
       message: "Rclone uploaded backup to '{{backup.rclone_dest}}'."
+      color: "good"
     when: backup.use_rclone
 
   - name: "Use rsync to upload backup to '{{backup.rsync_dest}}'."
@@ -300,11 +337,12 @@
     become_user: "{{user}}"
     when: backup.use_rsync
 
-  - name: "Pushover Message: Rsync uploaded backup to '{{backup.rsync_dest}}'."
+  - name: "Slack Message: Rsync uploaded backup to '{{backup.rsync_dest}}'."
     include_role:
-      name: pushover
+      name: slack
     vars:
       message: "Rsync uploaded backup to '{{backup.rsync_dest}}'."
+      color: "good"
     when: backup.use_rsync
 
   - name: "Get End Time"
@@ -315,11 +353,12 @@
     set_fact:
       total_time: "{{ (((end_time|int) - (start_time|int)) / 60) | int | abs }}"
 
-  - name: "Pushover Message: Finished Cloudbox backup task in {{ total_time }} minutes."
+  - name: "Slack Message: Finished Cloudbox backup task in {{ total_time }} minutes."
     include_role:
-      name: pushover
+      name: slack
     vars:
       message: "Finished Cloudbox backup task in {{ total_time }} minutes."
+      color: "good"
 
   - name: "Start cloudplow service."
     systemd:
@@ -332,6 +371,18 @@
       name: traktarr
       state: started
     when: traktarr_service.stat.exists and traktarr_service_running
+
+  - name: "Start traktarrpq service."
+    systemd:
+      name: traktarrpq
+      state: started
+    when: traktarrpq_service.stat.exists and traktarrpq_service_running
+
+  - name: "Start traktarr4k service."
+    systemd:
+      name: traktarr4k
+      state: started
+    when: traktarr4k_service.stat.exists and traktarr4k_service_running
 
   - name: "Remove {{backup.tar_dest}}."
     file:
@@ -390,14 +441,27 @@
         state: started
       when: traktarr_service.stat.exists and traktarr_service_running
 
+    - name: "Start traktarrpq service."
+      systemd:
+        name: traktarrpq
+        state: started
+      when: traktarrpq_service.stat.exists and traktarrpq_service_running
+
+    - name: "Start traktarr4k service."
+      systemd:
+        name: traktarr4k
+        state: started
+      when: traktarr4k_service.stat.exists and traktarr4k_service_running
+
     - debug:
         msg: 'Backup terminated due to an error.'
 
-    - name: "Pushover Message: Backup terminated due to an error."
+    - name: "Slack Message: Backup terminated due to an error."
       include_role:
-        name: pushover
+        name: slack
       vars:
         message: "Backup terminated due to an error."
+        color: "danger"
 
   always:
   - name: "Remove 'backup.lock'."

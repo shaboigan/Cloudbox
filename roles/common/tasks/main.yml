@@ -26,10 +26,6 @@
     - "{{downloads.nzbs}}"
     - "{{downloads.torrents}}"
 
-- name: (Re)Set permissions
-  import_tasks: "permissions.yml"
-  tags: permissions-fix
-
 - name: Add multiverse repositories
   apt_repository:
     repo: "{{item}}"

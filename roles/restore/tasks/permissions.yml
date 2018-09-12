@@ -1,6 +1,6 @@
 #########################################################################
-# Title:         Cloudbox: Pushover Role                                #
-# Author(s):     Desimaniac                                             #
+# Title:         Cloudbox: Restore - Permissions                        #
+# Author(s):     Desimaniac, L3uddz                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.rocks          #
@@ -8,11 +8,11 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Pushover Message"
-  pushover:
-    msg: "{{message}}"
-    app_token: "{{ pushover.app_token | default(pushover_app_token,true) }}"
-    user_key: "{{ pushover.user_key | default(pushover_user_key,true) }}"
-    pri: "{{ pushover.priority | default(0,true) }}"
-  when: pushover_enabled
-  ignore_errors: yes
+- name: Set '/opt' ownership recursively
+  shell: "chown -R {{user}}:{{user}} /opt"
+  args:
+    warn: no
+ - name: Set '/opt' permissions recursively
+  shell: "chmod -R ugo+X /opt"
+  args:
+    warn: no

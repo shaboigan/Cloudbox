@@ -13,17 +13,18 @@
   include_role:
     name: cloudflare
   vars:
-    subdomain: "{{item}}"
-  with_items:
-    - "{{domain}}"
-    - "www"
-  when: organizr.direct_domain|default(false,true)
+    subdomain: organizr
+  when: not (organizr.direct_domain|default(false,true))
 
 - name: "Set DNS Record on CloudFlare"
   include_role:
     name: cloudflare
   vars:
-    subdomain: organizr
+    subdomain: "{{item}}"
+  with_items:
+    - "{{domain}}"
+    - "www"
+  when: organizr.direct_domain|default(false,true)
 
 - name: Slurp hashed htpasswd
   slurp:

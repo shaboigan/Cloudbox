@@ -1,0 +1,13 @@
+---
+- name: Send successful notification message via Slack
+  slack:
+    token: "{{ slack.token | default(slack_token,true) }}"
+    msg: "{{message}}"
+    color: "{{color}}"
+    channel: '{{slack.channel}}'
+    username: 'Ansible on {{ inventory_hostname }}'
+    icon_url: http://www.example.com/some-image-file.png
+    link_names: 0
+    parse: 'none'
+  when: slack_enabled
+  ignore_errors: yes

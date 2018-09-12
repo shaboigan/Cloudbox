@@ -51,73 +51,27 @@
       )
       else false }}"
 
-- name: "Set 'pushover_api_token' variable when using older settings"
+- name: "Set 'slack.enabled' variable"
   set_fact:
-    pushover_app_token: "{{backup.pushover_app_token}}"
-  when: not(
-        (backup.pushover_app_token is undefined)
+    slack.enabled: "{{ true if not(
+        (slack.token is undefined)
         or
-        (backup.pushover_app_token is none)
+        (slack.token is none)
         or
-        (backup.pushover_app_token | trim == '')
-        or
-        (backup.pushover_user_key is undefined)
-        or
-        (backup.pushover_user_key is none)
-        or
-        (backup.pushover_user_key | trim == '')
-      )
-
-- name: "Set 'pushover_api_token' variable when using older settings"
-  set_fact:
-    pushover_user_key: "{{backup.pushover_user_key}}"
-  when: not(
-        (backup.pushover_app_token is undefined)
-        or
-        (backup.pushover_app_token is none)
-        or
-        (backup.pushover_app_token | trim == '')
-        or
-        (backup.pushover_user_key is undefined)
-        or
-        (backup.pushover_user_key is none)
-        or
-        (backup.pushover_user_key | trim == '')
-      )
-
-- name: "Set 'pushover_enabled' variable"
-  set_fact:
-    pushover_enabled: "{{ true if not(
-        (pushover_app_token is undefined)
-        or
-        (pushover_app_token is none)
-        or
-        (pushover_app_token | trim == '')
-        or
-        (pushover_user_key is undefined)
-        or
-        (pushover_user_key is none)
-        or
-        (pushover_user_key | trim == '')
+        (slack.token | trim == '')
         )
       or not(
-        (pushover is undefined)
+        (slack is undefined)
         or
-        (pushover is none)
+        (slack is none)
         or
-        (pushover | trim == '')
+        (slack | trim == '')
         or
-        (pushover.app_token is undefined)
+        (slack.token is undefined)
         or
-        (pushover.app_token is none)
+        (slack.token is none)
         or
-        (pushover.app_token | trim == '')
-        or
-        (pushover.user_key is undefined)
-        or
-        (pushover.user_key is none)
-        or
-        (pushover.user_key | trim == '')
+        (slack.token | trim == '')
       )
       else false }}"
 

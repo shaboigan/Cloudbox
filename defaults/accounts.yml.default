@@ -15,10 +15,6 @@ nordvpn:
 trakt:
   id:
   secret:
-discord:
-  id:
-  token:
-pushover:
-  app_token:
-  user_key:
-  priority:
+slack:
+  token: 
+  channel:
