@@ -119,4 +119,4 @@
   when: not traktarr_service.stat.exists
 
 - name: Load traktarr service
-  systemd: state=stopped name=traktarr daemon_reload=yes enabled=no
+  systemd: state=started name=traktarr daemon_reload=yes enabled=yes

@@ -108,7 +108,7 @@
     "tags": {}
   },
   "trakt": {
-    "client_id": "",
-    "client_secret": ""
+    "client_id": "{{trakt.id}}",
+    "client_secret": "{{trakt.secret}}"
   }
 }

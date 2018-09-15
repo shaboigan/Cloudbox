@@ -97,4 +97,4 @@
   when: not traktarrpq_service.stat.exists
 
 - name: Load traktarrpq service
-  systemd: state=stopped name=traktarrpq daemon_reload=yes enabled=no
+  systemd: state=started name=traktarrpq daemon_reload=yes enabled=yes
