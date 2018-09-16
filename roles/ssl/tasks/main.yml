@@ -25,8 +25,8 @@
 
   - file:
       path: /home/{{user}}/.docker
-      owner: {{user}}
-      group: {{user}}
+      owner: "{{user}}"
+      group: "{{user}}"
       mode: 0775
     with_items:
       - "ca-key.pem"
