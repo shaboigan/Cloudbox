@@ -16,11 +16,11 @@
 - name: "Set 'ssl_enabled' variable"
   set_fact:
     ssl_enabled: "{{ true if not(
-        (ssl.ip is undefined)
+        (ssl.dns is undefined)
         or
-        (ssl.ip is none)
+        (ssl.dns is none)
         or
-        (ssl.ip | trim == '')
+        (ssl.dns | trim == '')
       )
       else false }}"
 
@@ -32,6 +32,17 @@
         (cloudflare_api_token is none)
         or
         (cloudflare_api_token | trim == '')
+      )
+      else false }}"
+
+- name: "Set 'rclone_enabled' variable"
+  set_fact:
+    rclone_enabled: "{{ true if not(
+        (rclone.config is undefined)
+        or
+        (rclone.config is none)
+        or
+        (rclone.config | trim == '')
       )
       else false }}"
 

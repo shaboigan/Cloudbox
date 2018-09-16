@@ -2,6 +2,9 @@
 - name: "Block: Secure docker daemon with TLS certificates"
   block:
 
+  - name: Get IP Address
+  ipinfoio_facts:
+
   - name: Create user SSL directory
     file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
     with_items:
@@ -58,7 +61,7 @@
       image: paulczar/omgwtfssl
       pull: yes
       env:
-        SSL_IP: "127.0.0.1,{{ssl.ip}}"
+        SSL_IP: "127.0.0.1,{{ip}}"
         SSL_DNS: "{{ssl.dns}}"
         SSL_KEY: "/server/key.pem"
         SSL_CERT: "/server/cert.pem"

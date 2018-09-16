@@ -13,6 +13,7 @@ nordvpn:
   protocol: # openvpn_udp;openvpn_tcp
 rclone:
   version: latest
+  config:
 backup:
   tar_dest: /home/{{user}}/Backups
   rsync_dest: rsync://somehost.com/Backups
