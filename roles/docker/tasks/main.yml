@@ -99,8 +99,13 @@
 - name: Import override file
   copy: "src=override.conf dest=/etc/systemd/system/docker.service.d/override.conf force=yes mode=0775"
 
+- name: "Configure Docker TLS certificates"
+  import_role:
+    name: ssl
+  tags: ssl
+
 - name: Start docker
-  systemd: state=started name=docker enabled=yes
+  systemd: state=started name=docker daemon_reload=yes enabled=yes
 
 - name: Wait for 30 seconds before commencing
   wait_for:

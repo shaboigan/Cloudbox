@@ -41,7 +41,7 @@
     default_volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/deluge:/config"
-      - "//home/{{user}}:/data:ro"
+      - "/home/{{user}}:/data:ro"
       - "/opt/scripts:/scripts"
       - "/mnt:/mnt"
 

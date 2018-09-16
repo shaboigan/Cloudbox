@@ -53,6 +53,7 @@
     default_volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/rutorrent:/config"
+      - "/home/{{user}}:/data:ro"
       - "/opt/scripts:/scripts"
       - "/mnt:/mnt"
 

@@ -13,6 +13,17 @@
   set_fact:
     continuous_integration: "{{ continuous_integration | default(false,true) }}"
 
+- name: "Set 'ssl_enabled' variable"
+  set_fact:
+    ssl_enabled: "{{ true if not(
+        (ssl.ip is undefined)
+        or
+        (ssl.ip is none)
+        or
+        (ssl.ip | trim == '')
+      )
+      else false }}"
+
 - name: "Set 'cloudflare_enabled' variable"
   set_fact:
     cloudflare_enabled: "{{ true if not(
