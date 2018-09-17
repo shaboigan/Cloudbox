@@ -100,9 +100,8 @@
   copy: "src=override.conf dest=/etc/systemd/system/docker.service.d/override.conf force=yes mode=0775"
 
 - name: "Configure Docker TLS certificates"
-  import_role:
-    name: ssl
-  tags: ssl
+  include_tasks: "docker_ssl.yml"
+  when: ssl_enabled
 
 - name: Start docker
   systemd: state=started name=docker daemon_reload=yes enabled=yes

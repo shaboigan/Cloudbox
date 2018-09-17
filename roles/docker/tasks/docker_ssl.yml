@@ -1,0 +1,86 @@
+---
+- name: Get IP Address
+  ipinfoio_facts:
+
+- name: Create user SSL directory
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /home/{{user}}/.docker
+
+- name: Run SSL container to create client certificates
+  docker_container:
+    name: ssl
+    image: paulczar/omgwtfssl
+    pull: yes
+    volumes:
+      - /home/{{user}}/.docker:/certs
+    state: absent
+
+- name: "Wait for 10 seconds for certificates to be created"
+  wait_for:
+    timeout: 10
+
+- file:
+    path: /home/{{user}}/.docker
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+  with_items:
+    - "ca-key.pem"
+    - "ca.srl"
+    - "key.csr"
+    - "openssl.cnf"
+    - "ca.pem"
+    - "cert.pem"
+    - "key.pem"
+    - "secret.yaml"
+
+- name: "Copy client ca.pem to Docker SSL location."
+  copy:
+    src: "{{item}}"
+    dest: "/etc/docker/ssl"
+    owner: "root"
+    group: "root"
+    mode: 0775
+    force: yes
+  with_items:
+    - "/home/{{user}}/.docker/ca.pem"
+  ignore_errors: yes
+
+- name: Create Docker SSL directory
+  file: "path={{item}} state=directory mode=0775 owner=root group=root"
+  with_items:
+    - /etc/docker/ssl
+
+- name: Run SSL container to create server certificates
+  docker_container:
+    name: ssl
+    image: paulczar/omgwtfssl
+    pull: yes
+    env:
+      SSL_IP: "127.0.0.1,{{ip}}"
+      SSL_DNS: "{{ssl.dns}}"
+      SSL_KEY: "/server/key.pem"
+      SSL_CERT: "/server/cert.pem"
+    volumes:
+      - /etc/docker/ssl:/server
+      - /home/{{user}}/.docker:/certs
+    state: absent
+
+- name: "Wait for 10 seconds for certificates to be created"
+  wait_for:
+    timeout: 10
+
+- name: Configure Docker to use TLS
+  lineinfile:
+    path: "/etc/docker/daemon.json"
+    insertafter: '"log-opts": {"max-size": "10m", "max-file": "3"}'
+    line: "{{ item.line }}"
+    state: present
+  with_items:
+    - {line: '    "hosts": ["unix:///var/run/docker.sock", "tcp://0.0.0.0:2376"],'}
+    - {line: '    "tls": true,'}
+    - {line: '    "tlscacert": "/data/certs/ca.pem",'}
+    - {line: '    "tlscert": "/data/certs/server-cert.pem",'}
+    - {line: '    "tlskey": "/data/certs/server-key.pem",'}
+    - {line: '    "tlsverify": true'}

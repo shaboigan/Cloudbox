@@ -35,9 +35,9 @@
       )
       else false }}"
 
-- name: "Set 'rclone_enabled' variable"
+- name: "Set 'rclone_config_enabled' variable"
   set_fact:
-    rclone_enabled: "{{ true if not(
+    rclone_config_enabled: "{{ true if not(
         (rclone.config is undefined)
         or
         (rclone.config is none)

@@ -1,0 +1,38 @@
+---
+- name: Download rclone.conf
+  get_url:
+    url: {{rclone.config}}
+    dest: ~/.config/rclone/rclone.conf
+    mode: 0755
+
+- name: Create root rclone directories
+  file: "path={{item}} state=directory mode=0775 owner=root group=root recurse=yes"
+  with_items:
+    - "/root/.config"
+    - "/root/.config/rclone"
+
+- name: "Copy rclone.conf to root rclone directory"
+  copy:
+    src: "{{item}}"
+    dest: "/root/.config/rclone/"
+    owner: "{{user}}"
+    group: "{{user}}"
+    force: yes
+  with_items:
+    - "/home/{{user}}/.config/rclone/rclone.conf"
+
+###### Plexdrive config ######
+#/opt/plexdrive/plexdrive mount -v 3 --refresh-interval=1m --chunk-check-threads=8 --chunk-load-threads=8 --chunk-load-ahead=4 --max-chunks=100 --fuse-options=allow_other,read_only --config=/opt/plexdrive --cache-file=/opt/plexdrive/cache.bolt /mnt/plexdrive
+
+#Enter client ID and Secret
+
+###### Plexdrive config ######
+
+- name: Start mountcloud service
+  systemd: state=started name=mountcloud daemon_reload=yes enabled=yes
+
+- name: Start mountlocal service
+  systemd: state=started name=mountlocal daemon_reload=yes enabled=yes
+
+- name: Start plexdrive service
+  systemd: state=started name=plexdrive daemon_reload=yes enabled=yes
