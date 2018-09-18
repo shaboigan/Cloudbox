@@ -15,6 +15,10 @@
     }
   },
   "notifications": {
+    "slack": {
+      "service": "slack",
+      "webhook_url": ""https://hooks.slack.com/services/{{trakt.token}}"
+    },
     "verbose": false
   },
   "filters": {
