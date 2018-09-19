@@ -2,12 +2,6 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Set DNS Record on CloudFlare"
-  include_role:
-    name: cloudflare
-  vars:
-    subdomain: nordvpn
-
 - name: Stop and remove any existing container
   docker_container:
     name: nordvpn
@@ -35,12 +29,8 @@
       - "58946:58946"
 # Telly port
       - "127.0.0.1:6077:6077"
-# RuTorrent daemon and web-ui ports
-      - "127.0.0.1:9080:80"
-      - "51413:51413"
-      - "6881:6881/udp"
 # RuTorrent_test daemon and web-ui ports
-#      - "127.0.0.1:9080:9080"
+      - "127.0.0.1:9080:9080"
       - "9443:9443"
       - "3000:3000"
     env:
