@@ -6,7 +6,7 @@
   include_role:
     name: cloudflare
   vars:
-    subdomain: {{ traefik.subdomain|default('traefik',true) }}
+    subdomain: "{{ traefik.subdomain|default('traefik',true) }}"
 
 - name: Create traefik directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
