@@ -13,7 +13,7 @@
   include_role:
     name: cloudflare
   vars:
-    subdomain: {{ plex.subdomain|default('plex',true) }}
+    subdomain: "{{ plex.subdomain|default('plex',true) }}"
 
 - name: Create plex directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
