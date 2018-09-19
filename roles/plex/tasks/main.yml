@@ -13,7 +13,7 @@
   include_role:
     name: cloudflare
   vars:
-    subdomain: plex
+    subdomain: {{ plex.subdomain|default('plex',true) }}
 
 - name: Create plex directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
@@ -136,12 +136,12 @@
       PLEX_GID: "{{gid}}"
       PLEX_CLAIM: "{{ plex_claim_code | default (omit)}}"
       CHANGE_CONFIG_DIR_OWNERSHIP: false
-      ADVERTISE_IP: "http://plex.{{domain}}:80/,https://plex.{{domain}}:443/"
+      ADVERTISE_IP: "http://{{ plex.subdomain|default('plex',true) }}.{{domain}}:80/,https://{{ plex.subdomain|default('plex',true) }}.{{domain}}:443/"
     labels:
       traefik.enable: "true"
       traefik.backend: "plex"
       traefik.frontend.redirect.entryPoint: "https"
-      traefik.frontend.rule: "Host:plex.{{domain}}"
+      traefik.frontend.rule: "Host:{{ plex.subdomain|default('plex',true) }}.{{domain}}"
       traefik.port: "32400"
       traefik.docker.network: "cloudbox"
       "com.github.cloudbox.cloudbox_managed": "true"
