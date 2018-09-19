@@ -26,15 +26,6 @@
     - "www"
   when: organizr.direct_domain|default(false,true)
 
-- name: Slurp hashed htpasswd
-  slurp:
-    src: "/opt/traefik/.htpasswd"
-  register: hashed
-
-- name: Set hashed password
-  set_fact:
-    hashed_password: "{{ hashed['content'] | b64decode }}"
-
 - name: Stop and remove any existing container
   docker_container:
     name: organizr
@@ -79,7 +70,7 @@
       traefik.frontend.redirect.entryPoint: "https"
       traefik.frontend.rule: "Host:organizr.{{domain}}"
       traefik.port: "80"
-      traefik.frontend.auth.basic: "{{ hashed_password }}"
+      #traefik.frontend.auth.basic: "{{ hashed_password }}"
       traefik.docker.network: "cloudbox"
       "com.github.cloudbox.cloudbox_managed": "true"
     volumes:
