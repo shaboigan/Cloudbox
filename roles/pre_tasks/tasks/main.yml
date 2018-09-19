@@ -23,12 +23,12 @@
 # Sub-Domain Tasks
 - name: "Set Cloudbox Type to 'cloudbox'"
   set_fact:
-    cloudbox_type: "uk"
+    cloudbox_type: "cloudbox"
   tags: cloudbox
 
 - name: "Set Cloudbox Type to 'mediabox'"
   set_fact:
-    cloudbox_type: "au"
+    cloudbox_type: "mediabox"
   tags: mediabox
 
 - name: "Set Cloudbox Type to 'feederbox'"
