@@ -2,8 +2,8 @@
 ssl:
   dns: #docker.local
 plex:
-  open_port: no
-  force_auto_adjust_quality: no
+  open_port: yes
+  force_auto_adjust_quality: yes
   allow_high_output_bitrates: no
   subdomain: plex
 ombi:
@@ -18,4 +18,4 @@ telly:
   playlist: "/opt/telly/file.m3u or URL2M3U"
   streams: "1"
   regex: ".*UK.*"
-  log_requests:  
+  log_requests:
