@@ -13,7 +13,7 @@
   include_role:
     name: cloudflare
   vars:
-    subdomain: {{ tautulli.subdomain|default('tautulli',true) }}
+    subdomain: "{{ tautulli.subdomain|default('tautulli',true) }}"
 
 - name: Stop and remove any existing container
   docker_container:
