@@ -12,7 +12,9 @@ tautulli:
   subdomain: tautulli
 traefik:
   subdomain: traefik
-suitarr:
+deluge:
+  open_port: no
+rutorrent:
   open_port: no
 organizr:
   direct_domain: no
