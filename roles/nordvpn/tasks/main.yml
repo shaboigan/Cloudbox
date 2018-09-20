@@ -24,13 +24,13 @@
       - /dev/net/tun
     published_ports:
 # Deluge daemon and web-ui ports
-      - "127.0.0.1:8112:8112"
+      - "{{ (( deluge.open_port | default(false,true)) | ternary('', '127.0.0.1:')) + '8112:8112' }}"
       - "58846:58846"
       - "58946:58946"
 # Telly port
       - "127.0.0.1:6077:6077"
 # RuTorrent_test daemon and web-ui ports
-      - "127.0.0.1:9080:9080"
+      - "{{ (( rutorrent.open_port | default(false,true)) | ternary('', '127.0.0.1:')) + '9080:9080' }}"
       - "9443:9443"
       - "3000:3000"
     env:
