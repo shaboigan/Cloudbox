@@ -61,7 +61,7 @@
                     "timeout": 3600
                 }
             },
-            "remove_empty_dir_depth": 2,
+            "remove_empty_dir_depth": 3,
             "sync_remote": "cloud-crypt:/Media",
             "upload_folder": "/mnt/local/Media",
             "upload_remote": "cloud-crypt:/Media"
