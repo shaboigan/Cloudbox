@@ -101,13 +101,13 @@
   "radarr": {
     "api_key": "{{ radarr4k_api_key | default('',true) }}",
     "profile": "Ultra-HD",
-    "url": "https://radarr4k.{{domain}}",
+    "url": "https://{{http_user}}:{{http_passwd}}@radarr4k.{{domain}}",
     "root_folder": "/movies/"
   },
   "sonarr": {
     "api_key": "{{ sonarr4k_api_key | default('',true) }}",
     "profile": "Ultra-HD",
-    "url": "https://sonarr4k.{{domain}}",
+    "url": "https://{{http_user}}:{{http_passwd}}@sonarr4k.{{domain}}",
     "root_folder": "/tv/",
     "tags": {}
   },
