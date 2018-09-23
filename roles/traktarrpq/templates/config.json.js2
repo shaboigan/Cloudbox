@@ -101,7 +101,7 @@
   "radarr": {
     "api_key": "{{ radarrpq_api_key | default('',true) }}",
     "profile": "SD",
-    "url": "https://radarrpq.{{domain}}",
+    "url": "https://{{http_user}}:{{http_passwd}}@radarrpq.{{domain}}",
     "root_folder": "/movies/"
   },
   "trakt": {
