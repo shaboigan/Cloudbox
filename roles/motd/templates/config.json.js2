@@ -16,13 +16,13 @@
     "title_color": "LBLU"
   },
   "nzbget": {
-    "url": "https://{{user}}:{{passwd}}@nzbget.{{domain}}"
+    "url": "https://{{http_user}}:{{http_passwd}}@nzbget.{{domain}}"
   },
   "tautulli": {
       "url": "https://tautulli.{{domain}}",
       "api_key": "SET_YOUR_API_KEY"
   },
   "rtorrent": {
-    "url": "https://{{user}}:{{passwd}}@rutorrent.{{domain}}"
+    "url": "https://{{http_user}}:{{http_passwd}}@rutorrent.{{domain}}"
   }
 }
