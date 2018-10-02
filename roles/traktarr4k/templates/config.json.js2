@@ -102,13 +102,13 @@
     "api_key": "{{ radarr4k_api_key | default('',true) }}",
     "profile": "Ultra-HD",
     "url": "https://{{http_user}}:{{http_passwd}}@radarr4k.{{domain}}",
-    "root_folder": "/movies/"
+    "root_folder": "/movies/4K/"
   },
   "sonarr": {
     "api_key": "{{ sonarr4k_api_key | default('',true) }}",
     "profile": "Ultra-HD",
     "url": "https://{{http_user}}:{{http_passwd}}@sonarr4k.{{domain}}",
-    "root_folder": "/tv/",
+    "root_folder": "/tv/4K/",
     "tags": {}
   },
   "trakt": {
