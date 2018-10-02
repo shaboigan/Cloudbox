@@ -102,7 +102,7 @@
     "api_key": "{{ radarrpq_api_key | default('',true) }}",
     "profile": "SD",
     "url": "https://{{http_user}}:{{http_passwd}}@radarrpq.{{domain}}",
-    "root_folder": "/movies/"
+    "root_folder": "/movies/Poor Quality/"
   },
   "trakt": {
     "client_id": "{{trakt.id}}",
