@@ -102,13 +102,13 @@
     "api_key": "{{ radarr_api_key | default('',true) }}",
     "profile": "HD-1080p",
     "url": "https://{{http_user}}:{{http_passwd}}@radarr.{{domain}}",
-    "root_folder": "/movies/"
+    "root_folder": "/movies/YIFY/"
   },
   "sonarr": {
     "api_key": "{{ sonarr_api_key | default('',true) }}",
     "profile": "HD-1080p",
     "url": "https://{{http_user}}:{{http_passwd}}@sonarr.{{domain}}",
-    "root_folder": "/tv/",
+    "root_folder": "/tv/TV Shows/",
     "tags": {}
   },
   "trakt": {
