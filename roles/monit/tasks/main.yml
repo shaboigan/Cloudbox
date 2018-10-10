@@ -1,0 +1,57 @@
+---
+- name: "Set DNS Record on CloudFlare"
+  include_role:
+    name: cloudflare
+  vars:
+    subdomain: monit
+
+- name: Slurp hashed htpasswd
+  slurp:
+    src: "/opt/traefik/.htpasswd"
+  register: hashed
+
+- name: Set hashed password
+  set_fact:
+    hashed_password: "{{ hashed['content'] | b64decode }}"
+
+- name: Stop and remove any existing container
+  docker_container:
+    name: monit
+    state: absent
+
+- name: Create monit directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /opt/monit
+    - /opt/monit/monitrc
+
+- name: Create and start container
+  docker_container:
+    name: monito
+    image: kijart/monit
+    pull: yes
+    published_ports:
+      - "127.0.0.1:2812:2812"
+    env:
+      PUID: "{{uid}}"
+      PGID: "{{gid}}"
+    labels:
+      traefik.enable: "true"
+      traefik.backend: "monit"
+      traefik.frontend.redirect.entryPoint: "https"
+      traefik.frontend.rule: "Host:monit.{{domain}}"
+      traefik.port: "2812"
+      traefik.frontend.auth.basic: "{{ hashed_password }}"
+      traefik.docker.network: "cloudbox"
+      traefik.protocol: "https"
+      "com.github.cloudbox.cloudbox_managed": "true"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/monit/monitrc:/etc/monitrc"
+    networks:
+      - name: cloudbox
+        aliases:
+          - monit
+    purge_networks: yes
+    restart_policy: always
+    state: started
