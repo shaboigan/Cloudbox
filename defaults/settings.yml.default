@@ -15,11 +15,11 @@ rclone:
   version: latest
   config:
 backup:
-  tar_dest: /home/{{user}}/Backups
-  rsync_dest: rsync://somehost.com/Backups
-  rclone_dest: cloud-crypt:/Backups
+  tar_dest: /home/{{user}}/Backups/{{ ( cloudbox_type | default('Cloudbox',true) ) }}
+  rsync_dest: rsync://somehost.com/Backups/{{ ( cloudbox_type | default('Cloudbox',true) ) }}
+  rclone_dest: cloud-crypt:/Backups/{{ ( cloudbox_type | default('Cloudbox',true) ) }}
   keep_local_copy: true
   use_rsync: false
   use_rclone: true
-  cron_time: daily
+  cron_time: weekly
   cron_state: absent
