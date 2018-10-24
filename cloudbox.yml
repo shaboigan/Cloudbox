@@ -28,29 +28,29 @@
     - { role: plex_autoscan, tags: ['cloudbox', 'mediabox', 'plex_autoscan'] }
     - { role: plex_patrol, tags: ['cloudbox', 'mediabox', 'plex_patrol'] }
     - { role: python-plexlibrary, tags: ['cloudbox', 'mediabox', 'python-plexlibrary'] }
-    - { role: portainer, tags: ['cloudbox', 'feederbox', 'portainer'] }
-    - { role: organizr, tags: ['cloudbox', 'feederbox', 'organizr'] }
+    - { role: portainer, tags: ['cloudbox', 'portainer'] }
+    - { role: organizr, tags: ['cloudbox', 'organizr'] }
     - { role: cloudplow, tags: ['cloudbox', 'feederbox', 'cloudplow'] }
-    - { role: sabnzbd, tags: ['cloudbox', 'feederbox', 'sabnzbd'], when: [ 'nzbs' ] }
-    - { role: deluge, tags: ['cloudbox', 'feederbox', 'deluge'], when: [ 'torrents' ] }
-    - { role: jackett, tags: ['cloudbox', 'feederbox', 'jackett'], when: [ 'torrents' ] }
-    - { role: nzbhydra2, tags: ['cloudbox', 'feederbox', 'nzbhydra2'], when: [ 'nzbs' ] }
-    - { role: plex_dupefinder, tags: ['cloudbox', 'feederbox', 'plex_dupefinder'] }    
-    - { role: bazarr, tags: ['cloudbox', 'feederbox', 'bazarr'] }
-    - { role: sonarr, tags: ['cloudbox', 'feederbox', 'sonarr'] }
-    - { role: radarr, tags: ['cloudbox', 'feederbox', 'radarr'] }
-    - { role: lidarr, tags: ['cloudbox', 'feederbox', 'lidarr'] }
+    - { role: sabnzbd, tags: ['cloudbox', 'sabnzbd'], when: [ 'nzbs' ] }
+    - { role: deluge, tags: ['cloudbox', 'deluge'], when: [ 'torrents' ] }
+    - { role: jackett, tags: ['cloudbox', 'jackett'], when: [ 'torrents' ] }
+    - { role: nzbhydra2, tags: ['cloudbox', 'nzbhydra2'], when: [ 'nzbs' ] }
+    - { role: plex_dupefinder, tags: ['cloudbox', 'plex_dupefinder'] }    
+    - { role: sonarr, tags: ['cloudbox', 'sonarr'] }
+    - { role: radarr, tags: ['cloudbox', 'radarr'] }
+    - { role: nzbget, tags: ['feederbox', 'nzbget'], when: [ 'nzbs' ] }
+    - { role: rutorrent, tags: ['feederbox', 'rutorrent'], when: [ 'torrents' ] }
     - { role: feeder-mount, tags: ['feeder-mount'] }
     - { role: feeder-dismount, tags: ['feeder-dismount'] }
     - { role: handbrake, tags: ['handbrake'] }
     - { role: heimdall, tags: ['heimdall'] }
     - { role: netdata, tags: ['netdata'] }
-    - { role: nzbget, tags: ['nzbget'], when: [ 'nzbs' ] }
     - { role: quassel, tags: ['quassel'] }
+    - { role: lidarr, tags: ['lidarr'] }
     - { role: radarr4k, tags: ['radarr4k'] }
     - { role: radarrpq, tags: ['radarrpq'] }    
-    - { role: rutorrent, tags: ['rutorrent'], when: [ 'torrents' ] }
     - { role: sonarr4k, tags: ['sonarr4k'] }
+    - { role: bazarr, tags: ['bazarr'] }
     - { role: telly, tags: ['telly'] }
     - { role: thelounge, tags: ['thelounge'] }
     - { role: traktarr, tags: ['traktarr'] }
