@@ -101,7 +101,7 @@
 
 - name: "Configure Docker TLS certificates"
   include_tasks: "docker_ssl.yml"
-  when: ssl_enabled
+  when: (ssl.enable|default(false,true))
 
 - name: Start docker
   systemd: state=started name=docker daemon_reload=yes enabled=yes

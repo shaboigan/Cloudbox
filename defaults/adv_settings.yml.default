@@ -1,6 +1,6 @@
 ---
 ssl:
-  dns: #docker.local
+  enable: no
 plex:
   open_port: yes
   force_auto_adjust_quality: yes
