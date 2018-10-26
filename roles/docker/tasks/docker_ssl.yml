@@ -45,7 +45,7 @@
     force: yes
   with_items:
     - "/home/{{user}}/.docker/ca.pem"
-  ignore_errors: yes
+  ignore_errors: no
 
 - name: Create Docker SSL directory
   file: "path={{item}} state=directory mode=0775 owner=root group=root"
