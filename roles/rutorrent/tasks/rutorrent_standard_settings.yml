@@ -123,10 +123,3 @@
     regexp: '^directory.default.set\s?=.*'
     line: 'directory.default.set = /downloads/rutorrent'
     state: present
-
-- name: Set upload_max_filesize to 8M
-  lineinfile:
-    path: "/opt/rutorrent/php/php.ini"
-    regexp: '^upload_max_filesize\s?=.*'
-    line: 'upload_max_filesize = 8M'
-    state: present
