@@ -14,6 +14,16 @@
     path: "/opt/rutorrent/rtorrent/config/rtorrent.rc"
     state: present
 
+
+- name: Slurp hashed htpasswd
+  slurp:
+    src: "/opt/traefik/.htpasswd"
+  register: hashed
+
+- name: Set hashed password
+  set_fact:
+    hashed_password: "{{ hashed['content'] | b64decode }}"
+
 - name: "Wait for 10 seconds before stopping rutorrent container"
   wait_for:
     timeout: 10
@@ -123,3 +133,8 @@
     regexp: '^directory.default.set\s?=.*'
     line: 'directory.default.set = /downloads/rutorrent'
     state: present
+
+# Add a line to a file if it does not exist, without passing regexp
+- lineinfile:
+    path: /opt/rutorrent/nginx/security/auth
+    line: "{{hashed_password}}"
