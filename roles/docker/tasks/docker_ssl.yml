@@ -59,7 +59,7 @@
     pull: yes
     env:
       SSL_IP: "127.0.0.1,{{ip}}"
-      SSL_SUBJECT: "{{hostname}}.getplexd.tv"
+      SSL_SUBJECT: "{{ inventory_hostname }}.getplexd.tv"
       SSL_KEY: "/server/key.pem"
       SSL_CERT: "/server/cert.pem"
     volumes:
