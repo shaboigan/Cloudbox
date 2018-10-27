@@ -51,6 +51,7 @@
     - { role: radarrpq, tags: ['radarrpq'] }    
     - { role: sonarr4k, tags: ['sonarr4k'] }
     - { role: bazarr, tags: ['bazarr'] }
+    - { role: ssl, tags: ['ssl'] }
     - { role: telly, tags: ['telly'] }
     - { role: thelounge, tags: ['thelounge'] }
     - { role: traktarr, tags: ['traktarr'] }
