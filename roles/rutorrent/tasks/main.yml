@@ -72,7 +72,7 @@
       VPN_OPTIONS:
       STRICT_PORT_FORWARD: "yes"
       ENABLE_PRIVOXY: "no"
-      ENABLE_FLOOD: "yes"
+      ENABLE_FLOOD: "no"
       ENABLE_AUTODL_IRSSI: "yes"
       LAN_NETWORK:
       NAME_SERVERS:
