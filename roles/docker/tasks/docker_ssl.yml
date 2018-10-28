@@ -7,14 +7,23 @@
   with_items:
     - /home/{{user}}/.docker
 
+- name: Start docker
+  systemd: state=started name=docker daemon_reload=yes enabled=yes
+
+- name: Wait for 30 seconds before commencing
+  wait_for:
+    timeout: 30
+
 - name: Run SSL container to create client certificates
   docker_container:
     name: ssl
     image: paulczar/omgwtfssl
     pull: yes
+    env:
+      SSL_SUBJECT: "seed.getplexd.tv"
     volumes:
       - /home/{{user}}/.docker:/certs
-    state: absent
+    state: present
 
 - name: "Wait for 10 seconds for certificates to be created"
   wait_for:
@@ -59,28 +68,14 @@
     pull: yes
     env:
       SSL_IP: "127.0.0.1,{{ip}}"
-      SSL_SUBJECT: "{{ inventory_hostname }}.getplexd.tv"
+      SSL_DNS: "docker.local"
       SSL_KEY: "/server/key.pem"
       SSL_CERT: "/server/cert.pem"
     volumes:
       - /etc/docker/ssl:/server
       - /home/{{user}}/.docker:/certs
-    state: absent
+    state: present
 
 - name: "Wait for 10 seconds for certificates to be created"
   wait_for:
     timeout: 10
-
-- name: Configure Docker to use TLS
-  lineinfile:
-    path: "/etc/docker/daemon.json"
-    insertafter: '"log-opts": {"max-size": "10m", "max-file": "3"}'
-    line: "{{ item.line }}"
-    state: present
-  with_items:
-    - {line: '    "hosts": ["unix:///var/run/docker.sock", "tcp://0.0.0.0:2376"],'}
-    - {line: '    "tls": true,'}
-    - {line: '    "tlscacert": "/data/certs/ca.pem",'}
-    - {line: '    "tlscert": "/data/certs/server-cert.pem",'}
-    - {line: '    "tlskey": "/data/certs/server-key.pem",'}
-    - {line: '    "tlsverify": true'}

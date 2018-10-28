@@ -1,0 +1,90 @@
+---
+- name: Get IP Address
+  ipinfoio_facts:
+
+- name: Create user SSL directory
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /home/{{user}}/.docker
+
+- name: Run SSL container to create client certificates
+  docker_container:
+    name: ssl
+    image: paulczar/omgwtfssl
+    pull: yes
+    volumes:
+      - /home/{{user}}/.docker:/certs
+    state: absent
+
+- name: "Wait for 10 seconds for certificates to be created"
+  wait_for:
+    timeout: 10
+
+---
+- name: copy docker cacert
+  copy:
+    backup: yes
+    content: "{{ docker_host_cacert }}"
+    dest: /etc/docker/ca.pem
+    #group: docker
+    mode: 0444
+  when: docker_host_tlsverify|bool
+  notify: restart docker daemon
+
+- name: copy docker cert
+  copy:
+    backup: yes
+    content: "{{ docker_host_cert }}"
+    dest: /etc/docker/cert.pem
+    #group: docker
+    mode: 0444
+  when: docker_host_tlsverify|bool or docker_host_tls|bool
+  notify: restart docker daemon
+
+- name: copy docker key
+  copy:
+    backup: yes
+    content: "{{ docker_host_key }}"
+    dest: /etc/docker/key.pem
+    #group: docker
+    mode: 0400
+  when: docker_host_tlsverify|bool or docker_host_tls|bool
+  notify: restart docker daemon
+
+- name: template daemon.json
+  template:
+    backup: yes
+    dest: /etc/docker/daemon.json
+    group: root
+    owner: root
+    mode: 0644
+    src: daemon.json.j2
+  notify: restart docker daemon
+
+- name: firewalld add docker0 interface to trusted zone
+  firewalld:
+    immediate: yes
+    interface: docker0
+    permanent: yes
+    state: enabled
+    zone: trusted
+  notify:
+    - restart firewalld
+    - restart docker daemon
+
+# NOTE: no support yet for opening non-tls port
+- name: firewalld add daemon tls port 2376 to default zone
+  firewalld:
+    immediate: yes
+    port: 2376/tcp
+    permanent: yes
+    state: enabled
+  when: docker_host_tlsverify|bool or docker_host_tls|bool
+  notify:
+    - restart firewalld
+    - restart docker daemon
+
+- name: start docker service
+  service:
+    name: docker
+    state: started

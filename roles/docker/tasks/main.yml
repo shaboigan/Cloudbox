@@ -90,8 +90,13 @@
     state: latest
   ignore_errors: yes
 
+- name: Import TLS daemon.json
+  copy: "src=daemon.ssl.json dest=/etc/docker/daemon.json force=yes mode=0775"
+  when: (ssl.enable|default(false,true))
+
 - name: Import daemon.json
   copy: "src=daemon.json dest=/etc/docker/daemon.json force=yes mode=0775"
+  when: not (ssl.enable|default(false,true))
 
 - name: Create override directory
   file: "path=/etc/systemd/system/docker.service.d state=directory mode=0775"
@@ -99,23 +104,18 @@
 - name: Import override file
   copy: "src=override.conf dest=/etc/systemd/system/docker.service.d/override.conf force=yes mode=0775"
 
-- name: Start docker
-  systemd: state=started name=docker daemon_reload=yes enabled=yes
-
-- name: Wait for 30 seconds before commencing
-  wait_for:
-    timeout: 30
-
 - name: "Configure Docker TLS certificates"
   include_tasks: "docker_ssl.yml"
   when: (ssl.enable|default(false,true))
 
-- name: Restart docker
-  systemd: state=restarted name=docker daemon_reload=yes enabled=yes
+- name: Start docker
+  systemd: state=started name=docker daemon_reload=yes enabled=yes
+  when: not (ssl.enable|default(false,true))
 
 - name: Wait for 30 seconds before commencing
   wait_for:
     timeout: 30
+  when: not (ssl.enable|default(false,true))
 
 - name: "Stop all Docker containers"
   shell: "docker stop $(docker ps -aq)"

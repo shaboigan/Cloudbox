@@ -116,6 +116,7 @@
     - yq
     - lxml
     - apprise
+    - pyOpenSSL
   ignore_errors: yes
 
 - name: Install nodejs

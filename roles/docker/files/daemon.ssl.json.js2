@@ -1,0 +1,12 @@
+{
+    "storage-driver": "overlay2",
+    "userland-proxy": false,
+    "log-driver": "json-file",
+    "log-opts": {"max-size": "10m", "max-file": "3"},
+    "hosts": ["unix:///var/run/docker.sock", "tcp://0.0.0.0:2376"],
+    "tls": true,
+    "tlscacert": "/etc/docker/ssl/ca.pem",
+    "tlscert": "/etc/docker/ssl/cert.pem",
+    "tlskey": "/etc/docker/ssl/key.pem",
+    "tlsverify": true
+}
