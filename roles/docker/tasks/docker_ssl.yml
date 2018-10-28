@@ -79,3 +79,21 @@
 - name: "Wait for 10 seconds for certificates to be created"
   wait_for:
     timeout: 10
+
+- name: Stop docker
+  systemd: state=stopped name=docker
+
+- name: Wait for 30 seconds before commencing
+  wait_for:
+    timeout: 30
+
+- name: Import TLS daemon.json
+  copy: "src=daemon.ssl.json.js2 dest=/etc/docker/daemon.json force=yes mode=0775"
+  when: (ssl.enable|default(false,true))
+
+- name: Start docker
+  systemd: state=started name=docker daemon_reload=yes enabled=yes
+
+- name: Wait for 30 seconds before commencing
+  wait_for:
+    timeout: 30

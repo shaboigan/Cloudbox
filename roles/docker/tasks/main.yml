@@ -90,13 +90,8 @@
     state: latest
   ignore_errors: yes
 
-- name: Import TLS daemon.json
-  copy: "src=daemon.ssl.json.js2 dest=/etc/docker/daemon.json force=yes mode=0775"
-  when: (ssl.enable|default(false,true))
-
 - name: Import daemon.json
   copy: "src=daemon.json.js2 dest=/etc/docker/daemon.json force=yes mode=0775"
-  when: not (ssl.enable|default(false,true))
 
 - name: Create override directory
   file: "path=/etc/systemd/system/docker.service.d state=directory mode=0775"
