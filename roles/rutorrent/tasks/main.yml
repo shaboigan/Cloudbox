@@ -109,6 +109,15 @@
         and
         ((not rtorrent_rc.stat.exists) or (standard_settings_needs_upgrading and subdirs_settings_exist))
 
+#- name: Import rutorrent_manage.sh
+#  copy:
+#    src: "rutorrent_manage.sh"
+#    dest: "/opt/scripts/rutorrent/rutorrent_manage.sh"
+#    owner: "{{user}}"
+#    group: "{{user}}"
+#    mode: 0775
+#    force: yes
+
 - name: Start container to apply changes
   docker_container:
     name: rutorrent

@@ -17,6 +17,7 @@
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
   with_items:
     - /opt/deluge
+    - /opt/scripts/deluge
 
 - name: Create new downloads directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
@@ -99,6 +100,15 @@
     - "label.conf"
     - "web.conf"
   when: deluge_settings.stat.exists == False
+
+- name: Import deluge_manage.sh
+  copy:
+    src: "deluge_manage.sh"
+    dest: "/opt/scripts/deluge/deluge_manage.sh"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: yes
 
 - name: Start container to apply changes
   docker_container:

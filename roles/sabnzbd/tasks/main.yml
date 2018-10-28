@@ -98,6 +98,15 @@
     restart_policy: always
     state: started
 
+- name: Import sabnzbd_manage.sh
+  copy:
+    src: "sabnzbd_manage.sh"
+    dest: "/opt/scripts/sabnzbd/sabnzbd_manage.sh"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: yes
+
 - name: Settings Tweaks
   include_tasks: "sabnzbd_settings.yml"
   when: not (
