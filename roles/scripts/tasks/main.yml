@@ -35,6 +35,7 @@
     - /opt/scripts/plex
     - /opt/scripts/plex_autoscan
     - /opt/scripts/rutorrent
+    - /opt/scripts/system
     - /opt/scripts/tautulli
     - /opt/scripts/torrents
 
