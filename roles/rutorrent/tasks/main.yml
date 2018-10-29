@@ -98,16 +98,12 @@
 # Done for new setups (or setups requiring updating for updated rtorrent version).
 - name: Standard Settings Tweaks
   include_tasks: "rutorrent_standard_settings.yml"
-  when: (not continuous_integration)
-        and
-        ((not rtorrent_rc.stat.exists) or (standard_settings_needs_upgrading))
+  when: ((not rtorrent_rc.stat.exists)
 
 # Done for new setups (or setups requiring updating for updated rtorrent version).
 - name: Subdir Settings Tweaks
   include_tasks: "rutorrent_subdir_settings.yml"
-  when: (not continuous_integration)
-        and
-        ((not rtorrent_rc.stat.exists) or (standard_settings_needs_upgrading and subdirs_settings_exist))
+  when: ((not rtorrent_rc.stat.exists)
 
 #- name: Import rutorrent_manage.sh
 #  copy:
@@ -122,6 +118,4 @@
   docker_container:
     name: rutorrent
     state: started
-  when: (not continuous_integration)
-        and
-        ((not rtorrent_rc.stat.exists) or (standard_settings_needs_upgrading))
+  when: ((not rtorrent_rc.stat.exists)
