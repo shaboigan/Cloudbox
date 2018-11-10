@@ -39,7 +39,7 @@
 
 - name: Create config from template
   copy:
-    src: "config-template.yml"
+    src: "config-template.json.js2"
     dest: "/opt/python-plexlibrary/config.yml"
     owner: "{{user}}"
     group: "{{user}}"
