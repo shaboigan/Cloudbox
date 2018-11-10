@@ -13,6 +13,7 @@ nordvpn:
   user:
   pass:
 trakt:
+  user:
   id:
   secret:
 slack:

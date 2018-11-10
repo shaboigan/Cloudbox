@@ -21,7 +21,7 @@
     },
     "plex": {
         "enabled": false,
-        "url": "https://plex.{{domain}}",
+        "url": "https://{{ plex.subdomain|default('plex',true) }}.{{domain}}",
         "token": "{{ plex_auth_token | default('') }}",
         "poll_interval": 60,
         "max_streams_before_throttle": 1,
