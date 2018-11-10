@@ -32,6 +32,11 @@
     path: "/opt/python-plexlibrary/config.yml"
   register: python_plexlibrary_config
 
+- name: Import Plex Auth Token role
+  import_role:
+    name: plex_auth_token
+  when: plex_account_enabled and not python_plexlibrary_config.stat.exists
+
 - name: Create config from template
   copy:
     src: "config-template.yml"
