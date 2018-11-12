@@ -55,8 +55,8 @@
                             # "Custom" is telly's internal identifier for this 'Provider'
                             # If you change it to "NAMEOFPROVIDER" telly's reaction will be
                             # "I don't recognize a provider called 'NAMEOFPROVIDER'."
-  M3U = "http://tiks.ws:83/get.php?username=8228001995&password=3RJ5nPpacy&output=ts&type=m3u"  # These can be either URLs or fully-qualified paths.
-  EPG = "http://tiks.ws:83/xmltv.php?username=8228001995&password=3RJ5nPpacy"
+  M3U = "http://tiks.ws:83/get.php?username={{user}}&password={{pass}}&output=ts&type=m3u"  # These can be either URLs or fully-qualified paths.
+  EPG = "http://tiks.ws:83/xmltv.php?username={{user}}&password={{pass}}"
   # THE FOLLOWING KEYS ARE OPTIONAL IN THEORY, REQUIRED IN PRACTICE
   Filter = "Sports|Premium Movies|United Kingdom.*|UK"
   FilterKey = "group-title" # FilterKey normally defaults to whatever the provider file says is best, 
