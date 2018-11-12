@@ -12,8 +12,8 @@
 - name: "Assert that all Telly related settings are filled in."
   assert:
     that:
-      - (telly.playlist is defined) and (telly.playlist is not none) and not (telly.playlist | trim == '') and (telly.playlist != "/opt/telly/file.m3u or URL2M3U")
-      - (telly.streams is defined) and (telly.streams is not none) and not (telly.streams | trim == '')
+      - (telly.user is defined) and (telly.user is not none) and not (telly.user | trim == '')
+      - (telly.pass is defined) and (telly.pass is not none) and not (telly.pass | trim == '')
     msg: "You must specify the Telly settings in 'adv_settings.yml'"
 
 - name: Stop and remove any existing container
