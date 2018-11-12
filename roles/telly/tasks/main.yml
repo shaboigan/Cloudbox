@@ -26,6 +26,21 @@
   with_items:
     - "/opt/telly"
 
+- name: Check toml file exists
+  stat:
+    path: "/opt/telly/telly.config.toml"
+  register: telly_toml
+
+- name: Import Telly toml
+  template:
+    src: telly.config.toml
+    dest: /opt/telly/telly.config.toml
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: yes
+  when: not telly_toml.stat.exists
+
 - name: Create and start container
   docker_container:
     name: telly
