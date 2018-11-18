@@ -12,8 +12,8 @@
 - name: "Assert that all Telly related settings are filled in."
   assert:
     that:
-      - (telly.playlist is defined) and (telly.playlist is not none) and not (telly.playlist | trim == '') and (telly.playlist != "/opt/telly/file.m3u or URL2M3U")
-      - (telly.streams is defined) and (telly.streams is not none) and not (telly.streams | trim == '')
+      - (telly.user is defined) and (telly.user is not none) and not (telly.user | trim == '')
+      - (telly.pass is defined) and (telly.pass is not none) and not (telly.pass | trim == '')
     msg: "You must specify the Telly settings in 'adv_settings.yml'"
 
 - name: Stop and remove any existing container
@@ -21,63 +21,38 @@
     name: telly
     state: absent
 
-# START - Suitarr Migration Tasks
-- name: Check folder exists
-  stat:
-    path: /opt/telly
-  register: folder
-
-- name: Check subfolder1 exists
-  stat:
-    path: /opt/telly/Telly
-  register: subfolder1
-
-- name: Check subfolder2 exists
-  stat:
-    path: /opt/telly/app
-  register: subfolder2
-
-- name: Move 'telly' folder contents to 'app' subfolder
-  shell: |
-    mv /opt/telly /tmp/app
-    mkdir /opt/telly
-    mv /tmp/app /opt/telly/
-    find /opt/telly/* -type d -empty -delete
-    chown -R {{user}}:{{user}} /opt/telly
-  when: (folder.stat.exists) and not (subfolder1.stat.exists or subfolder2.stat.exists)
-
-- name: Move 'Telly' subfolder to 'app' subfolder
-  shell: |
-    mv /opt/telly/Telly /opt/telly/app
-    chown -R {{user}}:{{user}} /opt/telly
-  when: (folder.stat.exists) and (subfolder1.stat.exists) and (not subfolder2.stat.exists)
-# END - Suitarr Migration Tasks
-
 - name: Create telly directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
     - "/opt/telly"
 
+- name: Check toml file exists
+  stat:
+    path: "/opt/telly/telly.config.toml"
+  register: telly_toml
+
+- name: Import Telly toml
+  template:
+    src: telly.config.toml
+    dest: /opt/telly/telly.config.toml
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: yes
+  when: not telly_toml.stat.exists
+
 - name: Create and start container
   docker_container:
     name: telly
-    image: hotio/suitarr:telly"
+    image: tellytv/telly:dev-ffmpeg"
     pull: yes
     env:
-      VERSION: "{{suitarr.version}}"
+      TZ: "Europe/London"
       PUID: "{{uid}}"
       PGID: "{{gid}}"
-      BACKUP: "no"
-      TELLY_IPTV_PLAYLIST: "{{telly.playlist}}"
-      TELLY_IPTV_STREAMS: "{{telly.streams}}"
-      TELLY_WEB_LISTEN_ADDRESS: "0.0.0.0:6077"
-      TELLY_WEB_BASE_ADDRESS: "telly:6077"
-      TELLY_FILTER_REGEX_MODE: true
-      TELLY_DISCOVERY_SSDP: true
-      TELLY_LOG_REQUESTS: "{{ telly.log_requests | default ('') }}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
-      - "/opt/telly:/opt/telly"
+      - "/opt/telly:/etc/telly"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"
     networks:
