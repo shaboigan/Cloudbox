@@ -50,15 +50,15 @@
 # DELETE OR COMMENT OUT SOURCES THAT YOU ARE NOT USING ############################################
 # NONE OF THESE EXAMPLES WORK AS-IS; IF YOU DON'T CHANGE IT, DELETE IT ############################
 [[Source]]
-  Name = "Helix"            # Name is optional and is used mostly for logging purposes
+  Name = "{{telly.provider}}"            # Name is optional and is used mostly for logging purposes
   Provider = "Custom"       # DO NOT CHANGE THIS IF YOU ARE ENTERING URLS OR FILE PATHS
                             # "Custom" is telly's internal identifier for this 'Provider'
                             # If you change it to "NAMEOFPROVIDER" telly's reaction will be
                             # "I don't recognize a provider called 'NAMEOFPROVIDER'."
-  M3U = "http://tiks.ws:83/get.php?username={{user}}&password={{pass}}&output=ts&type=m3u"  # These can be either URLs or fully-qualified paths.
-  EPG = "http://tiks.ws:83/xmltv.php?username={{user}}&password={{pass}}"
+  M3U = "{{telly.playlist}}"  # These can be either URLs or fully-qualified paths.
+  EPG = "{{telly.epg}}"
   # THE FOLLOWING KEYS ARE OPTIONAL IN THEORY, REQUIRED IN PRACTICE
-  Filter = "Sports|Premium Movies|United Kingdom.*|UK"
+  Filter = "{{telly.regex}}"
   FilterKey = "group-title" # FilterKey normally defaults to whatever the provider file says is best, 
                             # otherwise you must set this.
   FilterRaw = false         # FilterRaw will run your regex on the entire line instead of just specific keys.

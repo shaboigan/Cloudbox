@@ -15,5 +15,9 @@ traefik:
 organizr:
   direct_domain: no
 telly:
-  user: 
-  pass: 
+  playlist: "/opt/telly/file.m3u or URL2M3U"
+  streams: "1"
+  epg:
+  provider:
+  regex: ".*UK.*"
+  log_requests:
