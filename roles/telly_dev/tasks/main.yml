@@ -44,7 +44,7 @@
 - name: Create and start container
   docker_container:
     name: telly_dev
-    image: tellytv/telly:dev-ffmpeg"
+    image: tellytv/telly:dev-ffmpeg
     pull: yes
     env:
       TZ: "Europe/London"
