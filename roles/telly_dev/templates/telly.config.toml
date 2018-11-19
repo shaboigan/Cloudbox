@@ -37,7 +37,7 @@
 
 # THIS SECTION IS REQUIRED ########################################################################
 [Web]
-  Base-Address = "0.0.0.0:6077"   # Set this to the IP address of the machine telly runs on
+  Base-Address = "telly:6077"   # Set this to the IP address of the machine telly runs on
   Listen-Address = "0.0.0.0:6077" # this can stay as-is
 
 # THIS SECTION IS OPTIONAL ========================================================================
