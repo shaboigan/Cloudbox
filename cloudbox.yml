@@ -52,8 +52,7 @@
     - { role: sonarr4k, tags: ['sonarr4k'] }
     - { role: bazarr, tags: ['bazarr'] }
     - { role: telly, tags: ['telly'] }
-    - { role: telly_dev, tags: ['telly_dev'] }    
-    - { role: jackett_test, tags: ['jackett_test'] }
+    - { role: telly_dev, tags: ['telly_dev'] } 
     - { role: thelounge, tags: ['thelounge'] }
     - { role: traktarr, tags: ['traktarr'] }
     - { role: traktarr4k, tags: ['traktarr4k'] }    
