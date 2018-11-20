@@ -37,13 +37,11 @@
 - name: Create and start container
   docker_container:
     name: jackett
-    image: hotio/suitarr:jackett
+    image: linuxserver/jackett
     pull: yes
     published_ports:
       - "127.0.0.1:9117:9117"
     env:
-      VERSION: "{{suitarr.version}}"
-      BACKUP: "no"
       PUID: "{{uid}}"
       PGID: "{{gid}}"
     labels:
