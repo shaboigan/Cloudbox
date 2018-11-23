@@ -43,6 +43,8 @@
     - { role: feeder-mount, tags: ['feeder-mount'] }
     - { role: feeder-dismount, tags: ['feeder-dismount'] }
     - { role: handbrake, tags: ['handbrake'] }
+    - { role: firefox, tags: ['firefox'] }
+    - { role: jdownloader2, tags: ['jdownloader2'] }        
     - { role: heimdall, tags: ['heimdall'] }
     - { role: netdata, tags: ['netdata'] }
     - { role: quassel, tags: ['quassel'] }
