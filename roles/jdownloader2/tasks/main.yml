@@ -1,0 +1,60 @@
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: "Set DNS Record on CloudFlare"
+  include_role:
+    name: cloudflare
+  vars:
+    subdomain: jdownloader2
+
+- name: Slurp hashed htpasswd
+  slurp:
+    src: "/opt/traefik/.htpasswd"
+  register: hashed
+
+- name: Set hashed password
+  set_fact:
+    hashed_password: "{{ hashed['content'] | b64decode }}"
+
+- name: Stop and remove any existing container
+  docker_container:
+    name: jdownloader2
+    state: absent
+
+- name: Create jdownloader2 directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /opt/jdownloader2
+    - /mnt/local/downloads/jdownloader2
+
+- name: Create and start container
+  docker_container:
+    name: jdownloader2
+    image: "jlesage/jdownloader-2"
+    pull: yes
+    published_ports:
+      - "127.0.0.1:5900:5800"
+    env:
+      USER_ID: "{{uid}}"
+      GROUP_ID: "{{gid}}"
+      APP_NICENESS: "10"
+    labels:
+      traefik.enable: "true"
+      traefik.backend: "jdownloader2"
+      traefik.frontend.redirect.entryPoint: "https"
+      traefik.frontend.rule: "Host:jdownloader2.{{domain}}"
+      traefik.port: "5800"
+      traefik.frontend.auth.basic: "{{ hashed_password }}"
+      traefik.docker.network: "cloudbox"
+      "com.github.cloudbox.cloudbox_managed": "true"
+    volumes:
+      - "/opt/jdownloader2:/config:rw"
+      - "/mnt/local/downloads/jdownloader2:/output:rw"
+    networks:
+      - name: cloudbox
+        aliases:
+          - jdownloader2
+    purge_networks: yes
+    restart_policy: always
+    state: started
