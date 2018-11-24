@@ -34,7 +34,7 @@
     pull: yes
     published_ports:
       - "127.0.0.1:6000:5800"
-    shm-size: 2g
+    shm_size: 2g
     env:
       USER_ID: "{{uid}}"
       GROUP_ID: "{{gid}}"
