@@ -26,14 +26,14 @@
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
     - /opt/handbrake
-    - /mnt/handbrake
-    - /mnt/handbrake/source
-    - /mnt/handbrake/source/yify
-    - /mnt/handbrake/source/yify_anime
-    - /mnt/handbrake/source/bluray
-    - /mnt/handbrake/source/4k
-    - /mnt/handbrake/source/dvd
-    - /mnt/handbrake/output
+    - /mnt/local/handbrake
+    - /mnt/local/handbrake/source
+    - /mnt/local/handbrake/source/yify
+    - /mnt/local/handbrake/source/yify_anime
+    - /mnt/local/handbrake/source/bluray
+    - /mnt/local/handbrake/source/4k
+    - /mnt/local/handbrake/source/dvd
+    - /mnt/local/handbrake/output
 
 - name: Create and start container
   docker_container:
@@ -62,13 +62,13 @@
       "com.github.cloudbox.cloudbox_managed": "true"
     volumes:
       - "/opt/handbrake:/config:rw"
-      - "/mnt/handbrake/source/yify:/watch:rw"
-      - "/mnt/handbrake/source/yify_anime:/watch2:rw"
-      - "/mnt/handbrake/source/bluray:/watch3:rw"
-      - "/mnt/handbrake/source/4k:/watch4:rw"
-      - "/mnt/handbrake/source/dvd:/watch5:rw"
-      - "/mnt/handbrake/output:/output:rw"
-      - "/mnt/handbrake:/storage:ro"
+      - "/mnt/local/handbrake/source/yify:/watch:rw"
+      - "/mnt/local/handbrake/source/yify_anime:/watch2:rw"
+      - "/mnt/local/handbrake/source/bluray:/watch3:rw"
+      - "/mnt/local/handbrake/source/4k:/watch4:rw"
+      - "/mnt/local/handbrake/source/dvd:/watch5:rw"
+      - "/mnt/local/handbrake/output:/output:rw"
+      - "/mnt/local/handbrake:/storage:ro"
     networks:
       - name: cloudbox
         aliases:
