@@ -43,9 +43,9 @@
       traefik.enable: "true"
       traefik.backend: "jdownloader2"
       traefik.frontend.redirect.entryPoint: "https"
-      traefik.frontend.rule: "Host:jdownloader2.{{domain}}"
+      traefik.frontend.rule: "Host:jdownloadr.{{domain}}"
       traefik.port: "5800"
-#     traefik.frontend.auth.basic: "{{ hashed_password }}"
+      traefik.frontend.auth.basic: "{{ hashed_password }}"
       traefik.docker.network: "cloudbox"
       "com.github.cloudbox.cloudbox_managed": "true"
     volumes:
