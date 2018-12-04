@@ -81,9 +81,9 @@
     force: yes
   when: not radarrsync_config.stat.exists
 
-- name: Set RadarSync.py as executable
+- name: Set RadarrSync.py as executable
   file:
-    path: /opt/radarrsync/RadarSync.py
+    path: /opt/radarrsync/RadarrSync.py
     owner: "{{user}}"
     group: "{{user}}"
     mode: a+x
@@ -93,14 +93,14 @@
 
 - name: "Create /usr/local/bin symlink"
   file:
-    src: "/opt/radarrsync/RadarSync.py"
+    src: "/opt/radarrsync/RadarrSync.py"
     dest: "/usr/local/bin/radarrsync"
     state: link
 
-- name: "Schedule cron task for daily update."
-  cron:
-    name: "Python-PlexLibrary"
-    user: "{{user}}"
-    job: "/opt/radarrsync/RadarSync.py"
-    special_time: daily
-    state: present
+#- name: "Schedule cron task for daily update."
+#  cron:
+#    name: "Python-PlexLibrary"
+#    user: "{{user}}"
+#    job: "/opt/radarrsync/RadarrSync.py"
+#    special_time: daily
+#    state: present

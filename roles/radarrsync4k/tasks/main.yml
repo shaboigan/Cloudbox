@@ -81,9 +81,9 @@
     force: yes
   when: not radarrsync4k_config.stat.exists
 
-- name: Set RadarSync.py as executable
+- name: Set RadarrSync.py as executable
   file:
-    path: /opt/radarrsync4k/RadarSync.py
+    path: /opt/radarrsync4k/RadarrSync.py
     owner: "{{user}}"
     group: "{{user}}"
     mode: a+x
@@ -93,7 +93,7 @@
 
 - name: "Create /usr/local/bin symlink"
   file:
-    src: "/opt/radarrsync4k/RadarSync.py"
+    src: "/opt/radarrsync4k/RadarrSync.py"
     dest: "/usr/local/bin/radarrsync4k"
     state: link
 
