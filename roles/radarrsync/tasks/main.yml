@@ -22,11 +22,6 @@
   become: yes
   become_user: "{{user}}"
 
-- name: Install pip requirements
-  pip:
-    requirements: "/opt/radarrsync/requirements.txt"
-    executable: pip
-
 - name: Check config exists
   stat:
     path: "/opt/radarrsync/config.txt"
