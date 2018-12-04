@@ -1,0 +1,32 @@
+[General]
+# Time to wait between adding new movies to a server. This will help reduce the load of the Sync server. 0 to disable. (seconds)
+wait_between_add = 5
+
+# Full path to log file
+log_path = /opt/radarrsync/Output.txt
+
+# DEBUG, INFO, VERBOSE | Logging level.
+log_level = DEBUG
+
+[RadarrMaster]
+url = "https://{{http_user}}:{{http_passwd}}@radarr.{{domain}}"
+key = "{{ radarr_api_key | default('',true) }}"
+
+
+[SyncServers]
+# Ensure the servers start with 'Radarr_'
+[Radarr_4K]
+url = "https://{{http_user}}:{{http_passwd}}@radarr4k.{{domain}}"
+key = "{{ radarr4k_api_key | default('',true) }}"
+
+rootFolders = /Movies
+# If this path exists
+current_path = /Poor\ Quality/
+# Replace with this path
+new_path = /4K/
+
+# This is the profile ID the movie will be added to.
+profileId = 2
+
+# This is the profile ID the movie must have on the Master server.
+profileIdMatch = 2

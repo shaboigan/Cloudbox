@@ -1,0 +1,111 @@
+#########################################################################
+# Title:         Cloudbox: RadarrSync4K Role                            #
+# Author(s):     Desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Create RadarrSync4K directories
+  file: "path={{item}} state=directory owner={{user}} group={{user}} recurse=yes"
+  with_items:
+    - "/opt/radarrsync4k"
+
+- name: Clone RadarrSync
+  git:
+    repo: "https://github.com/EnorMOZ/RadarrSync/"
+    dest: "/opt/radarrsync4k"
+    version: master
+    force: yes
+  become: yes
+  become_user: "{{user}}"
+
+- name: Install pip requirements
+  pip:
+    requirements: "/opt/radarrsync4k/requirements.txt"
+    executable: pip
+
+- name: Check config exists
+  stat:
+    path: "/opt/radarrsync4k/config.txt"
+  register: radarrsync4k_ config
+
+- name: "Check if radarr exists"
+  stat:
+    path: "/opt/radarr/app/config.xml"
+  register: radarr_config
+  when: not radarrsync4k_ config.stat.exists
+
+- name: "When radarr exists, add api key to radarrsync4k config"
+  block:
+
+  - name: Pull radarr api key
+    xml:
+      path: "/opt/radarr/app/config.xml"
+      xpath: /Config/ApiKey
+      content: text
+    register: xmlresp
+
+  - name: Set radarr api Key
+    set_fact:
+      radarr_api_key: "{{ xmlresp.matches[0].ApiKey }}"
+
+  when: (not radarrsync4k_ config.stat.exists) and (radarr_config.stat.exists)
+
+- name: "Check if radarr4k exists"
+  stat:
+    path: "/opt/radarr4k/app/config.xml"
+  register: radarr4k_config
+  when: not radarrsync4k_ config.stat.exists
+
+- name: "When radarr4k exists, add api key to radarrsync4k config"
+  block:
+
+  - name: Pull radarr4k api key
+    xml:
+      path: "/opt/radarr4k/app/config.xml"
+      xpath: /Config/ApiKey
+      content: text
+    register: xmlresp4k
+
+  - name: Set radarr4k api Key
+    set_fact:
+      radarr4k_api_key: "{{ xmlresp4k.matches[0].ApiKey }}"
+
+  when: (not radarrsync4k_ config.stat.exists) and (radarr4k_config.stat.exists)
+
+- name: Import default config
+  template:
+    src: "config.json.js2"
+    dest: "/opt/radarrsync4k/config.default"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: yes
+  when: not radarrsync4k_ config.stat.exists
+
+- name: Set RadarSync.py as executable
+  file:
+    path: /opt/radarrsync4k/RadarSync.py
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: a+x
+
+- name: Set directory permissions
+  file: "path=/opt/radarrsync4k state=directory owner={{user}} group={{user}} recurse=yes"
+
+- name: "Create /usr/local/bin symlink"
+  file:
+    src: "/opt/radarrsync4k/RadarSync.py"
+    dest: "/usr/local/bin/radarrsync4k"
+    state: link
+
+#- name: "Schedule cron task for daily update."
+#  cron:
+#    name: "Python-PlexLibrary"
+#    user: "{{user}}"
+#    job: "/opt/python-plexlibrary/plexlibrary.sh"
+#    special_time: daily
+#    state: present

@@ -104,3 +104,8 @@
     purge_networks: yes
     restart_policy: always
     state: started
+
+- name: "Configure RadarrSync"
+  import_role:
+    name: radarrsync
+  when: (radarrsync.pq|default(false,true))

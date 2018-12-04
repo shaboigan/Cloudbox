@@ -1,0 +1,110 @@
+#########################################################################
+# Title:         Cloudbox: RadarrSync Role                              #
+# Author(s):     Desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Create RadarrSync directories
+  file: "path={{item}} state=directory owner={{user}} group={{user}} recurse=yes"
+  with_items:
+    - "/opt/radarrsync"
+
+- name: Clone RadarrSync
+  git:
+    repo: "https://github.com/EnorMOZ/RadarrSync/"
+    version: master
+    force: yes
+  become: yes
+  become_user: "{{user}}"
+
+- name: Install pip requirements
+  pip:
+    requirements: "/opt/radarrsync/requirements.txt"
+    executable: pip
+
+- name: Check config exists
+  stat:
+    path: "/opt/radarrsync/config.txt"
+  register: radarrsync_config
+
+- name: "Check if radarrpq exists"
+  stat:
+    path: "/opt/radarrpq/app/config.xml"
+  register: radarrpq_config
+  when: not radarrsync_config.stat.exists
+
+- name: "When radarrpq exists, add api key to radarrsync config"
+  block:
+
+  - name: Pull radarrpq api key
+    xml:
+      path: "/opt/radarrpq/app/config.xml"
+      xpath: /Config/ApiKey
+      content: text
+    register: xmlresppq
+
+  - name: Set radarrpq api Key
+    set_fact:
+      radarrpq_api_key: "{{ xmlresppq.matches[0].ApiKey }}"
+
+  when: (not radarrsync_config.stat.exists) and (radarrpq_config.stat.exists)
+
+- name: "Check if radarr exists"
+  stat:
+    path: "/opt/radarr/app/config.xml"
+  register: radarr_config
+  when: not radarrsync_config.stat.exists
+
+- name: "When radarr exists, add api key to radarrsync config"
+  block:
+
+  - name: Pull radarr api key
+    xml:
+      path: "/opt/radarr/app/config.xml"
+      xpath: /Config/ApiKey
+      content: text
+    register: xmlresp
+
+  - name: Set radarr api Key
+    set_fact:
+      radarr_api_key: "{{ xmlresp.matches[0].ApiKey }}"
+
+  when: (not radarrsync_config.stat.exists) and (radarr_config.stat.exists)
+
+- name: Import default config
+  template:
+    src: "config.json.js2"
+    dest: "/opt/radarrsync/config.txt"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: yes
+  when: not radarrsync_config.stat.exists
+
+- name: Set RadarSync.py as executable
+  file:
+    path: /opt/radarrsync/RadarSync.py
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: a+x
+
+- name: Set directory permissions
+  file: "path=/opt/radarrsync state=directory owner={{user}} group={{user}} recurse=yes"
+
+- name: "Create /usr/local/bin symlink"
+  file:
+    src: "/opt/radarrsync/RadarSync.py"
+    dest: "/usr/local/bin/radarrsync"
+    state: link
+
+#- name: "Schedule cron task for daily update."
+#  cron:
+#    name: "Python-PlexLibrary"
+#    user: "{{user}}"
+#    job: "/opt/python-plexlibrary/plexlibrary.sh"
+#    special_time: daily
+#    state: present
