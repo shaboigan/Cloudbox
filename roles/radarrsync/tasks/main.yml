@@ -24,7 +24,7 @@
 
 - name: Check config exists
   stat:
-    path: "/opt/radarrsync/config.txt"
+    path: "/opt/radarrsync/Config.txt"
   register: radarrsync_config
 
 - name: "Check if radarrpq exists"
@@ -74,7 +74,7 @@
 - name: Import default config
   template:
     src: "config.json.js2"
-    dest: "/opt/radarrsync/config.txt"
+    dest: "/opt/radarrsync/Config.txt"
     owner: "{{user}}"
     group: "{{user}}"
     mode: 0775
