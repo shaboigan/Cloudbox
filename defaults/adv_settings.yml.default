@@ -1,7 +1,7 @@
 ---
 ssl:
   enable: no
-radarrsync
+radarrsync:
   pq: yes
   4k: yes
 plex:
