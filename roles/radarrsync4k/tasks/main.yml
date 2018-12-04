@@ -30,13 +30,13 @@
 - name: Check config exists
   stat:
     path: "/opt/radarrsync4k/config.txt"
-  register: radarrsync4k_ config
+  register: radarrsync4k_config
 
 - name: "Check if radarr exists"
   stat:
     path: "/opt/radarr/app/config.xml"
   register: radarr_config
-  when: not radarrsync4k_ config.stat.exists
+  when: not radarrsync4k_config.stat.exists
 
 - name: "When radarr exists, add api key to radarrsync4k config"
   block:
@@ -52,13 +52,13 @@
     set_fact:
       radarr_api_key: "{{ xmlresp.matches[0].ApiKey }}"
 
-  when: (not radarrsync4k_ config.stat.exists) and (radarr_config.stat.exists)
+  when: (not radarrsync4k_config.stat.exists) and (radarr_config.stat.exists)
 
 - name: "Check if radarr4k exists"
   stat:
     path: "/opt/radarr4k/app/config.xml"
   register: radarr4k_config
-  when: not radarrsync4k_ config.stat.exists
+  when: not radarrsync4k_config.stat.exists
 
 - name: "When radarr4k exists, add api key to radarrsync4k config"
   block:
@@ -74,7 +74,7 @@
     set_fact:
       radarr4k_api_key: "{{ xmlresp4k.matches[0].ApiKey }}"
 
-  when: (not radarrsync4k_ config.stat.exists) and (radarr4k_config.stat.exists)
+  when: (not radarrsync4k_config.stat.exists) and (radarr4k_config.stat.exists)
 
 - name: Import default config
   template:
@@ -84,7 +84,7 @@
     group: "{{user}}"
     mode: 0775
     force: yes
-  when: not radarrsync4k_ config.stat.exists
+  when: not radarrsync4k_config.stat.exists
 
 - name: Set RadarSync.py as executable
   file:
