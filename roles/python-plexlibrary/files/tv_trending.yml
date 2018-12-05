@@ -17,7 +17,7 @@ source_libraries:
     # [Cloudbox] 'folders' = Plex library path (i.e '/data/...').
     folders:
       # [Cloudbox] Example path below assumes main TV shows are located in "/mnt/unionfs/Media/TV/TV/" (i.e. Customizing Plex Library - Scenario 1 style).
-      - '/data/TV/TV'
+      - '/data/TV/TV Shows'
 
 # New library details
 new_library:

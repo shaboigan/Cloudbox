@@ -17,7 +17,7 @@ source_libraries:
     # [Cloudbox] Plex library path (i.e /data/...).
     folders:
         # [Cloudbox] Example path below assumes main movies are located in "/mnt/unionfs/Media/Movies/Movies/" (i.e. Customizing Plex Library - Scenario 1 style).
-      - '/data/Movies/Movies'
+      - '/data/Movies/YIFY'
 
 # New library details
 new_library:

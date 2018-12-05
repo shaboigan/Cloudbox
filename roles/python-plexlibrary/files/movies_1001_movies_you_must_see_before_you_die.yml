@@ -12,13 +12,13 @@ source_libraries:
     # [Cloudbox] Plex library path (i.e /data/...).
     folders:
         # [Cloudbox] Example path below assumes main movies are located in "/mnt/unionfs/Media/Movies/Movies/" (i.e. Customizing Plex Library - Scenario 1 style).
-      - '/data/Movies/Movies'
+      - '/data/Movies/YIFY'
 
 # New library details
 new_library:
   name: 'Movies - 1001 Movies You Must See Before You Die'
   # [Cloudbox] 'folder' = Path on host where symlinks are stored (i.e. '/mnt/local/Media/...').
-  folder: '/mnt/local/Media/Movies/Movies/Movies-1001_Must_See/'
+  folder: '/mnt/local/Media/Movies/Movies-1001_Must_See/'
   sort: yes
   sort_title:
     format: '{number}. {title}'
