@@ -58,6 +58,7 @@
     - { role: thelounge, tags: ['thelounge'] }
     - { role: radarrsync, tags: ['radarrsync'] }
     - { role: radarrsync4k, tags: ['radarrsync4k'] }
+    - { role: pingrr, tags: ['pingrr'] }
     - { role: traktarr, tags: ['traktarr'] }
     - { role: traktarr4k, tags: ['traktarr4k'] }
     - { role: traktarrpq, tags: ['traktarrpq'] }
