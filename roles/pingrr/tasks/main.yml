@@ -1,0 +1,122 @@
+#########################################################################
+# Title:         Cloudbox: Pingrr Role                                  #
+# Author(s):     L3uddz, Desimaniac                                     #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Check if pingrr service exists
+  stat:
+    path: "/etc/systemd/system/pingrr.service"
+  register: pingrr_service
+
+- name: Stop existing pingrr service
+  systemd: state=stopped name=pingrr
+  when: pingrr_service.stat.exists
+
+- name: Create pingrr directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
+  with_items:
+    - /opt/pingrr
+
+- name: Clone pingrr
+  git:
+    repo: https://github.com/Dec64/pingrr/
+    dest: /opt/pingrr
+    version: master
+    force: yes
+  become: yes
+  become_user: "{{user}}"
+
+- name: Install pip requirements
+  pip:
+    requirements: /opt/pingrr/requirements.txt
+    executable: pip
+
+- name: Check if pingrr config exists
+  stat:
+    path: "/opt/pingrr/config.json"
+  register: pingrr_config
+
+- name: "Check if sonarr exists"
+  stat:
+    path: "/opt/sonarr/app/config.xml"
+  register: sonarr_config
+  when: not pingrr_config.stat.exists
+
+- name: "When sonarr exists, add api key to pingrr config"
+  block:
+
+  - name: Pull sonarr api key
+    xml:
+      path: "/opt/sonarr/app/config.xml"
+      xpath: /Config/ApiKey
+      content: text
+    register: xmlresp
+
+  - name: Set sonarr api Key
+    set_fact:
+      sonarr_api_key: "{{ xmlresp.matches[0].ApiKey }}"
+
+  when: (not pingrr_config.stat.exists) and (sonarr_config.stat.exists)
+
+- name: "Check if radarr exists"
+  stat:
+    path: "/opt/radarr/app/config.xml"
+  register: radarr_config
+  when: not pingrr_config.stat.exists
+
+- name: "When radarr exists, add api key to pingrr config"
+  block:
+
+  - name: Pull radarr api key
+    xml:
+      path: "/opt/radarr/app/config.xml"
+      xpath: /Config/ApiKey
+      content: text
+    register: xmlresp
+
+  - name: Set radarr api Key
+    set_fact:
+      radarr_api_key: "{{ xmlresp.matches[0].ApiKey }}"
+
+  when: (not pingrr_config.stat.exists) and (radarr_config.stat.exists)
+
+- name: Import default config
+  template:
+    src: config.json.js2
+    dest: /opt/pingrr/config.json
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: yes
+  when: not pingrr_config.stat.exists
+
+- name: Set pingrr.py as executable
+  file:
+    path: /opt/pingrr/pingrr.py
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: a+x
+
+- name: Set directory permissions
+  file: "path=/opt/pingrr state=directory owner={{user}} group={{user}} recurse=yes"
+
+- name: "Create /usr/local/bin symlink"
+  file:
+    src: "/opt/pingrr/pingrr.py"
+    dest: "/usr/local/bin/pingrr"
+    state: link
+
+- name: Import pingrr service
+  template:
+    src: pingrr.service.js2
+    dest: /etc/systemd/system/pingrr.service
+    force: yes
+  when: not pingrr_service.stat.exists
+
+- name: Load pingrr service
+  systemd: state=started name=pingrr daemon_reload=yes enabled=yes

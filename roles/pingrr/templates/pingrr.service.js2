@@ -1,0 +1,15 @@
+[Unit]
+Description=pingrr
+After=network-online.target
+
+[Service]
+User={{user}}
+Group={{user}}
+Type=simple
+WorkingDirectory=/opt/pingrr/
+ExecStart=/usr/bin/python /opt/pingrr/pingrr.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=default.target

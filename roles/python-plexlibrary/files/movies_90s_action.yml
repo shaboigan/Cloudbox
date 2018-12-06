@@ -3,7 +3,7 @@ library_type: 'movie'
 
 # Source list(s)
 source_list_urls:
-  - 'https://api.trakt.tv/users/geof-grouch-88/lists/90-s-action-movies-in-order-from-best-to-worst?sort=my_rating,asc'
+  - 'https://api.trakt.tv/users/geof-grouch-88/lists/90-s-action-movies-in-order-from-best-to-worst/items/movies'
 
 # Source library details
 source_libraries:
@@ -18,7 +18,7 @@ source_libraries:
 new_library:
   name: 'Movies - 90s Action from best to worst'
   # [Cloudbox] 'folder' = Path on host where symlinks are stored (i.e. '/mnt/local/Media/...').
-  folder: '/mnt/local/Media/Movies/Movies - 90s Action/'
+  folder: '/mnt/local/Media/Movies/Movies-90s Action/'
   sort: yes
   sort_title:
     format: '{number}. {title}'

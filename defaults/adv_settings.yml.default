@@ -3,7 +3,7 @@ ssl:
   enable: no
 radarrsync:
   pq: yes
-  4k: yes
+  4k: no
 plex:
   open_port: yes
   force_auto_adjust_quality: yes

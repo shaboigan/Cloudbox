@@ -1,0 +1,107 @@
+{
+    "filters": {
+        "allow_canceled": true, 
+        "allow_ended": true, 
+        "country": ["gb","us","ca"], 
+        "genre": [], 
+        "language": "en", 
+        "network": "", 
+        "rating": 5, 
+        "runtime": 0, 
+        "votes": 1, 
+        "year": {
+            "movies": 0, 
+            "shows": 0
+        }
+    }, 
+    "just_watch": {
+        "country": "US", 
+        "enabled": {
+            "movies": true, 
+            "shows": true
+        }, 
+        "pages": 1
+    }, 
+    "pingrr": {
+        "aired": 0, 
+        "dry_run": false, 
+        "limit": {
+            "radarr": 3, 
+            "sonarr": 3
+        }, 
+        "log_level": "info", 
+        "timer": 24
+    }, 
+    "pushover": {
+        "app_token": "", 
+        "enabled": false, 
+        "user_token": ""
+    }, 
+    "radarr": {
+        "api": "{{ radarr_api_key | default('',true) }}", 
+        "folder_path": "/movies/YIFY", 
+        "genre_paths": false, 
+        "host": "localhost:7878", 
+        "monitored": true, 
+        "path_root": "/movies/", 
+        "paths": {
+            "Anime-movies": [
+                "anime"
+            ], 
+            "Docs": [
+                "documentary"
+            ], 
+            "Kids": [
+                "children, family"
+            ]
+        }, 
+        "quality_profile": "1"
+    }, 
+    "slack": {
+        "channel": "", 
+        "enabled": true, 
+        "sender_icon": ":robot_face:", 
+        "sender_name": "Pingrr", 
+        "webhook_url": "https://hooks.slack.com/services/{{trakt.token}}"
+    }, 
+    "sonarr": {
+        "api": "{{ sonarr_api_key | default('',true) }}", 
+        "folder_path": "/tv/TV Shows/", 
+        "genre_paths": false, 
+        "host": "localhost:8989", 
+        "monitored": true, 
+        "path_root": "/tv/", 
+        "paths": {
+            "Anime": [
+                "anime"
+            ], 
+            "Doc-TV": [
+                "documentary"
+            ], 
+            "Kids-TV": [
+                "children, family"
+            ], 
+            "Reality-TV": [
+                "reality", 
+                "game-show"
+            ]
+        }, 
+        "quality_profile": 1, 
+        "search_missing_episodes": true
+    }, 
+    "trakt": {
+        "api": "", 
+        "imdb_info": false, 
+        "limit": 0, 
+        "movie_list": {
+            "anticipated": false, 
+            "popular": false, 
+            "trending": false
+        }, 
+        "tv_list": {
+            "anticipated": false, 
+            "popular": false, 
+            "trending": false
+        }
+    }
+}
