@@ -97,10 +97,10 @@
     dest: "/usr/local/bin/radarrsync4k"
     state: link
 
-#- name: "Schedule cron task for daily update."
-#  cron:
-#    name: "Python-PlexLibrary"
-#    user: "{{user}}"
-#    job: "/opt/python-plexlibrary/plexlibrary.sh"
-#    special_time: daily
-#    state: present
+- name: "Schedule cron task for daily update."
+  cron:
+    name: "RadarrSync4K"
+    user: "{{user}}"
+    job: "/usr/bin/python3 /opt/radarrsync4k/RadarrSync.py"
+    special_time: daily
+    state: present
