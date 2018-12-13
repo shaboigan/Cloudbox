@@ -13,7 +13,7 @@
   include_role:
     name: cloudflare
   vars:
-    subdomain: rutorrent
+    subdomain: rutorrent_test
 
 - name: Slurp hashed htpasswd
   slurp:
@@ -26,48 +26,48 @@
 
 - name: Stop and remove any existing container
   docker_container:
-    name: rutorrent
+    name: rutorrent_test
     state: absent
 
-- name: Create rutorrent directory
+- name: Create rutorrent_test directory
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
   with_items:
-    - /opt/rutorrent
+    - /opt/rutorrent_test
 
 - name: Create new downloads directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
   with_items:
-    - "{{downloads.torrents}}/rutorrent"
-    - "{{downloads.torrents}}/rutorrent/completed"
-    - "{{downloads.torrents}}/rutorrent/incoming"
-    - "{{downloads.torrents}}/rutorrent/watched"
+    - "{{downloads.torrents}}/rutorrent_test"
+    - "{{downloads.torrents}}/rutorrent_test/completed"
+    - "{{downloads.torrents}}/rutorrent_test/incoming"
+    - "{{downloads.torrents}}/rutorrent_test/watched"
   when: (torrents_downloads_path is defined)|default(false)
 
 - name: Check if rtorrent.rc exists
   stat:
-    path: "/opt/rutorrent/rtorrent/rtorrent.rc"
+    path: "/opt/rutorrent_test/rtorrent/rtorrent.rc"
   register: rtorrent_rc
 
 - name: Check if rtorrent.rc requires upgrading
   set_fact:
-    standard_settings_needs_upgrading: "{{ (lookup('file', '/opt/rutorrent/rtorrent/rtorrent.rc')) is search('peer_exchange') }}"
-    subdir_settings_exist: "{{ (lookup('file', '/opt/rutorrent/rtorrent/rtorrent.rc')) is search('/downloads/torrents/rutorrent/completed/') }}"
+    standard_settings_needs_upgrading: "{{ (lookup('file', '/opt/rutorrent_test/rtorrent/rtorrent.rc')) is search('peer_exchange') }}"
+    subdir_settings_exist: "{{ (lookup('file', '/opt/rutorrent_test/rtorrent/rtorrent.rc')) is search('/downloads/torrents/rutorrent_test/completed/') }}"
   when: rtorrent_rc.stat.exists
 
 - name: Backup previous rtorrent.rc file
-  shell: mv '/opt/rutorrent/rtorrent/rtorrent.rc' '/opt/rutorrent/rtorrent/rtorrent.rc.bak'
+  shell: mv '/opt/rutorrent_test/rtorrent/rtorrent.rc' '/opt/rutorrent_test/rtorrent/rtorrent.rc.bak'
   ignore_errors: yes
   when: (rtorrent_rc.stat.exists) and (standard_settings_needs_upgrading|default(false,true))
 
 - name: Check if plugins.ini exists
   stat:
-    path: "/opt/rutorrent/rutorrent/settings/plugins.ini"
+    path: "/opt/rutorrent_test/rutorrent/settings/plugins.ini"
   register: plugins_ini
 
 - name: Replace plugins.ini with customized one
   copy:
     src: plugins.ini
-    dest: "/opt/rutorrent/rutorrent/settings/plugins.ini"
+    dest: "/opt/rutorrent_test/rutorrent/settings/plugins.ini"
     owner: "{{user}}"
     group: "{{user}}"
     mode: 0775
@@ -78,28 +78,39 @@
   set_fact:
     default_volumes:
       - "/etc/localtime:/etc/localtime:ro"
-      - "/opt/rutorrent:/config"
+      - "/opt/rutorrent_test:/config"
       - "/opt/scripts:/scripts"
       - "/mnt:/mnt"
 
 - name: Create and start container
   docker_container:
-    name: rutorrent
+    name: rutorrent_test
     image: horjulf/rutorrent-autodl
     pull: yes
     published_ports:
-      - "3111:80"
-      - "51413:51413"
-      - "6881:6881/udp"
+      - "9080:9080"
+      - "9443:9443"
+      - "8118:8118"
+      - "3000:3000"      
     env:
       PUID: "{{uid}}"
       PGID: "{{gid}}"
+      VPN_ENABLED: "yes"
+      VPN_PROV: "airvpn"
+      ENABLE_PRIVOXY: "no"
+      ENABLE_FLOOD: "no"
+      ENABLE_AUTODL_IRSSI: "yes"
+      LAN_NETWORK: "172.18.0.0/16"
+      NAME_SERVERS:
+      DEBUG: "false"
+      PHP_TZ: "UTC"
+      UMASK: "022"
     volumes: "{{ default_volumes + torrents_downloads_path|default([]) + old_rutorrent_downloads_path|default([]) }}"
     labels:
       traefik.enable: "true"
-      traefik.backend: "rutorrent"
+      traefik.backend: "rutorrent_test"
       traefik.frontend.redirect.entryPoint: "https"
-      traefik.frontend.rule: "Host:rutorrent.{{domain}}"
+      traefik.frontend.rule: "Host:rutorrent_test.{{domain}}"
       traefik.port: "80"
       traefik.frontend.auth.basic: "{{ hashed_password }}"
       traefik.docker.network: "cloudbox"
@@ -107,7 +118,7 @@
     networks:
       - name: cloudbox
         aliases:
-          - rutorrent
+          - rutorrent_test
     purge_networks: yes
     restart_policy: unless-stopped
     stop_timeout: 300
@@ -129,7 +140,7 @@
 
 - name: Start container to apply changes
   docker_container:
-    name: rutorrent
+    name: rutorrent_test
     state: started
   when: (not continuous_integration)
         and
