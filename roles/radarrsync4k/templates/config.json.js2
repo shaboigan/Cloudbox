@@ -9,14 +9,14 @@ log_path = /opt/radarrsync/Output.txt
 log_level = DEBUG
 
 [RadarrMaster]
-url = "https://{{http_user}}:{{http_passwd}}@radarr.{{domain}}"
+url = "http://localhost:7878"
 key = "{{ radarr_api_key | default('',true) }}"
 
 
 [SyncServers]
 # Ensure the servers start with 'Radarr_'
 [Radarr_4K]
-url = "https://{{http_user}}:{{http_passwd}}@radarr4k.{{domain}}"
+url = "http://localhost:7879"
 key = "{{ radarr4k_api_key | default('',true) }}"
 
 rootFolders = /movies

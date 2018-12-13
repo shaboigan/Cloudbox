@@ -108,4 +108,4 @@
 - name: "Configure RadarrSync"
   import_role:
     name: radarrsync
-  when: (radarrsync.pq|default(false,true))
+  when: (radarrsync.enable|default(false,true))

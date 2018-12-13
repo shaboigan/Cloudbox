@@ -16,5 +16,6 @@ trakt:
   user:
   id:
   secret:
+  token:
 slack:
-  token: 
+  token:

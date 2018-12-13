@@ -108,4 +108,4 @@
 - name: "Configure RadarrSync4K"
   import_role:
     name: radarrsync4k
-  when: (radarrsync.4k|default(false,true))
+  when: (radarrsync4k.enable|default(false,true))

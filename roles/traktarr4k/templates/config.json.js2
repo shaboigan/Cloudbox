@@ -17,7 +17,7 @@
   "notifications": {
     "slack": {
       "service": "slack",
-      "webhook_url": "https://hooks.slack.com/services/{{trakt.token}}"
+      "webhook_url": "https://hooks.slack.com/services/{{traktarr4k.token}}"
     },
     "verbose": false
   },
