@@ -17,6 +17,7 @@
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
   with_items:
     - /opt/deluge
+    - /opt/deluge/openvpn    
     - /opt/scripts/deluge
 
 - name: Create new downloads directories
@@ -48,7 +49,6 @@
     default_volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/deluge:/config"
-      - "/home/{{user}}:/data:ro"
       - "/opt/scripts:/scripts"
       - "/mnt:/mnt"
 
