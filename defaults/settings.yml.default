@@ -11,6 +11,8 @@ nordvpn:
   country: 
   category: # Anti DDoS;Dedicated IP servers;Double VPN;Obfuscated Servers;Onion Over VPN;P2P;Standard VPN servers
   protocol: # openvpn_udp;openvpn_tcp
+airvpn:
+  port:
 rclone:
   version: latest
   config:

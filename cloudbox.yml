@@ -63,4 +63,5 @@
     - { role: traktarr4k, tags: ['traktarr4k'] }
     - { role: traktarrpq, tags: ['traktarrpq'] }
     - { role: watchtower, tags: ['watchtower'] }
+    - { role: vnc, tags: ['vnc'] }
     - { role: znc, tags: ['znc'] }

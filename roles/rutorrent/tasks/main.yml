@@ -33,7 +33,7 @@
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
   with_items:
     - /opt/rutorrent
-    - /opt/rutorrent/openvpn    
+    - /opt/rutorrent/openvpn
 
 - name: Create new downloads directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
@@ -93,7 +93,7 @@
     published_ports:
       - "127.0.0.1:9080:9080"
       - "9443:9443"
-      - "27633:27633"
+      - "{{airvpn.port}}:{{airvpn.port}}"
       - "5901:5901"
       - "6901:6901"
     env:
