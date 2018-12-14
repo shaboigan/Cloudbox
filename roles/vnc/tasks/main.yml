@@ -1,0 +1,52 @@
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: "Set DNS Record on CloudFlare"
+  include_role:
+    name: cloudflare
+  vars:
+    subdomain: vnc
+
+- name: Slurp hashed htpasswd
+  slurp:
+    src: "/opt/traefik/.htpasswd"
+  register: hashed
+
+- name: Set hashed password
+  set_fact:
+    hashed_password: "{{ hashed['content'] | b64decode }}"
+
+- name: Stop and remove any existing container
+  docker_container:
+    name: vnc
+    state: absent
+
+- name: Create vnc directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /opt/vnc
+
+- name: Create and start container
+  docker_container:
+    name: vnc
+    image: "consol/ubuntu-xfce-vnc"
+    pull: yes
+    env:
+      USER_ID: "{{uid}}"
+      GROUP_ID: "{{gid}}"
+    network_mode: "container:rutorrent"    
+    labels:
+      traefik.enable: "true"
+      traefik.backend: "vnc"
+      traefik.frontend.redirect.entryPoint: "https"
+      traefik.frontend.rule: "Host:vnc.{{domain}}"
+      traefik.port: "6901"
+      traefik.frontend.auth.basic: "{{ hashed_password }}"
+      traefik.docker.network: "cloudbox"
+      "com.github.cloudbox.cloudbox_managed": "true"
+    volumes:
+      - "/opt/vnc:/config"
+    purge_networks: yes
+    restart_policy: always
+    state: started
