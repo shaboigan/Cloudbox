@@ -86,9 +86,13 @@
       traefik.port: "8112"
       traefik.docker.network: "cloudbox"
       "com.github.cloudbox.cloudbox_managed": "true"
-    volumes: "{{ default_volumes + torrents_downloads_path|default([]) }}"
+    networks:
+      - name: cloudbox
+        aliases:
+          - deluge
     purge_networks: yes
-    restart_policy: always
+    restart_policy: unless-stopped
+    stop_timeout: 300
     state: started
 
 - name: Stop container to customize deluge settings
