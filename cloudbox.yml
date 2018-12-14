@@ -44,7 +44,6 @@
     - { role: feeder-dismount, tags: ['feeder-dismount'] }
     - { role: handbrake, tags: ['handbrake'] }
     - { role: firefox, tags: ['firefox'] }
-    - { role: rutorrent_test, tags: ['rutorrent_test'] }
     - { role: jdownloader2, tags: ['jdownloader2'] }
     - { role: heimdall, tags: ['heimdall'] }
     - { role: netdata, tags: ['netdata'] }
