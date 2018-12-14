@@ -1,10 +1,10 @@
 #########################################################################
 # Title:         Cloudbox: ruTorrent Role                               #
-# Author(s):     L3uddz, Horjulf                                        #
+# Author(s):     l3uddz, desimaniac, horjulf                            #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # Docker Image:  horjulf/rutorrent-autodl                               #
 # --                                                                    #
-#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#         Part of the Cloudbox project: https://cloudbox.works          #
 #########################################################################
 #                   GNU General Public License v3.0                     #
 #########################################################################
@@ -33,6 +33,7 @@
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
   with_items:
     - /opt/rutorrent
+    - /opt/rutorrent/openvpn    
 
 - name: Create new downloads directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
@@ -43,17 +44,42 @@
     - "{{downloads.torrents}}/rutorrent/watched"
   when: (torrents_downloads_path is defined)|default(false)
 
+- name: Check if opvn config file exists
+  stat:
+    path: "/opt/rutorrent/openvpn/config.ovpn"
+  register: config_ovpn
+
+- name: Import openvpn config file
+  copy:
+    src: config.ovpn
+    dest: "/opt/rutorrent/openvpn/config.ovpn"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: yes
+  when: not config_ovpn.stat.exists
+
 - name: Check if rtorrent.rc exists
   stat:
-    path: "/opt/rutorrent/rtorrent/config/rtorrent.rc"
+    path: "/opt/rutorrent/rtorrent/rtorrent.rc"
   register: rtorrent_rc
+
+- name: Check if rtorrent.rc requires upgrading
+  set_fact:
+    standard_settings_needs_upgrading: "{{ (lookup('file', '/opt/rutorrent/rtorrent/rtorrent.rc')) is search('peer_exchange') }}"
+    subdir_settings_exist: "{{ (lookup('file', '/opt/rutorrent/rtorrent/rtorrent.rc')) is search('/downloads/torrents/rutorrent/completed/') }}"
+  when: rtorrent_rc.stat.exists
+
+- name: Backup previous rtorrent.rc file
+  shell: mv '/opt/rutorrent/rtorrent/rtorrent.rc' '/opt/rutorrent/rtorrent/rtorrent.rc.bak'
+  ignore_errors: yes
+  when: (rtorrent_rc.stat.exists) and (standard_settings_needs_upgrading|default(false,true))
 
 - name: Set default_volumes variable
   set_fact:
     default_volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/rutorrent:/config"
-      - "/home/{{user}}:/data"
       - "/opt/scripts:/scripts"
       - "/mnt:/mnt"
 
@@ -62,60 +88,62 @@
     name: rutorrent
     image: binhex/arch-rtorrentvpn
     pull: yes
+    capabilities:
+      - NET_ADMIN
+    published_ports:
+      - "127.0.0.1:9080:9080"
+      - "9443:9443"
+      - "27633:27633"
     env:
       PUID: "{{uid}}"
       PGID: "{{gid}}"
-      VPN_ENABLED: "no"
-      VPN_USER:
-      VPN_PASS:
-      VPN_PROV:
-      VPN_OPTIONS:
-      STRICT_PORT_FORWARD: "yes"
+      VPN_ENABLED: "yes"
+      VPN_PROV: "airvpn"
       ENABLE_PRIVOXY: "no"
       ENABLE_FLOOD: "no"
       ENABLE_AUTODL_IRSSI: "yes"
-      LAN_NETWORK:
+      LAN_NETWORK: "172.18.0.0/16"
       NAME_SERVERS:
       DEBUG: "false"
       PHP_TZ: "UTC"
       UMASK: "022"
-    network_mode: "container:nordvpn"
+    volumes: "{{ default_volumes + torrents_downloads_path|default([]) + old_rutorrent_downloads_path|default([]) }}"
     labels:
       traefik.enable: "true"
       traefik.backend: "rutorrent"
       traefik.frontend.redirect.entryPoint: "https"
       traefik.frontend.rule: "Host:rutorrent.{{domain}}"
-      traefik.port: "9080"
+      traefik.port: "80"
       traefik.frontend.auth.basic: "{{ hashed_password }}"
       traefik.docker.network: "cloudbox"
       "com.github.cloudbox.cloudbox_managed": "true"
-    volumes: "{{ default_volumes + torrents_downloads_path|default([]) }}"
+    networks:
+      - name: cloudbox
+        aliases:
+          - rutorrent
     purge_networks: yes
-    restart_policy: always
+    restart_policy: unless-stopped
     stop_timeout: 300
     state: started
 
 # Done for new setups (or setups requiring updating for updated rtorrent version).
 - name: Standard Settings Tweaks
   include_tasks: "rutorrent_standard_settings.yml"
-  when: ((not rtorrent_rc.stat.exists)
+  when: (not continuous_integration)
+        and
+        ((not rtorrent_rc.stat.exists) or (standard_settings_needs_upgrading))
 
 # Done for new setups (or setups requiring updating for updated rtorrent version).
 - name: Subdir Settings Tweaks
   include_tasks: "rutorrent_subdir_settings.yml"
-  when: ((not rtorrent_rc.stat.exists)
-
-#- name: Import rutorrent_manage.sh
-#  copy:
-#    src: "rutorrent_manage.sh"
-#    dest: "/opt/scripts/rutorrent/rutorrent_manage.sh"
-#    owner: "{{user}}"
-#    group: "{{user}}"
-#    mode: 0775
-#    force: yes
+  when: (not continuous_integration)
+        and
+        ((not rtorrent_rc.stat.exists) or (standard_settings_needs_upgrading and subdirs_settings_exist))
 
 - name: Start container to apply changes
   docker_container:
     name: rutorrent
     state: started
-  when: ((not rtorrent_rc.stat.exists)
+  when: (not continuous_integration)
+        and
+        ((not rtorrent_rc.stat.exists) or (standard_settings_needs_upgrading))
