@@ -140,6 +140,6 @@
 
 # Authentication
 - name: Set .htpasswd in auth file
-- lineinfile:
+  lineinfile:
     path: /opt/rutorrent/nginx/security/auth
     line: "{{hashed_password}}"
