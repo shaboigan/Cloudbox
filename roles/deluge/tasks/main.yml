@@ -28,6 +28,21 @@
     - "{{downloads.torrents}}/deluge/watched"
   when: (torrents_downloads_path is defined)|default(false)
 
+- name: Check if opvn config file exists
+  stat:
+    path: "/opt/deluge/openvpn/config.ovpn"
+  register: config_ovpn
+
+- name: Import openvpn config file
+  copy:
+    src: config.ovpn
+    dest: "/opt/deluge/openvpn/config.ovpn"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: yes
+  when: not config_ovpn.stat.exists
+
 - name: Set default_volumes variable
   set_fact:
     default_volumes:
@@ -42,21 +57,27 @@
     name: deluge
     image: binhex/arch-delugevpn
     pull: yes
+    capabilities:
+      - NET_ADMIN
+    published_ports:
+      - "127.0.0.1:8112:8112"
+      - "58846:58846"
+      - "58946:58946"
+      - "27634:27634"
     env:
       PUID: "{{uid}}"
       PGID: "{{gid}}"
       UMASK: "022"
-      VPN_ENABLED: "no"
-      VPN_USER:
-      VPN_PASS:
-      VPN_PROV:
-      VPN_OPTIONS:
-      STRICT_PORT_FORWARD: "yes"
+      VPN_ENABLED: "yes"
+      VPN_PROV: "airvpn"
       ENABLE_PRIVOXY: "no"
-      LAN_NETWORK:
-      NAME_SERVERS:
+      ENABLE_FLOOD: "no"
+      ENABLE_AUTODL_IRSSI: "yes"
+      LAN_NETWORK: "172.18.0.0/16"
+      NAME_SERVERS: "209.222.18.222,37.235.1.174,8.8.8.8,209.222.18.218,37.235.1.177,8.8.4.4"
       DEBUG: "false"
-    network_mode: "container:nordvpn"
+      PHP_TZ: "UTC"
+    volumes: "{{ default_volumes + torrents_downloads_path|default([]) + old_rutorrent_downloads_path|default([]) }}"
     labels:
       traefik.enable: "true"
       traefik.backend: "deluge"

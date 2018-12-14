@@ -103,7 +103,7 @@
       ENABLE_FLOOD: "no"
       ENABLE_AUTODL_IRSSI: "yes"
       LAN_NETWORK: "172.18.0.0/16"
-      NAME_SERVERS:
+      NAME_SERVERS: "209.222.18.222,37.235.1.174,8.8.8.8,209.222.18.218,37.235.1.177,8.8.4.4"
       DEBUG: "false"
       PHP_TZ: "UTC"
       UMASK: "022"
@@ -113,7 +113,7 @@
       traefik.backend: "rutorrent"
       traefik.frontend.redirect.entryPoint: "https"
       traefik.frontend.rule: "Host:rutorrent.{{domain}}"
-      traefik.port: "80"
+      traefik.port: "9080"
       traefik.frontend.auth.basic: "{{ hashed_password }}"
       traefik.docker.network: "cloudbox"
       "com.github.cloudbox.cloudbox_managed": "true"
