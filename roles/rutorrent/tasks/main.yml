@@ -158,6 +158,4 @@
   docker_container:
     name: rutorrent
     state: started
-  when: (not continuous_integration)
-        and
-        ((not rtorrent_rc.stat.exists) or (standard_settings_needs_upgrading))
+  when: ((not rtorrent_rc.stat.exists) or (standard_settings_needs_upgrading))
