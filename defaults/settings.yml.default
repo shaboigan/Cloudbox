@@ -7,10 +7,32 @@ plex:
   transcodes: /home/{{user}}/.transcodes
 suitarr:
   version: stable 
-nordvpn:
-  country: 
-  category: # Anti DDoS;Dedicated IP servers;Double VPN;Obfuscated Servers;Onion Over VPN;P2P;Standard VPN servers
-  protocol: # openvpn_udp;openvpn_tcp
+slack:
+  uk:
+    admin:
+    servers:
+  seed:
+    admin:
+    servers:
+  sonarr:
+    downloads:
+  radarr:
+    admin:
+    downloads:
+  radarrpq:
+    admin:
+    downloads:
+  radarr4k:
+    admin:
+    downloads:
+  ombi:
+    admin:
+  traktarr:
+    admin:
+  pingrr:
+    admin:
+  tautulli:
+    tautulli:
 airvpn:
   port:
 rclone:

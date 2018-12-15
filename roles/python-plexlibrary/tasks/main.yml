@@ -89,10 +89,22 @@
     - "plexlibrary.sh"
     - "*.log"
 
+- name: Import python-plexlibrary scripts
+  template:
+    src: "{{item}}"
+    dest: "/opt/scripts/system/{{item}}"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: yes
+  with_items:
+    - "slack_python_plexlibrary.sh"
+    - "python-plexlibrary.sh"
+
 - name: "Schedule cron task for daily update."
   cron:
     name: "Python-PlexLibrary"
     user: "{{user}}"
-    job: "/opt/python-plexlibrary/plexlibrary.sh"
+    job: "/opt/scripts/python-plexlibrary/python-plexlibrary.sh"
     special_time: daily
     state: present

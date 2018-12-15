@@ -17,6 +17,29 @@
   set_fact:
     hashed_password: "{{ hashed['content'] | b64decode }}"
 
+- name: "When sonarr exists, add api key and port to traktarr config"
+  block:
+
+- name: "Check if deluge exists"
+  stat:
+    path: "/opt/deluge/"
+  register: deluge
+
+- name: "Check if rutorrent exists"
+  stat:
+    path: "/opt/rutorrent/"
+  register: rutorrent
+
+- name: Set vpn fact
+  set_fact:
+    vpn: "deluge"
+  when: (deluge.stat.exists) and (not rutorrent.stat.exists)
+
+- name: Set vpn fact
+  set_fact:
+    vpn: "rutorrent"
+  when: (rutorrent.stat.exists) and (not deluge.stat.exists)
+
 - name: Stop and remove any existing container
   docker_container:
     name: vnc
@@ -35,7 +58,7 @@
     env:
       USER_ID: "{{uid}}"
       GROUP_ID: "{{gid}}"
-    network_mode: "container:rutorrent"    
+    network_mode: "container:{{vpn}}"
     labels:
       traefik.enable: "true"
       traefik.backend: "vnc"

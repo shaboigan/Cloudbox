@@ -17,7 +17,7 @@
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
   with_items:
     - /opt/deluge
-    - /opt/deluge/openvpn    
+    - /opt/deluge/openvpn
     - /opt/scripts/deluge
 
 - name: Create new downloads directories
@@ -64,6 +64,10 @@
       - "58846:58846"
       - "58946:58946"
       - "{{airvpn.port}}:{{airvpn.port}}"
+# vnc port
+      - "127.0.0.1:6901:6901"
+# Telly port
+      - "127.0.0.1:6077:6077"
     env:
       PUID: "{{uid}}"
       PGID: "{{gid}}"

@@ -118,7 +118,7 @@
 #- name: Import nzbget_manage.sh
 #  copy:
 #    src: "nzbget_manage.sh"
-#    dest: "/opt/scripts/nzbget/nzbget_manage.sh"
+#    dest: "/opt/scripts/nzbs/nzbget_manage.sh"
 #    owner: "{{user}}"
 #    group: "{{user}}"
 #    mode: 0775

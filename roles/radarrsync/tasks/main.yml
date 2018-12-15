@@ -41,11 +41,21 @@
       path: "/opt/radarrpq/app/config.xml"
       xpath: /Config/ApiKey
       content: text
-    register: xmlresppq
+    register: xmlapi
 
-  - name: Set radarrpq api Key
+  - name: Pull radarrpq port
+    xml:
+      path: "/opt/radarrpq/app/config.xml"
+      xpath: /Config/Port
+      content: text
+    register: xmlport
+
+  - name: Set radarrpq facts
     set_fact:
-      radarrpq_api_key: "{{ xmlresppq.matches[0].ApiKey }}"
+      radarrpq_api_key: "{{ xmlapi.matches[0].ApiKey }}"
+      radarrpq_profile: "Any"
+      radarrpq_port: "{{ xmlport.matches[0].Port }}"
+      radarrpq_root: "Poor Quality"
 
   when: (not radarrsync_config.stat.exists) and (radarrpq_config.stat.exists)
 
@@ -63,11 +73,21 @@
       path: "/opt/radarr/app/config.xml"
       xpath: /Config/ApiKey
       content: text
-    register: xmlresp
+    register: xmlapi
 
-  - name: Set radarr api Key
+  - name: Pull radarr port
+    xml:
+      path: "/opt/radarr/app/config.xml"
+      xpath: /Config/Port
+      content: text
+    register: xmlport
+
+  - name: Set radarr facts
     set_fact:
-      radarr_api_key: "{{ xmlresp.matches[0].ApiKey }}"
+      radarr_api_key: "{{ xmlapi.matches[0].ApiKey }}"
+      radarr_profile: "HD-1080p"
+      radarr_port: "{{ xmlport.matches[0].Port }}"
+      radarr_root: "YIFY"
 
   when: (not radarrsync_config.stat.exists) and (radarr_config.stat.exists)
 
@@ -97,10 +117,22 @@
     dest: "/usr/local/bin/radarrsync"
     state: link
 
+- name: Import radarrsync scripts
+  template:
+    src: "{{item}}"
+    dest: "/opt/scripts/system/{{item}}"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: yes
+  with_items:
+    - "slack_radarrsync.sh"
+    - "radarrsync-report.sh"
+
 - name: "Schedule cron task for daily update."
   cron:
-    name: "RadarrSync"
+    name: "RadarrSync4K"
     user: "{{user}}"
-    job: "/usr/bin/python3 /opt/radarrsync/RadarrSync.py"
+    job: "/opt/scripts/radarrsync/radarrsync_report.sh"
     special_time: daily
     state: present

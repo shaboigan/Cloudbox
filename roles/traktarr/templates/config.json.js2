@@ -101,13 +101,13 @@
   "radarr": {
     "api_key": "{{ radarr_api_key | default('',true) }}",
     "profile": "{{ radarr_profile | default('',true) }}",
-    "url": "https://localhost:{{ radarr_port | default('',true) }}",
+    "url": "http://localhost:{{ radarr_port | default('',true) }}",
     "root_folder": "/movies/{{ radarr_root | default('',true) }}/"
   },
   "sonarr": {
     "api_key": "{{ sonarr_api_key | default('',true) }}",
     "profile": "{{ sonarr_profile | default('',true) }}",
-    "url": "https://localhost:{{ sonarr_port | default('',true) }}",
+    "url": "http://localhost:{{ sonarr_port | default('',true) }}",
     "root_folder": "/movies/{{ sonarr_root | default('',true) }}/"
     "tags": {}
   },

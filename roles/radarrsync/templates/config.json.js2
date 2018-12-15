@@ -9,24 +9,24 @@ log_path = /opt/radarrsync/Output.txt
 log_level = DEBUG
 
 [RadarrMaster]
-url = "https://{{http_user}}:{{http_passwd}}@radarrpq.{{domain}}"
-key = "{{ radarrpq_api_key | default('',true) }}"
+url = "http://localhost:{{ radarrpq_port }}"
+key = "{{ radarrpq_api_key }}"
 
 
 [SyncServers]
 # Ensure the servers start with 'Radarr_'
 [Radarr_YIFY]
-url = "https://{{http_user}}:{{http_passwd}}@radarr.{{domain}}"
-key = "{{ radarr_api_key | default('',true) }}"
+url = "http://localhost:{{ radarr_port }}"
+key = "{{ radarr_api_key }}"
 
 rootFolders = /movies
 # If this path exists
-current_path = Poor Quality
+current_path = {{ radarrpq_root }}
 # Replace with this path
-new_path = YIFY
+new_path = {{ radarr_root }}
 
 # This is the profile ID the movie will be added to.
-profileId = 4
+profileId = {{ radarr_profile }}
 
 # This is the profile ID the movie must have on the Master server.
-profileIdMatch = 1
+profileIdMatch = {{ radarrpq_profile }}

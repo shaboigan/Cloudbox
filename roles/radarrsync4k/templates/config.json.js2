@@ -9,24 +9,24 @@ log_path = /opt/radarrsync/Output.txt
 log_level = DEBUG
 
 [RadarrMaster]
-url = "http://localhost:7878"
-key = "{{ radarr_api_key | default('',true) }}"
+url = "http://localhost:{{ radarr_port }}"
+key = "{{ radarr_api_key }}"
 
 
 [SyncServers]
 # Ensure the servers start with 'Radarr_'
 [Radarr_4K]
-url = "http://localhost:7879"
-key = "{{ radarr4k_api_key | default('',true) }}"
+url = "http://localhost:{{ radarr4k_port }}"
+key = "{{ radarr4k_api_key }}"
 
 rootFolders = /movies
 # If this path exists
-current_path = /YIFY/
+current_path = {{ radarr_root }}
 # Replace with this path
-new_path = /4K/
+new_path = {{ radarr4k_root }}
 
 # This is the profile ID the movie will be added to.
-profileId = 5
+profileId = {{ radarr4k_profile }}
 
 # This is the profile ID the movie must have on the Master server.
-profileIdMatch = 4
+profileIdMatch = {{ radarr_profile }}
