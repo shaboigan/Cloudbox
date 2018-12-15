@@ -32,7 +32,6 @@
     group: "{{user}}"
     mode: 0775
     force: yes
-  when: rtorrent_rc.stat.exists
 
 - name: Wait for nginx.conf to be created
   wait_for:
