@@ -6,7 +6,7 @@
   include_role:
     name: cloudflare
   vars:
-    subdomain: {{ vnc.subdomain|default('vnc',true) }}
+    subdomain: "{{ vnc.subdomain|default('vnc',true) }}"
 
 - name: Slurp hashed htpasswd
   slurp:
