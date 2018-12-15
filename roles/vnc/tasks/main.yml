@@ -6,7 +6,7 @@
   include_role:
     name: cloudflare
   vars:
-    subdomain: vnc
+    subdomain: {{ vnc.subdomain|default('vnc',true) }}
 
 - name: Slurp hashed htpasswd
   slurp:
@@ -60,7 +60,7 @@
       traefik.enable: "true"
       traefik.backend: "vnc"
       traefik.frontend.redirect.entryPoint: "https"
-      traefik.frontend.rule: "Host:vnc.{{domain}}"
+      traefik.frontend.rule: "Host:{{ vnc.subdomain|default('vnc',true) }}.{{domain}}"
       traefik.port: "6901"
       traefik.frontend.auth.basic: "{{ hashed_password }}"
       traefik.docker.network: "cloudbox"

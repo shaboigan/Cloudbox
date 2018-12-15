@@ -24,6 +24,8 @@ tautulli:
   subdomain: tautulli
 traefik:
   subdomain: traefik
+vnc:
+  subdomain: vnc
 organizr:
   direct_domain: no
 telly:
