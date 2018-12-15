@@ -47,7 +47,7 @@
   register: sonarr_config
   when: not traktarr_config.stat.exists
 
-- name: "When sonarr exists, add api key to traktar config"
+- name: "When sonarr exists, add api key and port to traktar config"
   block:
 
   - name: Pull sonarr api key
@@ -55,11 +55,21 @@
       path: "/opt/sonarr/app/config.xml"
       xpath: /Config/ApiKey
       content: text
-    register: xmlresp
+    register: xmlapi
 
-  - name: Set sonarr api Key
+  - name: Pull sonarr port
+    xml:
+      path: "/opt/sonarr/app/config.xml"
+      xpath: /Config/Port
+      content: text
+    register: xmlport
+
+  - name: Set sonarr facts
     set_fact:
-      sonarr_api_key: "{{ xmlresp.matches[0].ApiKey }}"
+      sonarr_api_key: "{{ xmlapi.matches[0].ApiKey }}"
+      sonarr_profile: "HD-720p"
+      sonarr_port: "{{ xmlport.matches[0].Port }}"
+      sonarr_root: "TV Shows"
 
   when: (not traktarr_config.stat.exists) and (sonarr_config.stat.exists)
 
@@ -77,13 +87,20 @@
       path: "/opt/radarrpq/app/config.xml"
       xpath: /Config/ApiKey
       content: text
-    register: xmlresp
+    register: xmlapi
+
+  - name: Pull radarrpq port
+    xml:
+      path: "/opt/radarrpq/app/config.xml"
+      xpath: /Config/Port
+      content: text
+    register: xmlport
 
   - name: Set radarrpq facts
     set_fact:
-      radarr_api_key: "{{ xmlresp.matches[0].ApiKey }}"
+      radarr_api_key: "{{ xmlapi.matches[0].ApiKey }}"
       radarr_profile: "Any"
-      radarr_port: "7880"
+      radarr_port: "{{ xmlport.matches[0].Port }}"
       radarr_root: "Poor Quality"
 
   when: (not traktarr_config.stat.exists) and (radarrpq_config.stat.exists)
@@ -108,7 +125,7 @@
     set_fact:
       radarr_api_key: "{{ xmlresp.matches[0].ApiKey }}"
       radarr_profile: "HD-1080p"
-      radarr_port: "7878"
+      radarr_port: "{{ xmlport.matches[0].Port }}"
       radarr_root: "YIFY"
 
   when: (not radarrpq_config.stat.exists) and (not traktarr_config.stat.exists) and (radarr_config.stat.exists)

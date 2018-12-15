@@ -106,9 +106,9 @@
   },
   "sonarr": {
     "api_key": "{{ sonarr_api_key | default('',true) }}",
-    "profile": "HD-1080p",
-    "url": "https://localhost:8989",
-    "root_folder": "/tv/TV Shows/",
+    "profile": "{{ sonarr_profile | default('',true) }}",
+    "url": "https://localhost:{{ sonarr_port | default('',true) }}",
+    "root_folder": "/movies/{{ sonarr_root | default('',true) }}/"
     "tags": {}
   },
   "trakt": {
