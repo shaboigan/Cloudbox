@@ -101,13 +101,13 @@
   "radarr": {
     "api_key": "{{ radarr_api_key | default('',true) }}",
     "profile": "HD-1080p",
-    "url": "https://{{http_user}}:{{http_passwd}}@radarr.{{domain}}",
-    "root_folder": "/movies/YIFY/"
+    "url": "https://localhost:{{ radarr.port | default('7878',true) }}",
+    "root_folder": "/movies/{{ radarr.root | default('YIFY',true) }}/"
   },
   "sonarr": {
     "api_key": "{{ sonarr_api_key | default('',true) }}",
     "profile": "HD-1080p",
-    "url": "https://{{http_user}}:{{http_passwd}}@sonarr.{{domain}}",
+    "url": "https://localhost:8989",
     "root_folder": "/tv/TV Shows/",
     "tags": {}
   },

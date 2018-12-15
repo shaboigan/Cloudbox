@@ -63,11 +63,35 @@
 
   when: (not traktarr_config.stat.exists) and (sonarr_config.stat.exists)
 
+- name: "Check if radarrpq exists"
+  stat:
+    path: "/opt/radarrpq/app/config.xml"
+  register: radarrpq_config
+  when: not traktarr_config.stat.exists
+
+- name: "When radarrpq exists, add api key to traktarr config"
+  block:
+
+  - name: Pull radarrpq api key
+    xml:
+      path: "/opt/radarrpq/app/config.xml"
+      xpath: /Config/ApiKey
+      content: text
+    register: xmlresp
+
+  - name: Set radarrpq facts
+    set_fact:
+      radarr_api_key: "{{ xmlresp.matches[0].ApiKey }}"
+      radarr_port: "7880"
+      radarr_root: "Poor Quality"
+
+  when: (not traktarr_config.stat.exists) and (radarrpq_config.stat.exists)
+
 - name: "Check if radarr exists"
   stat:
     path: "/opt/radarr/app/config.xml"
   register: radarr_config
-  when: not traktarr_config.stat.exists
+  when: (not radarrpq_config.stat.exists) and (not traktarr_config.stat.exists)
 
 - name: "When radarr exists, add api key to traktar config"
   block:
@@ -82,6 +106,8 @@
   - name: Set radarr api Key
     set_fact:
       radarr_api_key: "{{ xmlresp.matches[0].ApiKey }}"
+      radarr_port: "7880"
+      radarr_root: "Poor Quality"
 
   when: (not traktarr_config.stat.exists) and (radarr_config.stat.exists)
 
