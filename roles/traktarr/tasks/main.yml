@@ -119,11 +119,18 @@
       path: "/opt/radarr/app/config.xml"
       xpath: /Config/ApiKey
       content: text
-    register: xmlresp
+    register: xmlapi
 
-  - name: Set radarr api Key
+  - name: Pull radarr port
+    xml:
+      path: "/opt/radarr/app/config.xml"
+      xpath: /Config/Port
+      content: text
+    register: xmlport
+
+  - name: Set radarr facts
     set_fact:
-      radarr_api_key: "{{ xmlresp.matches[0].ApiKey }}"
+      radarr_api_key: "{{ xmlapi.matches[0].ApiKey }}"
       radarr_profile: "HD-1080p"
       radarr_port: "{{ xmlport.matches[0].Port }}"
       radarr_root: "YIFY"
