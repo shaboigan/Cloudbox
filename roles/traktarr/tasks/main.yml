@@ -109,7 +109,7 @@
       radarr_port: "7880"
       radarr_root: "Poor Quality"
 
-  when: (not traktarr_config.stat.exists) and (radarr_config.stat.exists)
+  when: (not radarrpq_config.stat.exists) and (not traktarr_config.stat.exists) and (radarr_config.stat.exists)
 
 - name: Import default config
   template:
