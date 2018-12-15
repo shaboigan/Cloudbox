@@ -82,6 +82,7 @@
   - name: Set radarrpq facts
     set_fact:
       radarr_api_key: "{{ xmlresp.matches[0].ApiKey }}"
+      radarr_profile: "Any"
       radarr_port: "7880"
       radarr_root: "Poor Quality"
 
@@ -91,7 +92,7 @@
   stat:
     path: "/opt/radarr/app/config.xml"
   register: radarr_config
-  when: (not radarrpq_config.stat.exists) and (not traktarr_config.stat.exists)
+  when: (not radarrpq_config.stat.exists)
 
 - name: "When radarr exists, add api key to traktar config"
   block:
@@ -106,8 +107,9 @@
   - name: Set radarr api Key
     set_fact:
       radarr_api_key: "{{ xmlresp.matches[0].ApiKey }}"
-      radarr_port: "7880"
-      radarr_root: "Poor Quality"
+      radarr_profile: "HD-1080p"
+      radarr_port: "7878"
+      radarr_root: "YIFY"
 
   when: (not radarrpq_config.stat.exists) and (not traktarr_config.stat.exists) and (radarr_config.stat.exists)
 

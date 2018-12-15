@@ -100,9 +100,9 @@
   },
   "radarr": {
     "api_key": "{{ radarr_api_key | default('',true) }}",
-    "profile": "HD-1080p",
-    "url": "https://localhost:{{ radarr_port | default('7878',true) }}",
-    "root_folder": "/movies/{{ radarr_root | default('YIFY',true) }}/"
+    "profile": "{{ radarr_profile | default('',true) }}",
+    "url": "https://localhost:{{ radarr_port | default('',true) }}",
+    "root_folder": "/movies/{{ radarr_root | default('',true) }}/"
   },
   "sonarr": {
     "api_key": "{{ sonarr_api_key | default('',true) }}",
