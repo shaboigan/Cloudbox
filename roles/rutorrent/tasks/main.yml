@@ -71,7 +71,7 @@
 - name: Create and start container
   docker_container:
     name: rutorrent
-    image: binhex/arch-rtorrentvpn
+    image: binhex/arch-rtorrentvpn:latest
     pull: yes
     capabilities:
       - NET_ADMIN

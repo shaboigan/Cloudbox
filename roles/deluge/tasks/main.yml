@@ -55,7 +55,7 @@
 - name: Create and start container
   docker_container:
     name: deluge
-    image: binhex/arch-delugevpn
+    image: binhex/arch-delugevpn:latest
     pull: yes
     capabilities:
       - NET_ADMIN
