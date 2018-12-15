@@ -22,6 +22,17 @@
   wait_for:
     path: "/opt/rutorrent/rtorrent/config/rtorrent.rc"
     state: present
+  register: rtorrent_rc
+
+- name: Import modified rutorrent config file
+  template:
+    src: rtorrent.rc.js2
+    dest: "/opt/rutorrent/rtorrent/config/rtorrent.rc"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: yes
+  when: rtorrent_rc.stat.exists
 
 - name: Wait for nginx.conf to be created
   wait_for:
