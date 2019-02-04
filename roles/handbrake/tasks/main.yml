@@ -28,11 +28,12 @@
     - /opt/handbrake
     - /mnt/local/handbrake
     - /mnt/local/handbrake/source
-    - /mnt/local/handbrake/source/yify
-    - /mnt/local/handbrake/source/yify_anime
-    - /mnt/local/handbrake/source/bluray
-    - /mnt/local/handbrake/source/4k
-    - /mnt/local/handbrake/source/dvd
+    - /mnt/local/handbrake/watch   
+    - /mnt/local/handbrake/watch/24
+    - /mnt/local/handbrake/watch/25
+    - /mnt/local/handbrake/watch/26
+    - /mnt/local/handbrake/watch/27
+    - /mnt/local/handbrake/watch/28
     - /mnt/local/handbrake/output
 
 - name: Create and start container
@@ -45,11 +46,11 @@
     env:
       USER_ID: "{{uid}}"
       GROUP_ID: "{{gid}}"
-      AUTOMATED_CONVERSION_PRESET: YIFY
-#     AUTOMATED_CONVERSION_PRESET_2:
-#     AUTOMATED_CONVERSION_PRESET_3:
-#     AUTOMATED_CONVERSION_PRESET_4:
-#     AUTOMATED_CONVERSION_PRESET_5:
+      AUTOMATED_CONVERSION_PRESET: 24
+      AUTOMATED_CONVERSION_PRESET_2: 25
+      AUTOMATED_CONVERSION_PRESET_3: 26
+      AUTOMATED_CONVERSION_PRESET_4: 27
+      AUTOMATED_CONVERSION_PRESET_5: 28
       APP_NICENESS: "10"
     labels:
       traefik.enable: "true"
@@ -62,11 +63,11 @@
       "com.github.cloudbox.cloudbox_managed": "true"
     volumes:
       - "/opt/handbrake:/config:rw"
-      - "/mnt/local/handbrake/source/yify:/watch:rw"
-      - "/mnt/local/handbrake/source/yify_anime:/watch2:rw"
-      - "/mnt/local/handbrake/source/bluray:/watch3:rw"
-      - "/mnt/local/handbrake/source/4k:/watch4:rw"
-      - "/mnt/local/handbrake/source/dvd:/watch5:rw"
+      - "/mnt/local/handbrake/watch/24:/watch:rw"
+      - "/mnt/local/handbrake/watch2/25:/watch2:rw"
+      - "/mnt/local/handbrake/watch3/26:/watch3:rw"
+      - "/mnt/local/handbrake/watch4/27:/watch4:rw"
+      - "/mnt/local/handbrake/watch5/28:/watch5:rw"
       - "/mnt/local/handbrake/output:/output:rw"
       - "/mnt/local/handbrake:/storage:ro"
     networks:
