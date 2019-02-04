@@ -17,6 +17,13 @@
   set_fact:
     hashed_password: "{{ hashed['content'] | b64decode }}"
 
+- name: Install encoding tools
+  apt: name="{{item}}" state=present update_cache=yes
+  become: true
+  with_items:
+      - mediainfo
+      - atomicparsley      
+
 - name: Stop and remove any existing container
   docker_container:
     name: handbrake
@@ -64,10 +71,10 @@
     volumes:
       - "/opt/handbrake:/config:rw"
       - "/mnt/local/handbrake/watch/24:/watch:rw"
-      - "/mnt/local/handbrake/watch2/25:/watch2:rw"
-      - "/mnt/local/handbrake/watch3/26:/watch3:rw"
-      - "/mnt/local/handbrake/watch4/27:/watch4:rw"
-      - "/mnt/local/handbrake/watch5/28:/watch5:rw"
+      - "/mnt/local/handbrake/watch/25:/watch2:rw"
+      - "/mnt/local/handbrake/watch/26:/watch3:rw"
+      - "/mnt/local/handbrake/watch/27:/watch4:rw"
+      - "/mnt/local/handbrake/watch/28:/watch5:rw"
       - "/mnt/local/handbrake/output:/output:rw"
       - "/mnt/local/handbrake:/storage:ro"
     networks:
