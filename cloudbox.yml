@@ -47,6 +47,7 @@
     - { role: lidarr, tags: ['lidarr'] }
     - { role: radarr4k, tags: ['radarr4k'] }
     - { role: radarrpq, tags: ['radarrpq'] }
+    - { role: radarrhb, tags: ['radarrhb'] }    
     - { role: sonarr4k, tags: ['sonarr4k'] }
     - { role: bazarr, tags: ['bazarr'] }
     - { role: telly, tags: ['telly'] }
