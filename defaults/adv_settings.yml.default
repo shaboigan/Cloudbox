@@ -17,6 +17,7 @@ plex:
   open_port: yes
   force_auto_adjust_quality: yes
   allow_high_output_bitrates: no
+  db_cache_size: default
   subdomain: plex
 ombi:
   subdomain: ombi
