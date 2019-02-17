@@ -51,6 +51,7 @@
     - { role: sonarr4k, tags: ['sonarr4k'] }
     - { role: bazarr, tags: ['bazarr'] }
     - { role: telly, tags: ['telly'] }
+    - { role: telly2, tags: ['telly2'] }    
     - { role: telly_dev, tags: ['telly_dev'] }
     - { role: radarrsync, tags: ['radarrsync'] }
     - { role: radarrsync4k, tags: ['radarrsync4k'] }
