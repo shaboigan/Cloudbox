@@ -50,6 +50,7 @@
     - { role: radarrhb, tags: ['radarrhb'] }    
     - { role: sonarr4k, tags: ['sonarr4k'] }
     - { role: bazarr, tags: ['bazarr'] }
+    - { role: nordvpn, tags: ['nordvpn'] }
     - { role: telly, tags: ['telly'] }
     - { role: telly2, tags: ['telly2'] }    
     - { role: telly_dev, tags: ['telly_dev'] }
