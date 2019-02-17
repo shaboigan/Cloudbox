@@ -30,8 +30,9 @@
 - name: Create and start container
   docker_container:
     name: telly2
-    image: "tellytv/telly:v1.5.1"
+    image: "tellytv/telly:v1.5.0"
     pull: yes
+    user: "{{uid}}:{{gid}}"
     command: --database.file="/telly/telly.db"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
@@ -40,8 +41,6 @@
       - "6077:6077"
     env:
       TELLY_LOG_LEVEL: "debug"
-      PUID: "{{uid}}"
-      PGID: "{{gid}}"
     labels:
       traefik.enable: "true"
       traefik.backend: "telly2"
