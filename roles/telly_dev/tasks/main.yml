@@ -77,10 +77,5 @@
       - "/opt/telly_dev:/etc/telly"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"
-    networks:
-      - name: cloudbox
-        aliases:
-          - telly_dev
-    purge_networks: yes
     restart_policy: always
     state: started
