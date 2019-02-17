@@ -12,7 +12,6 @@
 - name: "Assert that all Telly related settings are filled in."
   assert:
     that:
-      - (telly.playlist is defined) and (telly.playlist is not none) and not (telly.playlist | trim == '') and (telly.playlist != "/opt/telly/file.m3u or URL2M3U")
       - (telly.streams is defined) and (telly.streams is not none) and not (telly.streams | trim == '')
     msg: "You must specify the Telly settings in 'adv_settings.yml'"
 
@@ -46,6 +45,8 @@
     name: telly_dev
     image: tellytv/telly:dev-ffmpeg
     pull: yes
+    published_ports:
+      - "6077:6077"
     env:
       TZ: "Europe/London"
       PUID: "{{uid}}"
