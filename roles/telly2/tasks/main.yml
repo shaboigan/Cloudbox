@@ -1,0 +1,58 @@
+#########################################################################
+# Title:         Cloudbox Community: Telly 2 Role                       #
+# Author(s):     EnorMOZ, Desimaniac                                    #
+# URL:           https://github.com/Cloudbox/Community                  #
+# Docker Image:  tellytv/telly                                          #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+
+- name: "Set DNS Record on CloudFlare"
+  include_role:
+    name: cloudflare
+  vars:
+    subdomain: telly2
+
+- name: Stop and remove any existing container
+  docker_container:
+    name: telly2
+    state: absent
+
+- name: Create telly directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - "/opt/telly2"
+    - "/opt/telly2/telly.db"
+
+- name: Create and start container
+  docker_container:
+    name: telly2
+    image: "tellytv/telly:v1.5.1"
+    pull: yes
+    command: --database.file="/telly/telly.db"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/telly2/telly.db:/telly/"
+    env:
+      TELLY_LOG_LEVEL: "debug"
+      PUID: "{{uid}}"
+      PGID: "{{gid}}"
+    labels:
+      traefik.enable: "true"
+      traefik.backend: "telly2"
+      traefik.frontend.redirect.entryPoint: "https"
+      traefik.frontend.rule: "Host:telly2.{{domain}}"
+      traefik.port: "6077"
+#      traefik.frontend.auth.basic: "{{ hashed_password }}"
+      traefik.docker.network: "cloudbox"
+      "com.github.cloudbox.cloudbox_managed": "true"
+    networks:
+      - name: cloudbox
+        aliases:
+          - telly2
+    purge_networks: yes
+    restart_policy: always
+    state: started
