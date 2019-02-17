@@ -36,6 +36,8 @@
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/telly2/telly.db:/telly/"
+    published_ports:
+      - "6077:6077"
     env:
       TELLY_LOG_LEVEL: "debug"
       PUID: "{{uid}}"
