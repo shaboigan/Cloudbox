@@ -16,6 +16,35 @@
   vars:
     subdomain: telly2
 
+- name: Slurp hashed htpasswd
+  slurp:
+    src: "/opt/traefik/.htpasswd"
+  register: hashed
+
+- name: Set hashed password
+  set_fact:
+    hashed_password: "{{ hashed['content'] | b64decode }}"
+
+- name: "Check if deluge exists"
+  stat:
+    path: "/opt/deluge/"
+  register: deluge
+
+- name: "Check if rutorrent exists"
+  stat:
+    path: "/opt/rutorrent/"
+  register: rutorrent
+
+- name: Set vpn fact
+  set_fact:
+    vpn: "deluge"
+  when: (deluge.stat.exists) and (not rutorrent.stat.exists)
+
+- name: Set vpn fact
+  set_fact:
+    vpn: "rutorrent"
+  when: (rutorrent.stat.exists) and (not deluge.stat.exists)
+
 - name: Stop and remove any existing container
   docker_container:
     name: telly2
@@ -37,10 +66,9 @@
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/telly2/telly.db:/telly/"
-    published_ports:
-      - "6077:6077"
     env:
       TELLY_LOG_LEVEL: "debug"
+    network_mode: "container:{{vpn}}"
     labels:
       traefik.enable: "true"
       traefik.backend: "telly2"
@@ -50,10 +78,5 @@
 #      traefik.frontend.auth.basic: "{{ hashed_password }}"
       traefik.docker.network: "cloudbox"
       "com.github.cloudbox.cloudbox_managed": "true"
-    networks:
-      - name: cloudbox
-        aliases:
-          - telly2
-    purge_networks: yes
     restart_policy: always
     state: started
