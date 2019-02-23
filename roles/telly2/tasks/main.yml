@@ -59,7 +59,7 @@
 - name: Create and start container
   docker_container:
     name: telly2
-    image: "tellytv/telly:1.5.2"
+    image: "tellytv/telly:v1.5.0"
     pull: yes
     user: "{{uid}}:{{gid}}"
     command: --database.file="/telly/telly.db"
