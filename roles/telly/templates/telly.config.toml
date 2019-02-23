@@ -37,7 +37,7 @@
 
 # THIS SECTION IS REQUIRED ########################################################################
 [Web]
-  Base-Address = "localhost:6077"   # Set this to the IP address of the machine telly runs on AS SEEN BY PLEX
+  Base-Address = "{{vpn_container_ip}}:6077"   # Set this to the IP address of the machine telly runs on AS SEEN BY PLEX
                                   # telly will be telling Plex to connect to URLs at this address.
   Listen-Address = "0.0.0.0:6077" # this can stay as-is
 

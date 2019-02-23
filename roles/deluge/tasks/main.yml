@@ -68,9 +68,9 @@
 # vnc port
       - "127.0.0.1:6901:6901"
 # Telly port
-#      - "127.0.0.1:6077:6077"
-#      - "127.0.0.1:6078:6078"
-#      - "127.0.0.1:6079:6079"
+      - "6077:6077"
+      - "6078:6078"
+      - "6079:6079"
     env:
       PUID: "{{uid}}"
       PGID: "{{gid}}"
@@ -84,7 +84,7 @@
       NAME_SERVERS: "209.222.18.222,37.235.1.174,8.8.8.8,209.222.18.218,37.235.1.177,8.8.4.4"
       DEBUG: "false"
       PHP_TZ: "UTC"
-    volumes: "{{ default_volumes + torrents_downloads_path|default([]) + old_rutorrent_downloads_path|default([]) }}"
+    volumes: "{{ default_volumes + torrents_downloads_path|default([]) }}"
     labels:
       traefik.enable: "true"
       traefik.backend: "deluge"
