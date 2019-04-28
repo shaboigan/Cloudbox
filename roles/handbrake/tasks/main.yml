@@ -33,6 +33,7 @@
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
     - /opt/handbrake
+    - /opt/scripts/handbrake
     - /mnt/local/handbrake
     - /mnt/local/handbrake/source
     - /mnt/local/handbrake/watch
@@ -111,7 +112,7 @@
     restart_policy: always
     state: started
 
-- name: Stop container to customize deluge settings
+- name: Stop container to customize handbrake settings
   docker_container:
     name: handbrake
     state: stopped
@@ -120,6 +121,15 @@
   copy:
     src: "presets.json"
     dest: "/opt/handbrake/ghb/presets.json"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: yes
+
+- name: Import customised preferences file
+  copy:
+    src: "preferences.json"
+    dest: "/opt/handbrake/ghb/preferences.json"
     owner: "{{user}}"
     group: "{{user}}"
     mode: 0775
