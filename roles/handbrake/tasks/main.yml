@@ -37,19 +37,19 @@
     - /mnt/local/handbrake
     - /mnt/local/handbrake/source
     - /mnt/local/handbrake/watch
-    - /mnt/local/handbrake/watch/24
+    - /mnt/local/handbrake/watch/24.0
     - /mnt/local/handbrake/watch/24.5
-    - /mnt/local/handbrake/watch/25
+    - /mnt/local/handbrake/watch/25.0
     - /mnt/local/handbrake/watch/25.5
-    - /mnt/local/handbrake/watch/26
+    - /mnt/local/handbrake/watch/26.0
     - /mnt/local/handbrake/watch/26.5
-    - /mnt/local/handbrake/watch/27
+    - /mnt/local/handbrake/watch/27.0
     - /mnt/local/handbrake/watch/27.5
-    - /mnt/local/handbrake/watch/28
+    - /mnt/local/handbrake/watch/28.0
     - /mnt/local/handbrake/watch/28.5
-    - /mnt/local/handbrake/watch/29
+    - /mnt/local/handbrake/watch/29.0
     - /mnt/local/handbrake/watch/29.5
-    - /mnt/local/handbrake/watch/30
+    - /mnt/local/handbrake/watch/30.0
     - /mnt/local/handbrake/output
 
 - name: Create and start container
@@ -89,19 +89,19 @@
       "com.github.cloudbox.cloudbox_managed": "true"
     volumes:
       - "/opt/handbrake:/config:rw"
-      - "/mnt/local/handbrake/watch/24:/watch:rw"
-      - "/mnt/local/handbrake/watch/25:/watch2:rw"
-      - "/mnt/local/handbrake/watch/26:/watch3:rw"
-      - "/mnt/local/handbrake/watch/27:/watch4:rw"
-      - "/mnt/local/handbrake/watch/28:/watch5:rw"
-      - "/mnt/local/handbrake/watch/28:/watch6:rw"
-      - "/mnt/local/handbrake/watch/28:/watch7:rw"
-      - "/mnt/local/handbrake/watch/25:/watch8:rw"
-      - "/mnt/local/handbrake/watch/26:/watch9:rw"
-      - "/mnt/local/handbrake/watch/27:/watch10:rw"
-      - "/mnt/local/handbrake/watch/28:/watch11:rw"
-      - "/mnt/local/handbrake/watch/28:/watch12:rw"
-      - "/mnt/local/handbrake/watch/28:/watch13:rw"
+      - "/mnt/local/handbrake/watch/24.0:/watch:rw"
+      - "/mnt/local/handbrake/watch/24.5:/watch2:rw"
+      - "/mnt/local/handbrake/watch/25.0:/watch3:rw"
+      - "/mnt/local/handbrake/watch/25.5:/watch4:rw"
+      - "/mnt/local/handbrake/watch/26.0:/watch5:rw"
+      - "/mnt/local/handbrake/watch/26.5:/watch6:rw"
+      - "/mnt/local/handbrake/watch/27.0:/watch7:rw"
+      - "/mnt/local/handbrake/watch/27.5:/watch8:rw"
+      - "/mnt/local/handbrake/watch/28.0:/watch9:rw"
+      - "/mnt/local/handbrake/watch/28.5:/watch10:rw"
+      - "/mnt/local/handbrake/watch/29.0:/watch11:rw"
+      - "/mnt/local/handbrake/watch/29.5:/watch12:rw"
+      - "/mnt/local/handbrake/watch/30.0:/watch13:rw"
       - "/mnt/local/handbrake/output:/output:rw"
       - "/mnt/local/handbrake:/storage:ro"
     networks:
