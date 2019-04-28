@@ -21,8 +21,8 @@
   apt: name="{{item}}" state=present update_cache=yes
   become: true
   with_items:
-      - mediainfo
-      - atomicparsley      
+    - mediainfo
+    - atomicparsley
 
 - name: Stop and remove any existing container
   docker_container:
@@ -35,12 +35,20 @@
     - /opt/handbrake
     - /mnt/local/handbrake
     - /mnt/local/handbrake/source
-    - /mnt/local/handbrake/watch   
+    - /mnt/local/handbrake/watch
     - /mnt/local/handbrake/watch/24
+    - /mnt/local/handbrake/watch/24.5
     - /mnt/local/handbrake/watch/25
+    - /mnt/local/handbrake/watch/25.5
     - /mnt/local/handbrake/watch/26
+    - /mnt/local/handbrake/watch/26.5
     - /mnt/local/handbrake/watch/27
+    - /mnt/local/handbrake/watch/27.5
     - /mnt/local/handbrake/watch/28
+    - /mnt/local/handbrake/watch/28.5
+    - /mnt/local/handbrake/watch/29
+    - /mnt/local/handbrake/watch/29.5
+    - /mnt/local/handbrake/watch/30
     - /mnt/local/handbrake/output
 
 - name: Create and start container
@@ -53,12 +61,22 @@
     env:
       USER_ID: "{{uid}}"
       GROUP_ID: "{{gid}}"
+      AUTOMATED_CONVERSION_MAX_WATCH_FOLDERS: 13
       AUTOMATED_CONVERSION_PRESET: 24
-      AUTOMATED_CONVERSION_PRESET_2: 25
-      AUTOMATED_CONVERSION_PRESET_3: 26
-      AUTOMATED_CONVERSION_PRESET_4: 27
-      AUTOMATED_CONVERSION_PRESET_5: 28
+      AUTOMATED_CONVERSION_PRESET_2: 24.5
+      AUTOMATED_CONVERSION_PRESET_3: 25
+      AUTOMATED_CONVERSION_PRESET_4: 25.5
+      AUTOMATED_CONVERSION_PRESET_5: 26
+      AUTOMATED_CONVERSION_PRESET_6: 26.5
+      AUTOMATED_CONVERSION_PRESET_7: 27
+      AUTOMATED_CONVERSION_PRESET_8: 27.5
+      AUTOMATED_CONVERSION_PRESET_9: 28
+      AUTOMATED_CONVERSION_PRESET_10: 28.5
+      AUTOMATED_CONVERSION_PRESET_11: 29
+      AUTOMATED_CONVERSION_PRESET_12: 29.5
+      AUTOMATED_CONVERSION_PRESET_13: 30
       APP_NICENESS: "10"
+      HANDBRAKE_DEBUG: 0
     labels:
       traefik.enable: "true"
       traefik.backend: "handbrake"
@@ -75,6 +93,14 @@
       - "/mnt/local/handbrake/watch/26:/watch3:rw"
       - "/mnt/local/handbrake/watch/27:/watch4:rw"
       - "/mnt/local/handbrake/watch/28:/watch5:rw"
+      - "/mnt/local/handbrake/watch/28:/watch6:rw"
+      - "/mnt/local/handbrake/watch/28:/watch7:rw"
+      - "/mnt/local/handbrake/watch/25:/watch8:rw"
+      - "/mnt/local/handbrake/watch/26:/watch9:rw"
+      - "/mnt/local/handbrake/watch/27:/watch10:rw"
+      - "/mnt/local/handbrake/watch/28:/watch11:rw"
+      - "/mnt/local/handbrake/watch/28:/watch12:rw"
+      - "/mnt/local/handbrake/watch/28:/watch13:rw"
       - "/mnt/local/handbrake/output:/output:rw"
       - "/mnt/local/handbrake:/storage:ro"
     networks:
@@ -83,4 +109,45 @@
           - handbrake
     purge_networks: yes
     restart_policy: always
+    state: started
+
+- name: Stop container to customize deluge settings
+  docker_container:
+    name: handbrake
+    state: stopped
+
+- name: Import customised presets file
+  copy:
+    src: "presets.json"
+    dest: "/opt/handbrake/ghb/presets.json"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: yes
+
+- name: Check handbrake auto_encode script exists
+  stat:
+    path: "/opt/scripts/handbrake/auto_encode.sh"
+    get_attributes: false
+    get_checksum: false
+    get_md5: false
+    get_mime: false
+  register: auto_encode
+
+- name: Import handbrake scripts
+  copy:
+    src: "{{item}}"
+    dest: "/opt/scripts/handbrake/{{item}}"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: yes
+  with_items:
+    - "auto_encode.sh"
+    - "test.sh"
+  when: auto_encode.stat.exists == False
+
+- name: Start container to apply changes
+  docker_container:
+    name: handbrake
     state: started
